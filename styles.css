@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #FFF7D6; /* Soft pastel yellow */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cute Header */
+header {
+    background-color: #1E3A5F; /* Dark Sky Navy Blue */
+    color: #ffffff; /* White text for contrast */
+    text-align: center;
+    padding: 1rem 0;
+     font-size: 1.8rem;
+    border-bottom: 5px solid #FFB6C1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow effect */
+}
+
+
+/* Main Content */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* Search Section */
+#search-section {
+    background: #FFF0F5; /* Light pastel pink */
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#grocery-select {
+    padding: 0.7rem;
+    font-size: 1rem;
+    width: 250px;
+    border: 2px solid #FFB6C1;
+    border-radius: 12px;
+    background-color: #FFFAF0;
+}
+
+/* Kawaii Button */
+#search-button {
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    background-color: #FFB6C1;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-left: 10px;
+}
+
+#search-button:hover {
+    background-color: #FF69B4;
+    transform: scale(1.1);
+}
+
+/* Results Section */
+#results-section {
+    width: 90%;
+    max-width: 800px;
+    margin-top: 2rem;
+}
+
+.result-item {
+    background-color: #FFF;
+    border: 2px solid #FFD1DC;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+
+.result-item:hover {
+    transform: translateY(-5px);
+}
+
+.result-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 15px;
+}
+
+.result-item h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #FF69B4;
+}
+
+.result-item p {
+    margin: 0.5rem 0;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    background-color: #FFD1DC;
+    color: white;
+    font-weight: bold;
+    border-top: 5px solid #FFB6C1;
+    margin-top: 20px;
+}
+
+/* Kawaii Bounce Animation */
+@keyframes bounce {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+/* Cart container */
+#cart {
+    position: fixed;
+    bottom: 0;
+    right: -150px; /* Start completely off-screen on the right */
+    width: 150px;
+    height: auto;
+    cursor: pointer;
+    animation: walkAcross 15s linear infinite; /* Moves across continuously */
+}
+
+/* Cart GIF */
+#cart-gif {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Animation when hovered */
+#cart:hover #cart-gif {
+    transform: scale(1.1);
+}
+
+/* Keyframes for walking effect */
+@keyframes walkAcross {
+    0% {
+        right: -150px; /* Starts off-screen on the right */
+    }
+    100% {
+        right: 100%; /* Moves fully off-screen to the left */
+        transform: translateX(-100%); /* Ensures it walks across */
+    }
+}
