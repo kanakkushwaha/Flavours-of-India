@@ -1,0 +1,238 @@
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #fff9c4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  
+  header {
+    background-color: #f78fb3;  /* Retaining the pink shade */
+    padding: 40px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border-bottom: 4px solid #f48fb1;
+  }
+  
+  header h1 {
+    font-size: 2.5em;
+    letter-spacing: 2px;
+    margin: 0;
+  }
+  
+  header p {
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card h3 {
+    font-size: 1.3em;
+    color: #333;
+    margin: 10px 0;
+    font-weight: 600;
+  }
+  
+  .card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .modal-content {
+    background: #fff;
+    margin: 5% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 650px;
+    border-radius: 12px;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-content h2 {
+    font-size: 2em;
+    color: #f78fb3;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 2em;
+    cursor: pointer;
+    color: #f78fb3;
+    transition: transform 0.3s ease;
+  }
+  
+  .close-button:hover {
+    transform: scale(1.2);
+  }
+  
+  footer {
+    background-color: #f78fb3;  /* Retaining the pink shade */
+    padding: 30px;
+    color: white;
+    font-size: 1.1em;
+    text-align: center;
+    border-top: 4px solid #f48fb1;
+  }
+  
+  footer p {
+    margin: 0;
+  }
+  
+  footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  footer a:hover {
+    color: #f48fb1;
+  }
+  
+  /* Loading Animation (for when page loads) */
+  @keyframes loadAnimation {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Fun Loading Spinner */
+  .loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #FF6F61;
+    border-radius: 50%;
+    animation: loadAnimation 1.5s infinite ease;
+  }
+  
+  /* Dessert of the Day Section */
+  .dessert-of-the-day {
+    background-color: #FCE2DB; /* Soft pastel background */
+    padding: 50px 30px;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 900px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+  }
+  
+  .dessert-of-the-day h2 {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #FF6F61;
+    margin-bottom: 15px;
+  }
+  
+  .dessert-of-the-day p {
+    font-size: 1.3em;
+    font-weight: 400;
+    color: #4E4E50;
+    line-height: 1.5;
+  }
+  
+  /* Card Hover Effects - Scaling */
+  .card:hover {
+    transform: scale(1.07); /* Subtle scaling effect */
+    transition: transform 0.4s ease;
+  }
+  
+  /* Animated Category Tabs */
+  .category-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
+    background-color: #F6F5F1;
+    margin-bottom: 30px;
+  }
+  
+  .category-tabs button {
+    background-color: transparent;
+    border: 2px solid #FF6F61;
+    color: #FF6F61;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .category-tabs button:hover {
+    background-color: #FF6F61;
+    color: white;
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+  
+  /* Responsive Design - Adjusting for smaller screens */
+  @media screen and (max-width: 768px) {
+    .grid-container {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      padding: 15px;
+    }
+  
+    .modal-content {
+      padding: 15px;
+      width: 90%;
+    }
+  
+    header h1 {
+      font-size: 2em;
+    }
+  
+    header p {
+      font-size: 1em;
+    }
+  }
