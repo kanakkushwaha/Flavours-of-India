@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meal Planner Timetable</title>
+    <style>
+        h1 {
+            font-size: 36px;
+            color: #000;
+            text-align: center;
+            margin-top: 30px;
+            background: linear-gradient(to right, #ff66b2, #66ccff);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .calendar-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .calendar {
+            background-color: #ffffff;
+            border-radius: 50px;
+            padding: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            background-image: url('https://www.peanutbutterandfitness.com/wp-content/uploads/2023/07/Healthy-Weekly-Meal-Plan-Recipes-7.9.23-1.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(100%);
+            width: 100%;
+        }
+
+        .calendar .month-selector {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar .month {
+            font-size: 28px;
+            text-align: center;
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+
+        .calendar .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar .days div {
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .calendar .days div:hover {
+            background-color: #1a1aff;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .calendar .days div.today {
+            background-color: #ff0066;
+            color: white;
+            font-weight: bold;
+        }
+
+        .meal-planner-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .meal-planner-popup .popup-content {
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .meal-planner-popup .popup-content h2 {
+            color: #ff5500;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .meal-planner-popup .popup-content input,
+        .meal-planner-popup .popup-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #66ccff;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.1s;
+        }
+
+        .meal-planner-popup .popup-content input:focus,
+        .meal-planner-popup .popup-content textarea:focus {
+            border-color: #ff66b2;
+            outline: none;
+        }
+
+        .meal-planner-popup .popup-content button {
+            background-color: #33cc33;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .meal-planner-popup .popup-content button:hover {
+            background-color: #ff3300;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ff3300;
+        }
+
+        .meal-image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .gif-container {
+            max-width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .gif-container img {
+            width: 300px;
+            height: auto;
+            display: block;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<h1>MEAL PLANNER TIMETABLE</h1>
+
+<div class="calendar-container">
+    <div class="calendar">
+        <div class="month-selector">
+            <select id="month-select" onchange="changeMonth()">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+            <select id="year-select" onchange="changeYear()"></select>
+        </div>
+        <div class="month" id="month-name">March</div>
+        <div class="days"></div>
+    </div>
+
+    <div class="gif-container">
+        <img src="https://media4.giphy.com/media/B14P2P1KRAlcdx77UD/200w.gif?cid=6c09b9522qcyukrltdw1ase769gnpa6z9zncwkbmkfxn0cr7&ep=v1_gifs_search&rid=200w.gif&ct=g" alt="Meal GIF">
+    </div>
+</div>
+
+<footer>
+    <p>&copy; Recipe Reviews | <a href="#">Privacy Policy</a></p>
+</footer>
+
+<!-- Popup -->
+<div id="meal-planner-popup" class="meal-planner-popup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">×</span>
+        <h2>Meal Planner for <span id="selected-date"></span></h2>
+
+        <div><strong>🍳 BREAKFAST:</strong></div>
+        <input type="text" id="breakfast" placeholder="Enter Breakfast">
+        <input type="file" id="breakfast-img" accept="image/*" onchange="previewImage('breakfast')">
+
+        <div><strong>🍔 LUNCH:</strong></div>
+        <input type="text" id="lunch" placeholder="Enter Lunch">
+        <input type="file" id="lunch-img" accept="image/*" onchange="previewImage('lunch')">
+
+        <div><strong>🍩 EVENING SNACKS:</strong></div>
+        <input type="text" id="evening-snacks" placeholder="Enter Evening Snacks">
+        <input type="file" id="evening-snacks-img" accept="image/*" onchange="previewImage('evening-snacks')">
+
+        <div><strong>🍲 DINNER:</strong></div>
+        <input type="text" id="dinner" placeholder="Enter Dinner">
+        <input type="file" id="dinner-img" accept="image/*" onchange="previewImage('dinner')">
+
+        <button onclick="saveMealPlan()">Save Meal Plan</button>
+    </div>
+</div>
+
+<script>
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let mealPlans = {};
+
+    function populateYearOptions() {
+        const yearSelect = document.getElementById('year-select');
+        const startYear = 2025;
+        const endYear = 2035;
+        yearSelect.innerHTML = '';
+        for (let year = startYear; year <= endYear; year++) {
+            let option = document.createElement('option');
+            option.value = year;
+            option.innerText = year;
+            if (year === currentYear) option.selected = true;
+            yearSelect.appendChild(option);
+        }
+    }
+
+    function changeMonth() {
+        currentMonth = parseInt(document.getElementById('month-select').value);
+        renderCalendar();
+    }
+
+    function changeYear() {
+        currentYear = parseInt(document.getElementById('year-select').value);
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        const daysContainer = document.querySelector('.calendar .days');
+        daysContainer.innerHTML = '';
+
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+        const totalDays = daysInMonth[currentMonth];
+
+        daysOfWeek.forEach(day => {
+            const dayElement = document.createElement('div');
+            dayElement.innerText = day;
+            dayElement.style.fontWeight = 'bold';
+            dayElement.style.color = '#ff66b2';
+            daysContainer.appendChild(dayElement);
+        });
+
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            const blankDay = document.createElement('div');
+            daysContainer.appendChild(blankDay);
+        }
+
+        for (let i = 1; i <= totalDays; i++) {
+            const dayElement = document.createElement('div');
+            dayElement.innerText = i;
+            dayElement.onclick = () => openMealPlanner(i);
+
+            if (mealPlans[`${currentYear}-${currentMonth + 1}-${i}`]) {
+                dayElement.style.backgroundColor = '#66ccff';
+            }
+
+            daysContainer.appendChild(dayElement);
+        }
+
+        document.getElementById('month-name').innerText = `${getMonthName(currentMonth)} ${currentYear}`;
+    }
+
+    function getMonthName(monthIndex) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+        return months[monthIndex];
+    }
+
+    function openMealPlanner(day) {
+        const selectedDate = `${getMonthName(currentMonth)} ${day}, ${currentYear}`;
+        document.getElementById('selected-date').innerText = selectedDate;
+
+        const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
+        const mealPlan = mealPlans[dateKey] || {};
+        document.getElementById('breakfast').value = mealPlan.breakfast || '';
+        document.getElementById('lunch').value = mealPlan.lunch || '';
+        document.getElementById('dinner').value = mealPlan.dinner || '';
+        document.getElementById('evening-snacks').value = mealPlan.eveningSnacks || '';
+
+        document.getElementById('breakfast-img').value = "";
+        document.getElementById('lunch-img').value = "";
+        document.getElementById('dinner-img').value = "";
+        document.getElementById('evening-snacks-img').value = "";
+
+        document.getElementById('meal-planner-popup').style.display = 'flex';
+    }
+
+    function closePopup() {
+        document.getElementById('meal-planner-popup').style.display = 'none';
+    }
+
+    function previewImage(mealType) {
+        const fileInput = document.getElementById(`${mealType}-img`);
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const preview = document.createElement('img');
+            preview.src = event.target.result;
+            preview.classList.add('meal-image-preview');
+            document.getElementById(`${mealType}-img`).parentElement.appendChild(preview);
+        };
+        if (fileInput.files && fileInput.files[0]) {
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function saveMealPlan() {
+        const breakfast = document.getElementById('breakfast').value;
+        const lunch = document.getElementById('lunch').value;
+        const dinner = document.getElementById('dinner').value;
+        const eveningSnacks = document.getElementById('evening-snacks').value;
+
+        const selectedDate = document.getElementById('selected-date').innerText.split(' ')[1];
+        const day = parseInt(selectedDate);
+        const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
+
+        mealPlans[dateKey] = {
+            breakfast,
+            lunch,
+            dinner,
+            eveningSnacks
+        };
+
+        alert(`Meal plan for ${document.getElementById('selected-date').innerText} saved!`);
+        closePopup();
+        renderCalendar();
+    }
+
+    window.onload = function () {
+        populateYearOptions();
+        renderCalendar();
+    };
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meal Planner Timetable</title>
+    <style>
+        h1 {
+            font-size: 36px;
+            color: #000;
+            text-align: center;
+            margin-top: 30px;
+            background: linear-gradient(to right, #ff66b2, #66ccff);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .calendar-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .calendar {
+            background-color: #ffffff;
+            border-radius: 50px;
+            padding: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            background-image: url('https://www.peanutbutterandfitness.com/wp-content/uploads/2023/07/Healthy-Weekly-Meal-Plan-Recipes-7.9.23-1.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(100%);
+            width: 100%;
+        }
+
+        .calendar .month-selector {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar .month {
+            font-size: 28px;
+            text-align: center;
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+
+        .calendar .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar .days div {
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .calendar .days div:hover {
+            background-color: #1a1aff;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .calendar .days div.today {
+            background-color: #ff0066;
+            color: white;
+            font-weight: bold;
+        }
+
+        .meal-planner-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .meal-planner-popup .popup-content {
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .meal-planner-popup .popup-content h2 {
+            color: #ff5500;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .meal-planner-popup .popup-content input,
+        .meal-planner-popup .popup-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #66ccff;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.1s;
+        }
+
+        .meal-planner-popup .popup-content input:focus,
+        .meal-planner-popup .popup-content textarea:focus {
+            border-color: #ff66b2;
+            outline: none;
+        }
+
+        .meal-planner-popup .popup-content button {
+            background-color: #33cc33;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .meal-planner-popup .popup-content button:hover {
+            background-color: #ff3300;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ff3300;
+        }
+
+        .meal-image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .gif-container {
+            max-width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .gif-container img {
+            width: 300px;
+            height: auto;
+            display: block;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<h1>MEAL PLANNER TIMETABLE</h1>
+
+<div class="calendar-container">
+    <div class="calendar">
+        <div class="month-selector">
+            <select id="month-select" onchange="changeMonth()">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+            <select id="year-select" onchange="changeYear()"></select>
+        </div>
+        <div class="month" id="month-name">March</div>
+        <div class="days"></div>
+    </div>
+
+    <div class="gif-container">
+        <img src="https://media4.giphy.com/media/B14P2P1KRAlcdx77UD/200w.gif?cid=6c09b9522qcyukrltdw1ase769gnpa6z9zncwkbmkfxn0cr7&ep=v1_gifs_search&rid=200w.gif&ct=g" alt="Meal GIF">
+    </div>
+</div>
+
+<footer>
+    <p>&copy; Recipe Reviews | <a href="#">Privacy Policy</a></p>
+</footer>
+
+<!-- Popup -->
+<div id="meal-planner-popup" class="meal-planner-popup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">×</span>
+        <h2>Meal Planner for <span id="selected-date"></span></h2>
+
+        <div><strong>🍳 BREAKFAST:</strong></div>
+        <input type="text" id="breakfast" placeholder="Enter Breakfast">
+        <input type="file" id="breakfast-img" accept="image/*" onchange="previewImage('breakfast')">
+
+        <div><strong>🍔 LUNCH:</strong></div>
+        <input type="text" id="lunch" placeholder="Enter Lunch">
+        <input type="file" id="lunch-img" accept="image/*" onchange="previewImage('lunch')">
+
+        <div><strong>🍩 EVENING SNACKS:</strong></div>
+        <input type="text" id="evening-snacks" placeholder="Enter Evening Snacks">
+        <input type="file" id="evening-snacks-img" accept="image/*" onchange="previewImage('evening-snacks')">
+
+        <div><strong>🍲 DINNER:</strong></div>
+        <input type="text" id="dinner" placeholder="Enter Dinner">
+        <input type="file" id="dinner-img" accept="image/*" onchange="previewImage('dinner')">
+
+        <button onclick="saveMealPlan()">Save Meal Plan</button>
+    </div>
+</div>
+
+<script>
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let mealPlans = {};
+
+    function populateYearOptions() {
+        const yearSelect = document.getElementById('year-select');
+        const startYear = 2025;
+        const endYear = 2035;
+        yearSelect.innerHTML = '';
+        for (let year = startYear; year <= endYear; year++) {
+            let option = document.createElement('option');
+            option.value = year;
+            option.innerText = year;
+            if (year === currentYear) option.selected = true;
+            yearSelect.appendChild(option);
+        }
+    }
+
+    function changeMonth() {
+        currentMonth = parseInt(document.getElementById('month-select').value);
+        renderCalendar();
+    }
+
+    function changeYear() {
+        currentYear = parseInt(document.getElementById('year-select').value);
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        const daysContainer = document.querySelector('.calendar .days');
+        daysContainer.innerHTML = '';
+
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+        const totalDays = daysInMonth[currentMonth];
+
+        daysOfWeek.forEach(day => {
+            const dayElement = document.createElement('div');
+            dayElement.innerText = day;
+            dayElement.style.fontWeight = 'bold';
+            dayElement.style.color = '#ff66b2';
+            daysContainer.appendChild(dayElement);
+        });
+
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            const blankDay = document.createElement('div');
+            daysContainer.appendChild(blankDay);
+        }
+
+        for (let i = 1; i <= totalDays; i++) {
+            const dayElement = document.createElement('div');
+            dayElement.innerText = i;
+            dayElement.onclick = () => openMealPlanner(i);
+
+            if (mealPlans[`${currentYear}-${currentMonth + 1}-${i}`]) {
+                dayElement.style.backgroundColor = '#66ccff';
+            }
+
+            daysContainer.appendChild(dayElement);
+        }
+
+        document.getElementById('month-name').innerText = `${getMonthName(currentMonth)} ${currentYear}`;
+    }
+
+    function getMonthName(monthIndex) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+        return months[monthIndex];
+    }
+
+    function openMealPlanner(day) {
+        const selectedDate = `${getMonthName(currentMonth)} ${day}, ${currentYear}`;
+        document.getElementById('selected-date').innerText = selectedDate;
+
+        const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
+        const mealPlan = mealPlans[dateKey] || {};
+        document.getElementById('breakfast').value = mealPlan.breakfast || '';
+        document.getElementById('lunch').value = mealPlan.lunch || '';
+        document.getElementById('dinner').value = mealPlan.dinner || '';
+        document.getElementById('evening-snacks').value = mealPlan.eveningSnacks || '';
+
+        document.getElementById('breakfast-img').value = "";
+        document.getElementById('lunch-img').value = "";
+        document.getElementById('dinner-img').value = "";
+        document.getElementById('evening-snacks-img').value = "";
+
+        document.getElementById('meal-planner-popup').style.display = 'flex';
+    }
+
+    function closePopup() {
+        document.getElementById('meal-planner-popup').style.display = 'none';
+    }
+
+    function previewImage(mealType) {
+        const fileInput = document.getElementById(`${mealType}-img`);
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const preview = document.createElement('img');
+            preview.src = event.target.result;
+            preview.classList.add('meal-image-preview');
+            document.getElementById(`${mealType}-img`).parentElement.appendChild(preview);
+        };
+        if (fileInput.files && fileInput.files[0]) {
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function saveMealPlan() {
+        const breakfast = document.getElementById('breakfast').value;
+        const lunch = document.getElementById('lunch').value;
+        const dinner = document.getElementById('dinner').value;
+        const eveningSnacks = document.getElementById('evening-snacks').value;
+
+        const selectedDate = document.getElementById('selected-date').innerText.split(' ')[1];
+        const day = parseInt(selectedDate);
+        const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
+
+        mealPlans[dateKey] = {
+            breakfast,
+            lunch,
+            dinner,
+            eveningSnacks
+        };
+
+        alert(`Meal plan for ${document.getElementById('selected-date').innerText} saved!`);
+        closePopup();
+        renderCalendar();
+    }
+
+    window.onload = function () {
+        populateYearOptions();
+        renderCalendar();
+    };
+</script>
+
+</body>
+</html>
