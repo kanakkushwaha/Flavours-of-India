@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flavours of India - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Dancing+Script&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: url('https://images.ctfassets.net/3s5io6mnxfqz/6ZImCEzx6UuvuKaAiZEDDN/50479ee4a0902deb4eb1bab720ce248a/image1.jpg') no-repeat center center/cover;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .header-title {
+      font-size: 3rem;
+      color: white;
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+    }
+
+    .welcome p {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 1.5;
+      color: #333;
+      margin: 20px;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap');
+
+    .category {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      color: #2c3e50;
+      padding: 25px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s ease-in-out;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .category::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 20%, transparent 80%);
+      animation: shine 3s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .category:hover {
+      transform: scale(1.07);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(135deg, #eb35ff 0%, #f5576c 100%);
+      color: #ffffff;
+      font-family: 'Pacifico', cursive;
+      font-size: 1.5rem;
+    }
+
+    .try-today {
+      background: #f5f5dc;
+      padding: 40px;
+      text-align: center;
+      border-radius: 15 px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      margin: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .try-today h2 {
+      color: #e65100;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .recipe-card {
+      display: inline-block;
+      background: linear-gradient(135deg, #ffcc80, #ffb74d);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0, 0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      margin: 10px;
+      width: 250px;
+    }
+
+    .recipe-card img {
+      width: 100%;
+      height: 150px;
+      border-radius: 10px;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .recipe-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .recipe-card:hover img {
+      transform : scale(1.1);
+    }
+
+    .recipe-details {
+      display: none;
+      margin-top: 10px;
+    }
+    .vegan-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.vegan-btn {
+  background: linear-gradient(to right, #a8e063, #56ab2f);
+  border: none;
+  color: white;
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.vegan-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 128, 0, 0.4);
+}
+
+.vegan-icon {
+  height: 24px;
+  width: 24px;
+}
+
+    .name-container {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      color: #4A90E2;
+      transition: transform 0.3s, color 0.3s;
+      cursor: pointer;
+    }
+
+    .name:hover {
+      transform: scale(1.1);
+      color: #D50000;
+    }
+
+    .button {
+      background: #ff9800;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background: #e65100;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="header-title">Flavours of India</h1>
+</header>
+
+<!-- 🧭 Navigation Bar Start -->
+<nav style="display: flex; justify-content: center; background-color: #ffcc80; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+  <a href="calculator.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">Nutrition Calculator</a>
+  <a href="food.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">RecipeMatch</a>
+  <a href="tips.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">Any tips?</a>
+  <a href="review.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">REVIEWS</a>
+  <a href="calm.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">Food Calender</a>
+  <a href="desserts.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">DESSERT DELIGHT</a>
+  <a href="Calm2.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">SUBMIT YOUR RECIPIES</a>
+  <a href="contact.html" style="margin: 0 15px; text-decoration: none; color: #333; font-weight: bold;">Contact</a>
+  
+</nav>
+<!-- 🧭 Navigation Bar End -->
+
+  </header>
+
+  <section class="welcome">
+    <p>
+
+      🔥 Unleash the flavors of ancient spices and modern twists! 🌿🍛  
+      🍤 Dive into the world of regional delicacies that will tantalize your taste buds! 🍜  
+      🍳 Perfect your cooking with step-by-step recipes and become the chef you’ve always dreamed of! 👩‍🍳👨‍🍳  
+      🎨 Experiment with ingredients, create new favorites, and surprise yourself every time! 🍔🍕</p>
+  </section>
+ 
+
+  <section class="categories">
+
+    <!-- 1. Drag & Drop Ingredients -->
+    <div style="max-width: 600px; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);">
+      <a href="drag.html" class="category" style="display: block; text-decoration: none;">
+        <img src="https://th.bing.com/th/id/OIP.vwd68MMW8OcqlXlfzFyqrgHaHa?rs=1&pid=ImgDetMain" alt="Ingredients" style="width: 100%; display: block;">
+        <div style="padding: 15px; background-color: #fff3; text-align: center; font-weight: bold; font-size: 18px; color: #000000; backdrop-filter: blur(3px);">
+          🍅🥕 Got ingredients? 🍽️💖  
+          <br>✨ <br>
+          Drag and drop them here and discover delicious recipes! 🍲🍜  
+          <br>🛒 Get creative with your kitchen! 👩‍🍳👨‍🍳  
+          <br>💥 Your next culinary adventure awaits! 🌟
+          🌟 Unleash your inner chef 
+        </div>
+      </a>
+    </div>
+    
+  
+    <!-- 2. Showcase Cooking Skills -->
+    <div style="max-width: 600px; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);">
+      <a href="put.html" class="category" style="display: block; text-decoration: none;">
+        <img src="https://th.bing.com/th/id/OIP.fNYy3GiyGvjrybh0A1bV7wHaHa?rs=1&pid=ImgDetMain" alt="Cooking Skills" style="width: 100%; display: block;">
+        <div style="padding: 15px; background-color: #fff3; text-align: center; font-weight: bold; font-size: 18px; color: #000000de; backdrop-filter: blur(3px);">
+          🍽️✨ SHOWCASE YOUR COOKING SKILLS👩‍🍳👨‍🍳  
+🎉 Share your amazing recipes & culinary creations! 🍰🍴  
+🔥 Let the kitchen magic begin! ✨🍳  
+🎨 Get creative, get cooking, & impress everyone with your skills! 💥🍕
+🌟 Master the art 
+
+        </div>
+      </a>
+    </div>
+  
+    <!-- 3. Meal Planner -->
+    <div style="max-width: 600px; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);">
+      <a href="schedule.html" class="category" style="display: block; text-decoration: none;">
+        <img src="https://static.vecteezy.com/system/resources/previews/003/047/984/large_2x/cartoon-character-sticker-with-chef-girl-cooking-free-vector.jpg" alt="Meal Planner" style="width: 100%; display: block;">
+        <div style="padding: 15px; background-color: #fff3; text-align: center; font-weight: bold; font-size: 18px; color: #000000de; backdrop-filter: blur(3px);">
+          📝 Got a lot on your plate?
+Plan your meals using our fun Meal Planner! 🥗✨
+🍽️ Stay organized and never miss a meal again!
+🌿 Make healthy choices and stay on track with your goals.
+🍴 Let’s make meal planning a breeze & your kitchen a joy!🌟  make every dish a masterpiece! 🍝🍮
+        </div>
+      </a>
+    </div>
+  
+    <!-- 4. Surprise Recipe Generator -->
+    <div style="max-width: 600px; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);">
+      <a href="index.html" class="category" style="display: block; text-decoration: none;">
+        <img src="https://th.bing.com/th/id/OIP.TqwKszNEenUra0FXbKlzTQHaHa?rs=1&pid=ImgDetMain" alt="Surprise Recipe" style="width: 100%; display: block;">
+        <div style="padding: 15px; background-color: #fff3; text-align: center; font-weight: bold; font-size: 18px; color: #000000de; backdrop-filter: blur(3px);">
+          🛒 Buy some quick groceries at the lowest prices and cook up a storm! 💸🍞
+🍽️ Find all your kitchen essentials in one place! 🛍️🍅
+🎉 Get ready to create delicious dishes without breaking the bank! 💥🍲
+🍴 Quick, easy, and affordable—just the way you like it! 🥳💚
+        </div>
+      </a>
+    </div>
+  
+    <!-- 5. Explore Indian Flavours -->
+    <div style="max-width: 600px; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);">
+      <a href="season.html" class="category" style="display: block; text-decoration: none;">
+        <img src="https://st.depositphotos.com/1793489/2321/v/450/depositphotos_23217048-stock-illustration-cartoon-vegetables-and-fruits.jpg" alt="Indian Flavours" style="width: 100%; display: block;">
+        <div style="padding: 15px; background-color: #fff3; text-align: center; font-weight: bold; font-size: 18px; color: #000000de; backdrop-filter: blur(3px);">
+          🌸 Celebrate every season with a burst of flavors! ❄️☀️🍂🌧️
+          🍓 From refreshing summer coolers to warm winter delights, we’ve got recipes for every weather! 🧋🍲
+          🎃 Embrace the taste of nature’s freshest picks with our handpicked seasonal specials! 🥦🍎🥥
+          🍽️ Let the seasons inspire your plate and your palate! 🌾👩‍🍳
+        </div>
+      </a>
+    </div>
+  
+  </section>
+  
+  <!-- Vegan Special Button -->
+  <div class="vegan-button-container">
+    <a href="vegan.html">
+      <button class="vegan-btn">
+        <img src="https://th.bing.com/th/id/OIP.jQ5muEmyBV15NqR_PMU1TQHaEo?rs=1&pid=ImgDetMain" alt="Vegan Icon" class="vegan-icon" />
+        Special Vegan Delights 🌿
+      </button>
+    </a>
+  </div>
+  
+
+  <section class="try-today">
+    <h2>🍲 Try This Today!</h2>
+    <div class="recipe-card" onclick="toggleDetails('paneer-butter-masala-details')">
+      <img src="https://www.ruchiskitchen.com/wp-content/uploads/2020/12/Paneer-butter-masala-recipe-3.jpg" alt="Paneer Butter Masala">
+      <h3>Paneer Butter Masala</h3>
+      <p>A creamy and rich dish made with paneer in a buttery tomato gravy.</p>
+      <div class="recipe-details" id="paneer-butter-masala-details">
+        <h4>Ingredients:</h4>
+        <ul>
+          <li>500g paneer, cubed</li>
+          <li>200g butter</li>
+          <li>2 onions, finely chopped</li>
+          <li>2 tomatoes, pureed</li>
+          <li>100ml cream</li>
+          <li>Spices: garam masala, cumin, coriander, turmeric</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="recipe-card" onclick="toggleDetails('matar-paneer-details')">
+      <img src="https://amritsarjunction.ca/wp-content/uploads/2022/07/Matar-Paneer.....jpg" alt="Matar Paneer">
+      <h3>Matar Paneer</h3>
+      <p>A delightful combination of green peas and paneer in a spiced tomato gravy.</p>
+      <div class="recipe-details" id="matar-paneer-details">
+        <h4>Ingredients:</h4>
+        <ul>
+          <li>200g paneer, cubed</li>
+          <li>1 cup green peas</li>
+          <li>2 tomatoes, pureed</li>
+          <li>1 onion, finely chopped</li>
+          <li>Spices: cumin, coriander, garam masala</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="recipe-card" onclick="toggleDetails('dal-makhani-details')">
+      <img src="https://myfoodstory.com/wp-content/uploads/2018/08/Dal-Makhani-New-4.jpg?fit=1200,9999" alt="Dal Makhani">
+      <h3>Dal Makhani</h3>
+      <p>A rich and creamy lentil dish, slow-cooked to perfection.</p>
+      <div class="recipe-details" id="dal-makhani-details">
+        <h4>Ingredients:</h4>
+        <ul>
+          <li>1 cup black lentils (urad dal)</li>
+          <li>1/2 cup kidney beans (rajma)</li>
+          <li>200g butter</li>
+          <li>2 tomatoes, pureed</li>
+          <li>100ml cream</li>
+          <li>Spices: cumin, garam masala, coriander</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function toggleDetails(id) {
+      const details = document.getElementById(id);
+      if (details.style.display === "none" || details.style.display === "") {
+        details.style.display = "block";
+      } else {
+        details.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
