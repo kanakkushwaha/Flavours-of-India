@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dessert Recipes 🍨</title>
+  <link rel="stylesheet" href="desserts.css">
+</head>
+<body>
+  <!-- Fun Loading Animation -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <p>Whipping up something sweet... 🍩</p>
+  </div>
+
+  <header>
+    <h1>🍰 Sweet Treats Around the World 🌍</h1>
+    <p>Tap on a dessert to explore how to make it!</p>
+  </header>
+
+  <!-- Dessert of the Day Section -->
+  <div id="dessertOfDay" class="dessert-highlight">
+    <h2>🍮 Dessert of the Day</h2>
+    <div id="dailyCard" class="card highlight"></div>
+  </div>
+
+  <main class="grid-container" id="dessertGrid">
+    <!-- Dessert cards will be injected here -->
+  </main>
+
+  <!-- Animated Category Tabs -->
+  <div class="category-tabs">
+    <button class="tab active" onclick="filterCategory('all')">All</button>
+    <button class="tab" onclick="filterCategory('no-bake')">No-Bake</button>
+    <button class="tab" onclick="filterCategory('vegan')">Vegan</button>
+    <button class="tab" onclick="filterCategory('quick')">Quick</button>
+  </div>
+
+  <!-- Modal for showing recipe details -->
+  <div id="recipeModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2 id="recipeTitle"></h2>
+      <h3>Ingredients 🧾</h3>
+      <ul id="recipeIngredients"></ul>
+      <h3>Instructions 👩‍🍳</h3>
+      <ol id="recipeSteps"></ol>
+    </div>
+  </div>
+
+  <footer>
+    <p>Made with 💛 for dessert lovers everywhere!</p>
+  </footer>
+
+  <script src="desserts.js"></script>
+</body>
+</html>
+
