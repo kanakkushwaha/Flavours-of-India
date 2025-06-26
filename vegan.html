@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vegan Recipe World</title>
+   <style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(to right, #fdfbfb, #ebedee);
+  color: #333;
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(90deg, #11998e, #38ef7d);
+  color: white;
+  text-align: center;
+  padding: 40px 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  animation: slideDown 1s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.2rem;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  background: #11998e;
+  padding: 15px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+nav a:hover {
+  background: #38ef7d;
+  transform: translateY(-3px);
+}
+
+#categories-list {
+  margin: 40px auto;
+  text-align: center;
+  max-width: 1200px;
+}
+
+#categories-list h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #11998e;
+}
+
+#categories-list ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  list-style: none;
+  padding: 0;
+}
+
+#categories-list li {
+  background: white;
+  color: #333;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+#categories-list li:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+#categories-list li img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+#categories-list li h3 {
+  padding: 15px;
+  font-size: 1.4rem;
+  background-color: #11998e;
+  color: white;
+}
+
+#recipe-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 25px;
+  width: 70%;
+  max-height: 90%;
+  overflow-y: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.6s ease;
+}
+
+
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content h3 {
+  color: #11998e;
+  margin-bottom: 15px;
+}
+
+.modal-content img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+ #recipe-modal {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      padding: 20px;
+      overflow-y: scroll;
+      z-index: 999;
+    }
+    #recipe-modal h2 {
+      margin-top: 0;
+    }
+    #close-btn, #back-btn {
+      background: crimson;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #back-btn {
+      background: #4CAF50;
+    }
+.close {
+  color: #666;
+  font-size: 30px;
+  float: right;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.close:hover {
+  color: black;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #11998e;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>Vegan Recipe Hub</h1>
+    <p>Your go-to source for delicious plant-based recipes!</p>
+  </header>
+  <div id="categories-list">
+    <h2>Choose a Recipe Category</h2>
+   
+  <ul id="category-section">
+    <li onclick="showRecipes('salads')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzW_w7zcj0HEHxnW1o53sg1Upna4ciwacusQ&s" alt="Salad">
+      <h3>Salads</h3>
+    </li>
+    <li onclick="showRecipes('pasta')">
+      <img src="https://fullofplants.com/wp-content/uploads/2023/04/quick-vegan-pasta-vegetable-stir-fry-with-ginger-and-garlic-8.jpg" alt="Pasta">
+      <h3>Pasta</h3>
+    </li>
+    <li onclick="showRecipes('desserts')">
+      <img src="https://www.eatingwell.com/thmb/Y_0DNLLFlcNyqwOg_s7oIZtX76U=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/vegan-flourless-choc-cake-1244-c273c17a5789486faa5b1e9c8ed03dc8.jpg" alt="Desserts">
+      <h3>Desserts</h3>
+    </li>
+    <li onclick="showRecipes('burgers')">
+        <img src="https://biancazapatka.com/wp-content/uploads/2020/05/veganer-bohnen-burger.jpg" alt="Burger"></a>
+        <h3>Burgers</h3>
+      </li>
+      <li onclick="showRecipes('soups')">
+        <img src="https://biancazapatka.com/wp-content/uploads/2022/10/kuerbis-suppe.jpg" alt="Soups"></a>
+        <h3>Soups</h3>
+      </li>
+      <li onclick="showRecipes('smoothies')">
+        <img src="https://veganinthefreezer.com/wp-content/uploads/2023/11/Vegan-Strawberry-Smoothie-Ready-1.jpg" alt="Smoothies"></a>
+        <h3>Smoothies</h3>
+      </li>
+       <li>
+      <li onclick="showRecipes('snacks')">
+        <img src="https://i.ytimg.com/vi/To_sVLonyr8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAFt1i-E0cpBRt-smhoFWKqXhvAYg" alt="Snacks">
+        </a>
+        <h3>Snacks</h3>
+      </li>
+      <li onclick="showRecipes('wraps')">
+        <img src="https://www.plantperks.com/wp-content/uploads/2020/02/IMG_0198-Edit.jpg" alt="Wraps"></a>
+        <h3>Wraps</h3>
+      </li>
+      <li onclick="showRecipes('smoothie_bowls')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAub5le1ofzBMu9QLqQ9_E89q6Xey7e3GXpw&s" alt="Smoothie Bowls"></a>
+        <h3>Smoothie Bowls</h3>
+      </li>
+      <li onclick="showRecipes('toasts')">
+        <img src="https://nosweatvegan.com/wp-content/uploads/2022/03/best-toast-toppings.jpg" alt="Toasts"></a>
+        <h3>Toasts</h3>
+      </li>
+      <li onclick="showRecipes('curries')">
+        <img src="https://rainbowplantlife.com/wp-content/uploads/2020/11/red2Blentil2Bcurry2Bangled2B-2B20202Bupdated2B2812Bof2B12928129-500x500.jpg" alt="Curries">
+        </a>
+        <h3>Curries</h3>
+      </li>
+      <li onclick="showRecipes('stirfry')">
+        <img src="https://www.acouplecooks.com/wp-content/uploads/2023/01/Vegan-Stir-Fry-012.jpg" alt="Stir Fry"></a>
+        <h3>Stir Fry</h3>
+      </li>
+      <li onclick="showRecipes('tacos')">
+        <img src="https://www.twospoons.ca/wp-content/uploads/2020/07/best-vegan-taco-recipe-easy-how-to-make-vegan-tacos-twospoons-5.jpg" alt="Tacos"></a>
+        <h3>Tacos</h3>
+      </li>
+      <li onclick="showRecipes('noodles')">
+        <img src="https://elavegan.com/wp-content/uploads/2020/10/eating-vegetable-stir-fry-noodles-with-chopsticks.jpg" alt="Noodles">
+        </a>
+        <h3>Noodles</h3>
+      </li>
+      <li onclick="showRecipes('cakes')">
+        <img src="https://www.homecookingadventure.com/wp-content/uploads/2022/01/raw_vegan_zebra_cake_main.jpg" alt="Cakes">
+        <h3>Cakes</h3>
+      </li>
+      <li onclick="showRecipes('pancakes')">
+        <a href="pancakes.html">
+        <img src="https://cdn.loveandlemons.com/wp-content/uploads/2023/02/vegan-pancakes.jpg" alt="Pancakes"></a>
+        <h3>Pancakes</h3>
+      </li>
+      <li onclick="showRecipes('vegan_cheese')">
+        <a href="vegancheese.html">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyUkQRnXhovdwL67waITkltTx7I8SFsI67HA&s" alt="Vegan Cheese"></a>
+        <h3>Vegan Cheese</h3>
+      </li>
+  </ul>
+
+  <section id="recipe-list">
+    <button id="back-btn" onclick="goBack()">← Back to Categories</button>
+    <h2 id="recipe-list-title"></h2>
+    <ul id="recipe-items"></ul>
+  </section>
+
+  <!-- Recipe Modal -->
+  <div id="recipe-modal">
+    <button id="close-btn" onclick="closeModal()">Close</button>
+    <h2 id="recipe-title"></h2>
+    <img id="recipe-image" src="" alt="" style="width:100%;max-height:250px;object-fit:cover;border-radius:10px;">
+    <p id="recipe-description"></p>
+    <h3>Ingredients:</h3>
+    <ul id="recipe-ingredients"></ul>
+    <h3>Instructions:</h3>
+    <p id="recipe-instructions"></p>
+  </div>
+
+  <script>
+    const recipeData = {
+      salads: [
+         {
+           title: "Chickpea Avocado Salad",
+           image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRILYrF75qLhL_1dfwuj5lVKabpLSBzOZvgRA&s",
+           description: "A fresh and filling salad with chickpeas and creamy avocado.",
+           ingredients: ["1 cup chickpeas", "1 avocado", "Lemon juice", "Salt", "Pepper"],
+           instructions: "1. Mix all ingredients in a bowl. 2. Add lemon juice. 3. Season to taste. 4. Chill and serve."
+           
+         },
+         {
+           title: "Moong Sprouts Salad",
+           image: "https://www.sharmispassions.com/wp-content/uploads/2021/03/MoongSproutsSalad2.jpg",
+           description: "A protein-rich salad with sprouted green gram, onions, and tomatoes.",
+           ingredients: ["1 cup sprouted moong", "1 onion", "1 tomato", "Green chili", "Lemon juice", "Salt"],
+           instructions: "1. Rinse sprouts. 2. Chop veggies. 3. Mix with sprouts. 4. Add salt, lemon, and chili."
+           
+         },
+         {
+           title: "Cucumber Peanut Salad",
+           image: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/Chandrima_Sarkar/Peanut_Cucumber_Salad_Recipe_2.jpg",
+           description: "A crunchy salad combining cucumbers and roasted peanuts with a dash of lime.",
+           ingredients: ["1 cucumber", "1/4 cup peanuts", "Coriander", "Lemon juice", "Salt"],
+           instructions: "1. Chop cucumber. 2. Roast peanuts. 3. Toss together. 4. Add coriander, lemon, and salt."
+           
+         },
+         {
+           title: "Carrot Coconut Salad",
+           image: "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2009/12/13/1/FNM_020110-Weekend-008_s4x3.jpg.rend.hgtvcom.616.462.suffix/1383173434397.webp",
+           description: "South Indian style salad with grated carrots and fresh coconut.",
+           ingredients: ["1 carrot", "2 tbsp grated coconut", "Mustard seeds", "Curry leaves", "Salt"],
+           instructions: "1. Grate carrots. 2. Add coconut and salt. 3. Temper mustard seeds and curry leaves. 4. Mix everything."
+           
+         },
+         {
+           title: "Corn Chaat Salad",
+           image: "https://i.ytimg.com/vi/oO56X3bWx6A/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA5SGuaPEdqrvN443i1kQluuKUtZQ",
+           description: "A sweet and spicy corn salad with Indian spices and lime.",
+           ingredients: ["1 cup boiled corn", "Chaat masala", "Onion", "Tomato", "Lemon juice", "Coriander"],
+           instructions: "1. Mix corn with chopped veggies. 2. Add spices and lemon. 3. Garnish with coriander. 4. Serve chilled."
+           
+         },
+         {
+           title: "Kachumber Salad",
+           image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/03/kachumber-salad-recipe.jpg",
+           description: "A traditional Indian chopped salad with cucumber, tomato, and onion.",
+           ingredients: ["1 cucumber", "1 tomato", "1 onion", "Salt", "Lemon juice", "Coriander"],
+           instructions: "1. Finely chop all veggies. 2. Mix in a bowl. 3. Add salt and lemon juice. 4. Top with coriander."
+           
+         },
+         {
+           title: "Beetroot Sesame Salad",
+           image: "https://i0.wp.com/delalicious.com/wp-content/uploads/2017/10/20171023_141625-01.jpeg?fit=1120%2C996&ssl=1",
+           description: "Earthy beetroot paired with toasted sesame seeds and lemon.",
+           ingredients: ["1 beetroot", "1 tsp sesame seeds", "Lemon juice", "Salt", "Green chili"],
+           instructions: "1. Grate beetroot. 2. Toast sesame seeds. 3. Mix with lemon, salt, and chili. 4. Serve fresh."
+           
+         },
+         {
+           title: "Raw Mango Salad",
+           image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMcEHy3NfzapWRlajjTvFWdlpyPO_xfDzMtQ&s",
+           description: "A tangy raw mango salad with Indian spices and crunch.",
+           ingredients: ["1 raw mango", "Chili powder", "Salt", "Roasted peanuts", "Coriander"],
+           instructions: "1. Grate mango. 2. Mix with salt and chili. 3. Add peanuts and coriander. 4. Serve chilled."
+           
+         },
+         {
+           title: "Mixed Vegetable Slaw",
+          image: "https://glutenfreeandmore.com/wp-content/uploads/2018/06/Mixed-Vegetable-Slaw-2.jpg",
+          description: "A colorful mix of shredded cabbage, carrot, and bell pepper.",
+          ingredients: ["1/2 cup cabbage", "1/2 carrot", "1/4 bell pepper", "Lemon juice", "Salt", "Pepper"],
+          instructions: "1. Shred all veggies. 2. Mix in a bowl. 3. Season with salt, pepper, and lemon. 4. Toss and serve."
+       },
+       {
+         title: "Sprouted Kala Chana Salad",
+         image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc0GzuIXhdAtAY0EPGmEd3iyUBLAArBQpXVQ&s",
+         description: "A wholesome salad made with sprouted black chickpeas and fresh veggies.",
+         ingredients: ["1 cup sprouted kala chana", "Onion", "Tomato", "Lemon juice", "Coriander", "Salt"],
+         instructions: "1. Boil chana lightly. 2. Mix with chopped onion and tomato. 3. Add salt, lemon, and coriander. 4. Serve."
+         
+       },
+        {
+          title: "Quinoa Kale Salad",
+          image: "https://www.eatingwell.com/thmb/H8ldmJ7nz2tNtBsYHNYLTpGbRKc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/kale-and-quinoa-salad-with-lemon-dressing-50e7ff379b924df8ab3dd665e2efefb5.jpg",
+          description: "Nutritious and vibrant salad with quinoa and kale.",
+          ingredients: ["1 cup cooked quinoa", "1 cup chopped kale", "Olive oil", "Salt", "Cherry tomatoes"],
+          instructions: "1. Toss quinoa and kale. 2. Add olive oil. 3. Mix with tomatoes. 4. Let sit 10 min before serving."
+        },
+        ],
+      pasta: [
+        {
+          title: "Vegan Garlic Pasta",
+          image: "https://minimalistbaker.com/wp-content/uploads/2014/03/Creamy-Garlic-Pasta-with-Roasted-Tomatoes-vegan.jpg",
+          description: "Creamy garlic-infused vegan pasta.",
+          ingredients: ["200g pasta", "4 cloves garlic", "1 tbsp olive oil", "Salt", "Oat cream"],
+          instructions: "1. Boil pasta. 2. Sauté garlic in oil. 3. Add cream and salt. 4. Mix with pasta."
+        },
+        {
+          title: "Spicy Tomato Basil Pasta",
+          image: "https://frommybowl.com/wp-content/uploads/2022/07/Spicy_Tomato_Basil_Pasta_Vegan_FromMyBowl-12.jpg",
+          description: "A tangy and herby pasta tossed in spicy tomato-basil sauce.",
+          ingredients: ["200g pasta", "3 tomatoes", "Fresh basil", "Garlic", "Chili flakes", "Olive oil", "Salt"],
+          instructions: "1. Boil pasta. 2. Sauté garlic, add tomatoes. 3. Add chili flakes and basil. 4. Mix pasta and serve."
+          },
+          {
+            title: "Creamy Coconut Curry Pasta",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBPpW_wFXZL9kf5SYogR_5pdTDc2rP24IsKg&s",
+            description: "Indian-style pasta in a rich, creamy coconut curry sauce.",
+            ingredients: ["200g pasta", "1 cup coconut milk", "1 onion", "1 tomato", "Curry powder", "Garlic"],
+            instructions: "1. Cook pasta. 2. Sauté onion, garlic, tomato. 3. Add curry powder, coconut milk. 4. Mix pasta and simmer."
+           
+          },
+          {
+            title: "Avocado Spinach Pasta",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnTymDnXWHelztX2F0B1Mxs6n9GxCSy902zQ&s",
+            description: "A creamy and nutrient-packed pasta with avocado and spinach sauce.",
+            ingredients: ["200g pasta", "1 avocado", "1 cup spinach", "Garlic", "Lemon juice", "Salt"],
+            instructions: "1. Boil pasta. 2. Blend avocado, spinach, garlic, lemon. 3. Mix with pasta. 4. Serve with pepper."
+           
+          },
+          {
+            title: "Masala Penne Pasta",
+            image: "https://acookwithin.com/wp-content/uploads/2020/05/masala-pasta.jpg",
+            description: "Indian twist on pasta with onion-tomato masala and herbs.",
+            ingredients: ["200g penne", "1 onion", "2 tomatoes", "Garlic", "Garam masala", "Turmeric", "Salt"],
+            instructions: "1. Cook pasta. 2. Make masala base with spices. 3. Mix with pasta. 4. Garnish and serve hot."
+           
+          },
+          {
+            title: "Pumpkin Sage Pasta",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLkJ8ZL1DaHDJz1r8maylluVyqZaXBNHHpWw&s",
+            description: "Smooth and savory pumpkin sauce pasta with a hint of sage.",
+            ingredients: ["200g pasta", "1 cup pumpkin puree", "Garlic", "Sage", "Olive oil", "Salt", "Pepper"],
+            instructions: "1. Cook pasta. 2. Sauté garlic and sage. 3. Add pumpkin puree. 4. Mix with pasta and season."
+           
+          },
+          {
+            title: "Peanut Butter Noodles",
+            image: "https://eatwithclarity.com/wp-content/uploads/2023/06/peanut-butter-noodles-5.jpg",
+            description: "Creamy and spicy peanut butter noodles with Asian flair.",
+            ingredients: ["200g noodles", "2 tbsp peanut butter", "Soy sauce", "Chili flakes", "Garlic", "Lemon juice"],
+            instructions: "1. Cook noodles. 2. Mix peanut sauce. 3. Toss noodles with sauce. 4. Serve warm or chilled."
+           
+          },
+          {
+            title: "Pesto Pasta with Cashews",
+            image: "https://i0.wp.com/www.redwinedragons.com/wp-content/uploads/2021/08/easy-pesto-chicken-pasta-dinner-1.jpeg?fit=800%2C533&ssl=1",
+            description: "A dairy-free pesto made with basil and cashews, tossed in pasta.",
+            ingredients: ["200g pasta", "1 cup basil", "1/4 cup cashews", "Garlic", "Olive oil", "Salt"],
+            instructions: "1. Boil pasta. 2. Blend pesto ingredients. 3. Toss pasta in pesto. 4. Serve garnished with herbs."
+           
+          },
+          {
+           title: "Roasted Veggie Pasta",
+           image: "https://www.kimscravings.com/wp-content/uploads/2017/08/roasted-veggie-pasta-20.jpg",
+           description: "Colorful roasted vegetables tossed with whole wheat pasta.",
+           ingredients: ["200g pasta", "Bell peppers", "Zucchini", "Onion", "Olive oil", "Oregano", "Salt"],
+           instructions: "1. Roast veggies. 2. Cook pasta. 3. Mix together with herbs. 4. Drizzle olive oil and serve."
+          },
+          {
+           title: "Lemon Garlic Pasta",
+           image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHXPmeYU5IMjCUGtToqsH23UaaR2yDb_fL6A&s",
+           description: "Zesty lemon and garlic tossed in olive oil with pasta.",
+           ingredients: ["200g pasta", "Garlic", "Lemon zest and juice", "Chili flakes", "Olive oil", "Parsley"],
+          instructions: "1. Boil pasta. 2. Sauté garlic in oil. 3. Add lemon juice and zest. 4. Toss pasta and garnish."
+          },
+          {
+           title: "Tofu Broccoli Stir-Fry Noodles",
+           image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREBVQKily7De4PUUoM7hDf0dE20tVfbXylLg&s",
+          description: "A filling noodle bowl with tofu and broccoli in soy-garlic sauce.",
+          ingredients: ["200g noodles", "1/2 block tofu", "1 cup broccoli", "Soy sauce", "Garlic", "Chili flakes"],
+          instructions: "1. Cook noodles. 2. Stir-fry tofu and broccoli. 3. Add soy-garlic sauce. 4. Mix with noodles."
+           
+          },
+          ],
+      desserts: [
+            {
+              title: "Vegan Mango Kheer",
+              image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRElJrx9dd2FQW0z2pzRVa9o6SyenmVMsZSpw&s",
+              description: "A tropical twist on traditional rice pudding with fresh mango.",
+              ingredients: ["1 cup rice", "2 cups almond milk", "1 mango", "Cardamom", "Jaggery"],
+              instructions: "1. Cook rice in almond milk. 2. Add jaggery and cardamom. 3. Cool slightly. 4. Mix in mango pulp and chill."
+             
+            },
+
+            {
+              title: "Coconut Ladoo",
+              image: "https://spicecravings.com/wp-content/uploads/2020/09/Coconut-Ladoo-Featured.jpg",
+              description: "Quick and sweet ladoos made with coconut and jaggery.",
+              ingredients: ["2 cups desiccated coconut", "1 cup jaggery", "Cardamom powder", "Almond milk"],
+              instructions: "1. Melt jaggery. 2. Add coconut and cardamom. 3. Stir until thick. 4. Roll into balls and cool."
+             
+            },
+            {
+              title: "Vegan Chocolate Modak",
+              image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM2hW9gCXiyEHUL_pXrursREVKRhVF8JOaVw&s",
+              description: "Ganesh Chaturthi favorite made vegan and chocolatey.",
+              ingredients: ["1 cup rice flour", "1/2 cup dark chocolate", "Coconut", "Almond milk", "Jaggery"],
+              instructions: "1. Prepare chocolate-coconut filling. 2. Make rice flour dough. 3. Fill and shape modaks. 4. Steam and serve."
+            },
+            {
+               title: "Almond Milk Rasmalai",
+               image: "https://myheartbeets.com/wp-content/uploads/2019/02/paleo-rasmalai.jpg",
+               description: "Soft vegan rasmalai discs soaked in spiced almond milk.",
+                ingredients: ["Almond milk", "Cashew paste", "Sugar", "Cardamom", "Saffron", "Semolina"],
+               instructions: "1. Make semolina discs. 2. Simmer almond milk with spices. 3. Soak discs in milk. 4. Chill and serve."
+            },
+            {
+               title: "Vegan Gajar Halwa",
+               image: "https://holycowvegan.net/wp-content/uploads/2008/10/gajar-ka-halwa.jpg",
+               description: "A classic Indian dessert made with carrots and coconut milk.",
+               ingredients: ["2 cups grated carrots", "1 cup coconut milk", "Jaggery", "Cardamom", "Cashews"],
+               instructions: "1. Sauté carrots. 2. Add coconut milk and jaggery. 3. Simmer till thick. 4. Garnish with nuts."
+             
+            },
+            {
+               title: "Dates and Nuts Energy Bites",
+               image: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/reshmaseetharam/Date_and_nut_energy_bites.jpg",
+               description: "Naturally sweetened, no-cook dessert balls with dates and nuts.",
+               ingredients: ["1 cup dates", "1/2 cup almonds", "1/2 cup walnuts", "Cardamom"],
+               instructions: "1. Blend dates and nuts. 2. Add cardamom. 3. Shape into balls. 4. Chill before serving."
+             
+            },
+            {
+               title: "Vegan Kaju Katli",
+               image: "https://holycowvegan.net/wp-content/uploads/2013/11/vegan-kaju-katli-8-1.jpg",
+               description: "Melt-in-mouth cashew fudge with no dairy!",
+               ingredients: ["1 cup cashew powder", "1/2 cup sugar", "Water", "Cardamom"],
+               instructions: "1. Make sugar syrup. 2. Add cashew powder. 3. Stir into dough. 4. Roll and cut into diamonds."
+            },
+            {
+              title: "Banana Halwa",
+              image: "https://exotikalhub.com/wp-content/uploads/2021/11/kerala-banana-halwa-2.jpg",
+              description: "Sticky sweet banana dessert from South India made vegan.",
+              ingredients: ["2 ripe bananas", "1/2 cup jaggery", "Coconut oil", "Cardamom", "Cashews"],
+              instructions: "1. Mash bananas. 2. Cook with jaggery and cardamom. 3. Add coconut oil. 4. Garnish and cool."
+             
+            },
+            {
+              title: "Sabudana Coconut Pudding",
+              image: "https://www.ruchikrandhap.com/wp-content/uploads/2018/07/Sago-Coconut-Pudding12-1.jpg",
+              description: "Chilled sago pearls in creamy coconut milk.",
+              ingredients: ["1/2 cup sabudana", "2 cups coconut milk", "Jaggery", "Cardamom", "Saffron"],
+              instructions: "1. Soak sabudana. 2. Cook with coconut milk. 3. Add jaggery and cardamom. 4. Chill before serving."
+             
+            },
+            {          
+              title: "Vegan Besan Barfi",
+              image: "https://www.veganricha.com/wp-content/uploads/2015/11/vegan-besan-burfi-with-condensed-non-dairy-milk-10672.jpg",
+              description: "Rich and crumbly chickpea flour barfi made with coconut oil.",
+              ingredients: ["1 cup besan", "1/2 cup coconut oil", "1/2 cup jaggery", "Cardamom"],
+              instructions: "1. Roast besan in coconut oil. 2. Add jaggery. 3. Stir until thick. 4. Set and cut into pieces."
+             
+            },
+            {
+              title: "Chocolate Avocado Mousse",
+              image: "https://loveonetoday.com/wp-content/uploads/Love-One-Today-Avocado-Dark-Chocolate-Mousse-featured.jpg",
+              description: "Smooth, creamy, and guilt-free chocolate dessert.",
+              ingredients: ["2 ripe avocados", "3 tbsp cocoa powder", "2 tbsp maple syrup", "1 tsp vanilla"],
+              instructions: "1. Blend all ingredients. 2. Chill for 1 hour. 3. Serve with berries."
+            },
+            ],
+            burgers: [
+            {
+            title: "Spicy Chickpea Burger",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5YHw1fuT1qnKYTlfidpfVwxgxIwRZJJN7fQ&s",
+            description: "A protein-packed patty with bold spices and herbs.",
+            ingredients: ["1 cup chickpeas", "1 onion", "Garlic", "Chili powder", "Coriander", "Bread crumbs"],
+            instructions: "1. Mash chickpeas. 2. Mix with spices, garlic, onion, and crumbs. 3. Shape into patties. 4. Pan-fry and serve."
+           },
+           {
+           title: "Sweet Potato Black Bean Burger",
+           image: "https://minimalistbaker.com/wp-content/uploads/2015/01/Sweet-Potato-Black-Bean-Burger-SQUARE.jpg",
+           description: "Sweet, smoky, and satisfying vegan burger.",
+           ingredients: ["1 sweet potato", "1/2 cup black beans", "Oats", "Cumin", "Salt"],
+           instructions: "1. Mash sweet potato and beans. 2. Add oats and spices. 3. Shape patties. 4. Grill and serve with toppings."
+             
+           },
+           {
+           title: "Mushroom Masala Burger",
+           image: "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-265472_12-860a6ba.jpg",
+           description: "Savory burger with Indian-spiced mushrooms.",
+           ingredients: ["1 cup mushrooms", "Onion", "Garam masala", "Bread crumbs", "Garlic"],
+           instructions: "1. Sauté mushrooms and onion. 2. Add masala and garlic. 3. Mix with crumbs. 4. Form patties and cook."
+             
+           },
+           {
+           title: "Lentil Beetroot Burger",
+           image: "https://theveganlarder.com/wp-content/uploads/2022/01/Beetroot-lentil-burger-1x1-1-of-1.jpg",
+           description: "Vibrant burger with earthy beets and protein-rich lentils.",
+           ingredients: ["1 cup lentils", "1 beetroot", "Cumin", "Bread crumbs", "Onion"],
+           instructions: "1. Cook lentils and mash with grated beet. 2. Add spices and crumbs. 3. Shape and grill patties. 4. Serve with sauce."
+             
+           },
+           {
+             title: "Tofu Tikka Burger",
+             image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZlCFka-M6bRLYRpML1y67Ri7xpLi3lmX7Cg&s",
+            description: "Fusion burger with grilled tikka-style tofu.",
+            ingredients: ["Tofu cubes", "Tikka masala", "Onion", "Capsicum", "Lemon juice"],
+            instructions: "1. Marinate tofu in tikka spices. 2. Grill until golden. 3. Assemble in bun with veggies. 4. Serve hot."
+             
+           },
+           {
+            title: "Paneer-Style Vegan Burger",
+            image: "https://i.ytimg.com/vi/z3ujmh7L1Is/maxresdefault.jpg",
+            description: "Dairy-free twist on classic paneer burgers using tofu.",
+             ingredients: ["Tofu", "Turmeric", "Chili powder", "Besan", "Ginger-garlic paste"],
+            instructions: "1. Mash tofu with spices. 2. Bind with besan. 3. Form patties. 4. Pan-fry and serve with mint chutney."
+             
+           },
+           {
+             title: "Aloo Patty Burger",
+             image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_IJBBu18pVLNK-swhCdWCgZ0Ot8naAkkJtg&s",
+             description: "Classic potato patty burger with desi flair.",
+             ingredients: ["Boiled potatoes", "Chili flakes", "Garam masala", "Coriander", "Bread crumbs"],
+             instructions: "1. Mash potatoes with spices. 2. Add crumbs. 3. Shape and fry patties. 4. Serve with vegan mayo."
+             
+           },
+           {
+             title: "Rajma Burger",
+             image: "https://i.ytimg.com/vi/db-ikX_9yGU/maxresdefault.jpg",
+             description: "Kidney bean burger loaded with flavor and protein.",
+             ingredients: ["1 cup rajma", "Onion", "Cumin", "Ginger", "Bread crumbs"],
+             instructions: "1. Mash cooked rajma with spices. 2. Mix with onion and crumbs. 3. Shape patties and cook. 4. Serve with tomato salsa."
+           },
+           {
+            title: "Millet Veggie Burger",
+            image: "https://anthonysgoods.com/cdn/shop/articles/DSC_0066.jpg?v=1611014028",
+            description: "Healthy grain burger with mixed veggies.",
+            ingredients: ["Cooked millet", "Carrot", "Beans", "Garam masala", "Besan"],
+            instructions: "1. Mix millet with grated veggies and spices. 2. Bind with besan. 3. Shape patties. 4. Grill and serve."
+           },
+           {
+            title: "Spinach Corn Burger",
+            image: "https://jabalpur.shop.bhanufarms.com/wp-content/uploads/2020/04/Spinach-Corn-Burger-patty-60g80mm.jpeg",
+            description: "Creamy corn and spinach burger with Indian spices.",
+            ingredients: ["Spinach", "Sweet corn", "Garlic", "Cumin", "Bread crumbs"],
+            instructions: "1. Cook spinach and corn. 2. Add garlic and cumin. 3. Mix with crumbs. 4. Form patties and fry lightly."
+             
+           }
+           ],
+      soups: [
+             {
+               title: "Lentil Vegetable Soup",
+               image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUkjCxu3d_7PvAch0gm9lyG3fEhppNKDX5SA&s",
+               description: "Hearty soup made with lentils and assorted vegetables.",
+               ingredients: ["1 cup lentils", "1 carrot", "1 onion", "1 tomato", "Salt", "Pepper"],
+               instructions: "1. Sauté chopped vegetables. 2. Add lentils and water. 3. Simmer for 30 minutes. 4. Add salt and pepper. 5. Blend if desired. 6. Serve hot."
+               },
+               {
+               title: "Carrot Ginger Soup",
+               image: "https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/10/Carrot-Ginger-Soup-main.jpg",
+               description: "Smooth, spicy, and sweet soup to warm your soul.",
+               ingredients: ["4 carrots", "1 inch ginger", "1 onion", "Vegetable broth", "Salt"],
+               instructions: "1. Sauté onion and ginger. 2. Add chopped carrots. 3. Pour in broth and simmer. 4. Blend until smooth. 5. Season with salt. 6. Garnish and serve."
+                 
+               },
+               {
+                 title: "Tomato Basil Soup",
+                 image: "https://www.cubesnjuliennes.com/wp-content/uploads/2022/09/Tomato-Basil-Soup-Recipe.jpg",
+                 description: "Classic tangy tomato soup with a touch of basil.",
+                ingredients: ["5 tomatoes", "1 onion", "2 garlic cloves", "Fresh basil", "Salt"],
+                instructions: "1. Sauté onion and garlic. 2. Add tomatoes and cook. 3. Add basil and simmer. 4. Blend the soup. 5. Strain and season. 6. Serve warm."
+                 
+               },
+               {
+                 title: "Pumpkin Coconut Soup",
+                 image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzFIKujhex2cmSKiA0RlwNXrCGN1dqp4y2fQ&s",
+                 description: "Creamy pumpkin soup with a hint of coconut.",
+                 ingredients: ["2 cups pumpkin", "1 cup coconut milk", "1 onion", "Garlic", "Salt"],
+                 instructions: "1. Roast or boil pumpkin. 2. Sauté onion and garlic. 3. Blend with pumpkin and coconut milk. 4. Simmer and season. 5. Serve hot."
+                 
+               },
+               {
+                  title: "Spinach Pea Soup",
+                  image: "https://www.aheadofthyme.com/wp-content/uploads/2018/01/spinach-and-pea-soup-2.jpg",
+                  description: "Green and vibrant soup made with peas and spinach.",
+                   ingredients: ["1 cup peas", "1 cup spinach", "1 onion", "Garlic", "Salt", "Pepper"],
+                   instructions: "1. Sauté onion and garlic. 2. Add peas and spinach. 3. Add water and cook. 4. Blend to smooth. 5. Season and enjoy."
+                 
+               },
+               {
+                   title: "Sweet Corn Soup",
+                   image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/08/sweet-corn-soup-recipe.jpg",
+                   description: "Indian-style sweet corn soup with a spicy kick.",
+                   ingredients: ["1 cup corn", "1 carrot", "1/2 capsicum", "Cornflour", "Pepper", "Salt"],
+                   instructions: "1. Boil veggies. 2. Add corn and simmer. 3. Add cornflour paste. 4. Stir until thick. 5. Season and serve."
+               },
+               {
+                 title: "Beetroot Soup",
+                 image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUQMdUnhB6wtY8eK4-RPMJBRAgUsxBqc96Dw&s",
+                 description: "Earthy beetroot soup that's healthy and delicious.",
+                  ingredients: ["2 beets", "1 onion", "1 potato", "Garlic", "Salt"],
+                 instructions: "1. Sauté onion and garlic. 2. Add chopped beets and potato. 3. Add water and cook. 4. Blend and strain. 5. Season and serve."
+                 
+               },
+               {
+                 title: "Mushroom Soup",
+                  image: "https://i0.wp.com/www.splashoftaste.com/wp-content/uploads/2024/10/Mushroom-Soup-14.jpg",
+                  description: "Creamy vegan mushroom soup packed with umami.",
+                 ingredients: ["1 cup mushrooms", "1 onion", "Garlic", "Plant milk", "Salt"],
+                 instructions: "1. Sauté onion, garlic, and mushrooms. 2. Add plant milk. 3. Simmer until soft. 4. Blend or leave chunky. 5. Season to taste."
+                 
+               },
+               {
+                 title: "Moong Dal Soup",
+                  image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/12/dal-soup-recipe.jpg",
+                  description: "Comforting Indian-style soup with yellow moong dal.",
+                  ingredients: ["1 cup moong dal", "Turmeric", "Garlic", "Cumin", "Salt"],
+                  instructions: "1. Boil moong dal with turmeric. 2. Blend if needed. 3. Temper garlic and cumin. 4. Add to soup. 5. Season and serve."
+                 
+               },
+               {
+                 title: "Broccoli Almond Soup",
+                  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwohSVyaNHhVauDhS-FjuRSx6OqrDsMRaNhw&s",
+                 description: "Nutty and creamy soup made with broccoli and almonds.",
+                 ingredients: ["1 cup broccoli", "10 almonds", "1 onion", "Garlic", "Salt"],
+                instructions: "1. Soak almonds. 2. Sauté onion and garlic. 3. Add broccoli. 4. Cook and blend with almonds. 5. Season and serve warm."
+               },
+               ],
+               
+      smoothies: [
+                 {
+                       title: "Mango Banana Smoothie",
+                         image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjfu5hbbjLHF0eGzOGJG6lz8hz-mRWOhLEbQ&s",
+                       description: "Tropical delight with mango and banana.",
+                       ingredients: ["1 mango", "1 banana", "1/2 cup plant milk", "Ice cubes"],
+                          instructions: "1. Peel and chop fruits. 2. Add to blender. 3. Pour in milk and blend. 4. Add ice. 5. Blend again. 6. Serve chilled."
+                  },
+                  {
+                      title: "Green Detox Smoothie",
+                      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-OPWVL7SQgQiPLPHIM4Y5tMX53udE6ISTIQ&s",
+                     description: "Healthy green smoothie with spinach and cucumber.",
+                     ingredients: ["1 cup spinach", "1/2 cucumber", "1 apple", "Lemon juice", "Water"],
+                     instructions: "1. Chop ingredients. 2. Blend with water. 3. Add lemon juice. 4. Blend until smooth. 5. Chill and serve."
+                  },
+                  {
+                     title: "Berry Blast Smoothie",
+                     image: "https://thebombco.com/cdn/shop/articles/21.png?v=1696254655&width=1200",
+                     description: "Antioxidant-rich smoothie with mixed berries.",
+                     ingredients: ["1 cup mixed berries", "1 banana", "1/2 cup almond milk"],
+                     instructions: "1. Add ingredients to blender. 2. Blend until smooth. 3. Add ice if desired. 4. Serve fresh."
+                  },
+                  {
+                    title: "Chocolate Peanut Butter Smoothie",
+                      image: "https://www.ambitiouskitchen.com/wp-content/uploads/fly-images/52949/Chocolate-Peanut-Butter-Banana-Smoothie-5-500x375-c.jpg",
+                      description: "Creamy and rich smoothie perfect for a snack.",
+                     ingredients: ["1 banana", "1 tbsp peanut butter", "1 tbsp cocoa", "Almond milk"],
+                    instructions: "1. Add all to blender. 2. Blend till creamy. 3. Add ice if desired. 4. Serve chilled."
+                  },
+                  {
+                    title: "Papaya Ginger Smoothie",
+                     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtwCcwhhdCL2uqnmp5XRWk18amXF8p3vS3Jw&s",
+                      description: "Soothing and digestive-friendly smoothie.",
+                     ingredients: ["1 cup papaya", "1/2 inch ginger", "1/2 banana", "Coconut water"],
+                     instructions: "1. Add ingredients to blender. 2. Blend until smooth. 3. Chill and serve."
+                  },
+                  {
+                       title: "Pineapple Mint Smoothie",
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK5O5jd_7I5ocnfG02efpnta52htXU4mYo7Q&s",
+                       description: "Refreshing smoothie with pineapple and mint.",
+                    ingredients: ["1 cup pineapple", "A few mint leaves", "1/2 cup water", "Lemon juice"],
+                     instructions: "1. Add all ingredients to blender. 2. Blend until frothy. 3. Add ice and blend again. 4. Serve cold."
+                 },
+                 {
+                   title: "Chikoo Smoothie",
+                    image: "https://www.archanaskitchen.com//images/archanaskitchen/World_Beverages/Chickoo_Banana_Date_Smoothie_Recipe-1.jpg",
+                    description: "Naturally sweet smoothie made with chikoo (sapota).",
+                     ingredients: ["2 chikoo", "1/2 banana", "Almond milk", "Cinnamon (optional)"],
+                     instructions: "1. Peel chikoo and banana. 2. Add to blender with milk. 3. Blend till creamy. 4. Add cinnamon if desired. 5. Serve."
+                 },
+                 {
+                      title: "Watermelon Lime Smoothie",
+                      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo2mV4nrbQDrC1LI_H6qMfb5xccn57SKolyg&s",
+                     description: "Hydrating and light smoothie perfect for summer.",
+                     ingredients: ["2 cups watermelon", "Lime juice", "Mint", "Ice"],
+                      instructions: "1. Add watermelon, lime juice, and mint to blender. 2. Blend until smooth. 3. Strain if needed. 4. Serve chilled."
+                 },
+                 {
+                    title: "Avocado Spinach Smoothie",
+                      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8qeFfxaJ48SINNcLXjZNxMuCjhjE3NQ9tgw&s",
+                       description: "Creamy green smoothie full of good fats.",
+                    ingredients: ["1/2 avocado", "1 cup spinach", "1 banana", "Coconut milk"],
+                   instructions: "1. Blend all ingredients together. 2. Add water if too thick. 3. Blend until creamy. 4. Serve fresh."
+                 },
+                 {
+                    title: "Apple Cinnamon Smoothie",
+                    image: "https://reciperunner.com/wp-content/uploads/2013/09/Apple-Cinnamon-Smoothie-Photograph.jpg",
+                    description: "Cozy smoothie with apple and warm spices.",
+                    ingredients: ["1 apple", "1/2 banana", "Cinnamon", "Plant milk"],
+                     instructions: "1. Core and chop apple. 2. Add all ingredients to blender. 3. Blend till smooth. 4. Sprinkle cinnamon. 5. Serve."
+                   
+                 },
+                 ],
+    snacks: [
+  {
+    title: "Masala Roasted Chickpeas",
+    image: "https://india.neelamfoodland.in/cdn/shop/products/IMG_8844_grande.jpg?v=1734379169",
+    description: "Crispy, spicy roasted chickpeas perfect for munching.",
+    ingredients: ["1 cup chickpeas", "1 tsp olive oil", "1/2 tsp chili powder", "Salt", "Cumin powder"],
+    instructions: "1. Soak and boil chickpeas. 2. Toss with spices and oil. 3. Spread on baking tray. 4. Roast at 200°C for 25 mins. 5. Cool and serve crunchy."
+  },
+  {
+    title: "Aloo Chaat",
+    image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/07/aloo-chaat-recipe.jpg",
+    description: "Spicy and tangy Indian street-style potato snack.",
+    ingredients: ["2 boiled potatoes", "Chaat masala", "Lemon juice", "Onion", "Coriander", "Tamarind chutney"],
+    instructions: "1. Dice boiled potatoes. 2. Add chopped onions and chutney. 3. Sprinkle chaat masala. 4. Drizzle lemon juice. 5. Garnish with coriander."
+  },
+  {
+    title: "Stuffed Dates with Nuts",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlna4rYF1xuoOeo52_lUv0BE4G2aVvLrogTA&s",
+    description: "Naturally sweet dates stuffed with crunchy nuts.",
+    ingredients: ["10 dates", "Almonds", "Cashews", "Walnuts", "Pinch of cinnamon"],
+    instructions: "1. Pit the dates. 2. Insert mixed nuts into each. 3. Sprinkle cinnamon. 4. Chill if preferred. 5. Serve as a quick energy snack."
+  },
+  {
+    title: "Oats Energy Balls",
+    image: "https://www.gimmesomeoven.com/wp-content/uploads/2012/02/Easy-No-Bake-Energy-Bites-Recipe.jpg",
+    description: "No-bake bites made with oats, dates, and peanut butter.",
+    ingredients: ["1 cup oats", "1/2 cup dates", "2 tbsp peanut butter", "Chia seeds", "Coconut flakes"],
+    instructions: "1. Blend oats and dates. 2. Mix in peanut butter and chia. 3. Roll into balls. 4. Coat with coconut. 5. Refrigerate and enjoy."
+  },
+  {
+    title: "Veg Cutlets",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQExVyHEK56deEjMe2hLFjur9OqJWEZkilcPw&s",
+    description: "Pan-fried patties made with mixed vegetables.",
+    ingredients: ["1 potato", "1/2 cup veggies", "Bread crumbs", "Spices", "Coriander"],
+    instructions: "1. Mash potato and veggies. 2. Mix with spices and shape into patties. 3. Coat with crumbs. 4. Pan-fry till golden. 5. Serve with chutney."
+  },
+  {
+    title: "Roasted Makhana",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpKNSslSwYMTF75UqxAmxf0wi6Jl3ZZ0kmbw&s",
+    description: "Crunchy foxnuts tossed in Indian spices.",
+    ingredients: ["2 cups makhana", "1 tsp oil", "Chili powder", "Salt", "Turmeric"],
+    instructions: "1. Heat oil in a pan. 2. Add makhana and roast. 3. Add spices and toss. 4. Roast until crispy. 5. Cool and store."
+  },
+  {
+    title: "Bhel Puri",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNgHp0qWjCjxqAhzCQESj7BwDcfmf45wW2xA&s",
+    description: "Classic Mumbai street snack with puffed rice and chutneys.",
+    ingredients: ["2 cups puffed rice", "Onion", "Tomato", "Sev", "Chutneys", "Lemon juice"],
+    instructions: "1. Mix puffed rice, chopped veggies, and chutneys. 2. Add lemon juice. 3. Top with sev. 4. Mix and serve immediately."
+  },
+  {
+    title: "Corn Chaat",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJCCuBqfGR56haE_Iul_y9-BKvY-iStWdsbw&s",
+    description: "Spicy and juicy snack made with sweet corn and spices.",
+    ingredients: ["1 cup corn", "Chaat masala", "Lemon juice", "Chili powder", "Coriander"],
+    instructions: "1. Boil corn. 2. Add spices and lemon. 3. Mix well. 4. Garnish with coriander. 5. Serve warm."
+  },
+  {
+    title: "Banana Chips",
+    image: "https://hemamagesh.com/wp-content/uploads/2019/06/banana-chips-featured-image-480x270.jpg",
+    description: "Crispy homemade banana chips with minimal oil.",
+    ingredients: ["Raw bananas", "Salt", "Turmeric", "Oil"],
+    instructions: "1. Slice bananas thin. 2. Soak in salt + turmeric water. 3. Dry slices. 4. Fry or air-fry till crispy. 5. Cool and store."
+  },
+  {
+    title: "Chickpea Sundal",
+    image: "https://www.archanaskitchen.com/images/archanaskitchen/Indian_Tea_Time_Snacks/Black_Chickpea_Sundal_Recipe_Kala_Chana_Sundal-1.jpg",
+    description: "South Indian-style sautéed chickpeas with coconut.",
+    ingredients: ["1 cup chickpeas", "Coconut", "Mustard seeds", "Curry leaves", "Chili", "Salt"],
+    instructions: "1. Soak and boil chickpeas. 2. Temper mustard seeds, chili, curry leaves. 3. Add chickpeas and coconut. 4. Toss and serve warm."
+  }
+],
+wraps: [
+  {
+    title: "Hummus Veggie Wrap",
+    image: "https://www.tasteofhome.com/wp-content/uploads/2018/01/Hummus-Veggie-Wrap-Up_EXPS_CWAS18_106657_B04_05__4b-3.jpg",
+    description: "A wholesome wrap filled with creamy hummus and crunchy vegetables.",
+    ingredients: ["Tortilla", "1/2 cup hummus", "Cucumber", "Carrot", "Lettuce", "Bell peppers"],
+    instructions: "1. Spread hummus on tortilla. 2. Add sliced veggies. 3. Roll the wrap tightly. 4. Cut in half. 5. Serve fresh or grilled."
+  },
+  {
+    title: "Tofu Tikka Wrap",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRMsvXxc3nXtnXbRD6gKpjtrnl3ZhmlqCSVw&s",
+    description: "Grilled tofu tikka rolled in a soft wrap with veggies.",
+    ingredients: ["Tofu cubes", "Tikka masala", "Onion", "Tomato", "Roti or wrap", "Mint chutney"],
+    instructions: "1. Marinate tofu in tikka masala. 2. Grill until golden. 3. Spread chutney on wrap. 4. Add tofu and veggies. 5. Roll and serve."
+  },
+  {
+    title: "Avocado Bean Wrap",
+    image: "https://www.eatingwell.com/thmb/QfAMTw-fIB3lLj-mGJh7N3vDkBY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Creamy-Avocado--White-Bean-Wrap-Beauty-0220_preview_maxWidth_4000_maxHeight_4000_ppi_300_quality_100-aaf83709223643ddac6e5610ac4d0301.jpg",
+    description: "Creamy avocado and protein-rich beans make this wrap filling and delicious.",
+    ingredients: ["Tortilla", "1 avocado", "1/2 cup black beans", "Lime", "Tomato", "Spinach"],
+    instructions: "1. Mash avocado with lime. 2. Spread on wrap. 3. Add beans, tomato, spinach. 4. Roll tightly. 5. Serve with salsa."
+  },
+  {
+    title: "Sweet Potato Chickpea Wrap",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlD4RGhLFuIeTeMD5bsRhdJbZV_AfZPMMAaA&s",
+    description: "Hearty wrap with roasted sweet potatoes and seasoned chickpeas.",
+    ingredients: ["Wrap", "Roasted sweet potato", "Chickpeas", "Tahini sauce", "Lettuce", "Onion"],
+    instructions: "1. Roast sweet potatoes and chickpeas. 2. Layer wrap with lettuce. 3. Add potato and chickpeas. 4. Drizzle tahini. 5. Roll and eat."
+  },
+  {
+    title: "Spicy Lentil Wrap",
+    image: "https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_4:3/k%2Farchive%2Fbb11b3504cd103c9b79590daefcfbebfff8e81bd",
+    description: "A spicy Indian-style lentil stuffing wrapped in soft flatbread.",
+    ingredients: ["Cooked lentils", "Spices", "Coriander", "Tortilla or roti", "Tomato salsa"],
+    instructions: "1. Cook lentils with spices. 2. Let cool. 3. Spread on wrap. 4. Add salsa and herbs. 5. Roll and enjoy warm."
+  },
+],
+
+smoothieBowls: [
+  {
+    title: "Berry Banana Smoothie Bowl",
+    image: "https://www.spendwithpennies.com/wp-content/uploads/2019/07/Berry-Banana-Smoothie-Bowl-SpendWithPennies-2.jpg",
+    description: "A refreshing blend of banana and mixed berries topped with granola.",
+    ingredients: ["1 banana", "1/2 cup mixed berries", "Plant milk", "Granola", "Chia seeds"],
+    instructions: "1. Blend banana and berries with a splash of milk. 2. Pour into a bowl. 3. Top with granola and chia seeds. 4. Serve chilled."
+  },
+  {
+    title: "Mango Coconut Smoothie Bowl",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyp_ANBoS-B96VzGw8-XNKyjG5BRyBnL7UZA&s",
+    description: "Creamy mango and coconut smoothie topped with tropical goodness.",
+    ingredients: ["1 mango", "1/4 cup coconut milk", "Banana", "Shredded coconut", "Pumpkin seeds"],
+    instructions: "1. Blend mango, banana, and coconut milk. 2. Pour into bowl. 3. Add toppings. 4. Chill and serve fresh."
+  },
+  {
+    title: "Green Detox Smoothie Bowl",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgGg98wRM7grRBRYpqOTmgBhpYUKw6QhHyJQ&s",
+    description: "A vibrant green bowl packed with spinach, banana, and avocado.",
+    ingredients: ["1 banana", "1/2 avocado", "Spinach", "Almond milk", "Sunflower seeds"],
+    instructions: "1. Blend all greens with milk. 2. Pour into a bowl. 3. Add seeds and fruits. 4. Eat chilled for best taste."
+  },
+  {
+    title: "Chocolate Peanut Butter Bowl",
+    image: "https://www.purelykaylie.com/wp-content/uploads/2021/03/chocolate-peanut-butter-smoothie-bowl-1.jpg",
+    description: "A dessert-like smoothie bowl with rich chocolate and peanut butter.",
+    ingredients: ["1 frozen banana", "Cocoa powder", "Peanut butter", "Oats", "Almond milk"],
+    instructions: "1. Blend banana, cocoa, peanut butter. 2. Add oats and a splash of milk. 3. Serve topped with banana slices and nuts."
+  },
+  {
+    title: "Pineapple Mint Smoothie Bowl",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvfZTxynsgNGBnii6Qt_UwescirWQHEYT7Mw&s",
+    description: "Tropical pineapple with a fresh minty kick.",
+    ingredients: ["1 cup pineapple", "Mint leaves", "Banana", "Coconut water", "Flax seeds"],
+    instructions: "1. Blend pineapple, mint, banana. 2. Add coconut water. 3. Pour into a bowl. 4. Sprinkle flax seeds. 5. Serve cold."
+  },
+],
+toasts : [
+  {
+    title: "Avocado Tomato Toast",
+    image: "https://bakesbybrownsugar.com/wp-content/uploads/2023/07/Avocado-Toast-with-Tomato-23.jpg",
+    description: "Creamy avocado and juicy tomato slices on toasted bread.",
+    ingredients: ["2 slices whole grain bread", "1 avocado", "1 tomato", "Salt", "Chili flakes"],
+    instructions: "1. Toast the bread. 2. Mash avocado and spread it. 3. Add tomato slices. 4. Season with salt and chili flakes. 5. Serve fresh."
+  },
+  {
+    title: "Mushroom Garlic Toast",
+    image: "https://i1.wp.com/thetwincookingproject.net/wp-content/uploads/2021/04/Garlic-Mushroom-Cheese-Toasts-6-scaled.jpg?fit=1707%2C2560&ssl=1",
+    description: "Sautéed mushrooms with garlic on crispy toast.",
+    ingredients: ["2 slices sourdough", "1 cup mushrooms", "2 garlic cloves", "Olive oil", "Salt"],
+    instructions: "1. Toast the bread. 2. Sauté mushrooms and garlic. 3. Add salt. 4. Spread on toast. 5. Serve warm."
+  },
+  {
+    title: "Peanut Butter Banana Toast",
+    image: "https://www.eatingwell.com/thmb/QSE5Ziv3ymIIyZ7zlGUCW7rFStQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/peanut-butter-banana-cinnamon-toast-hero-261628-4000x4000-61c4ca842bcd4a648c2fa8f6e6931c0e.jpg",
+    description: "Classic combo of peanut butter and banana on toast.",
+    ingredients: ["2 slices whole wheat bread", "Peanut butter", "1 banana", "Cinnamon"],
+    instructions: "1. Toast bread. 2. Spread peanut butter. 3. Top with banana slices. 4. Sprinkle cinnamon. 5. Serve."
+  },
+  {
+    title: "Hummus Veggie Toast",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY1Bzn_lID_UfwTQrCYSWHiFEjj3C1vTXwTw&s",
+    description: "Hummus spread with crunchy veggies on toast.",
+    ingredients: ["Bread slices", "Hummus", "Cucumber", "Bell peppers", "Salt"],
+    instructions: "1. Toast bread. 2. Spread hummus. 3. Add veggies. 4. Sprinkle salt. 5. Serve fresh."
+  },
+  {
+    title: "Tofu Scramble Toast",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG2Ge_IWKKme1jYtQfziU0D8V6UBod7yHsyA&s",
+    description: "Protein-packed tofu scramble on hearty toast.",
+    ingredients: ["Tofu", "Turmeric", "Onion", "Pepper", "Bread slices"],
+    instructions: "1. Crumble and sauté tofu with onion and turmeric. 2. Season. 3. Toast bread. 4. Top with tofu. 5. Serve hot."
+  },
+  {
+    title: "Vegan Cream Cheese & Herbs Toast",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtwesiD9TypiEDQraf_2lwX-aKPEpxKD5CwA&s",
+    description: "Herbed vegan cream cheese on crispy bread.",
+    ingredients: ["Vegan cream cheese", "Fresh herbs", "Salt", "Toasted bread"],
+    instructions: "1. Toast bread. 2. Mix herbs into cream cheese. 3. Spread on toast. 4. Add pinch of salt. 5. Serve."
+  },
+  {
+    title: "Nut Butter Berry Toast",
+    image: "https://reallifenutritionist.com/wp-content/uploads/2023/07/Blueberry-toast-5-1-500x375.jpg",
+    description: "Nut butter topped with mixed berries on toast.",
+    ingredients: ["Nut butter", "Strawberries", "Blueberries", "Chia seeds", "Toast"],
+    instructions: "1. Toast bread. 2. Spread nut butter. 3. Add berries. 4. Sprinkle chia seeds. 5. Serve."
+  },
+  {
+    title: "Tomato Basil Toast",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSOZZo4IKvFyC4KPtqlRlQkq1LBTNGbHBDZQ&s",
+    description: "Fresh tomato slices with basil on crunchy toast.",
+    ingredients: ["Tomatoes", "Fresh basil", "Olive oil", "Salt", "Toast"],
+    instructions: "1. Toast bread. 2. Add tomato slices. 3. Sprinkle salt. 4. Garnish with basil. 5. Drizzle olive oil."
+  },
+],
+curries : [
+  {
+    title: "Chickpea Spinach Curry",
+    image: "https://vancouverwithlove.com/wp-content/uploads/2024/08/chickpea-spinach-curry-2.jpg",
+    description: "Chickpeas cooked with spinach in Indian spices.",
+    ingredients: ["Chickpeas", "Spinach", "Onion", "Tomatoes", "Spices"],
+    instructions: "1. Sauté onions and tomatoes. 2. Add spices. 3. Mix in chickpeas and spinach. 4. Add water. 5. Simmer. 6. Serve hot."
+  },
+  {
+    title: "Vegan Tofu Tikka Masala",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRABcdNZhTXBkBeo5gWbyWOmN-Z_Ee2JJpaLQ&s",
+    description: "Tofu cubes in creamy tikka masala gravy.",
+    ingredients: ["Tofu", "Onion", "Tomatoes", "Cashew paste", "Spices"],
+    instructions: "1. Fry tofu. 2. Cook onion-tomato mix. 3. Add cashew paste & spices. 4. Add tofu. 5. Simmer. 6. Serve."
+  },
+  {
+    title: "Vegan Dal Tadka",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR57v5I16uUxt0cJmA1pmrH5JoZ5YUEE6sWaw&s",
+    description: "Yellow lentils tempered with Indian spices.",
+    ingredients: ["Toor dal", "Garlic", "Mustard seeds", "Chili", "Onion"],
+    instructions: "1. Boil dal. 2. Prepare tempering. 3. Mix into dal. 4. Simmer. 5. Garnish with coriander. 6. Serve hot."
+  },
+  {
+    title: "Mixed Vegetable Curry",
+    image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/07/vegetable-curry-recipe.jpg",
+    description: "Seasonal veggies in aromatic curry base.",
+    ingredients: ["Carrot", "Beans", "Peas", "Potato", "Spices"],
+    instructions: "1. Sauté veggies. 2. Add spices & water. 3. Simmer. 4. Cook till veggies are soft. 5. Serve."
+  },
+  {
+    title: "Pumpkin Coconut Curry",
+    image: "https://allwaysdelicious.com/wp-content/uploads/2021/10/thai-pumpkin-curry-sq-1.jpg",
+    description: "Creamy curry with pumpkin and coconut milk.",
+    ingredients: ["Pumpkin", "Coconut milk", "Onion", "Ginger", "Curry powder"],
+    instructions: "1. Cook onions and pumpkin. 2. Add spices. 3. Pour coconut milk. 4. Simmer. 5. Serve warm."
+  },
+  {
+    title: "Vegan Kofta Curry",
+    image: "https://rainbowplantlife.com/wp-content/uploads/2020/02/malaikoftainpanwithnaan-281of129-scaled.jpg",
+    description: "Lentil-based koftas in rich tomato gravy.",
+    ingredients: ["Lentils", "Tomatoes", "Spices", "Cashew paste", "Coriander"],
+    instructions: "1. Make koftas from lentils. 2. Fry and set aside. 3. Cook gravy. 4. Add koftas and simmer. 5. Serve."
+  },
+  {
+    title: "Cauliflower Potato Curry",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTziI-Z0KGm13uzCyxk-NoSn703YlDDY8YX0Q&s",
+    description: "Classic aloo gobi with turmeric and spices.",
+    ingredients: ["Potatoes", "Cauliflower", "Onions", "Spices", "Ginger"],
+    instructions: "1. Fry potatoes and cauliflower. 2. Sauté with spices. 3. Add water. 4. Cook till soft. 5. Serve."
+  },
+  {
+    title: "Black Eyed Pea Curry",
+    image: "https://cookingwithparita.com/wp-content/uploads/2022/08/authentic-black-eyed-peas-curry-recipe.jpg",
+    description: "Nutritious lobia curry with tomatoes and garlic.",
+    ingredients: ["Black-eyed peas", "Tomatoes", "Garlic", "Onion", "Spices"],
+    instructions: "1. Boil beans. 2. Cook onion-tomato-spice mix. 3. Mix with beans. 4. Simmer. 5. Serve hot."
+  },
+],
+stirfries : [
+  {
+    title: "Tofu Veggie Stir-fry",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVJ-l7PY4VDYMV-65pgIjEuCPOKvtzzo1J_Q&s",
+    description: "Tofu and colorful vegetables stir-fried in soy sauce.",
+    ingredients: ["Tofu", "Bell peppers", "Broccoli", "Soy sauce", "Garlic"],
+    instructions: "1. Fry tofu. 2. Sauté veggies. 3. Add soy sauce. 4. Stir-fry everything. 5. Serve hot."
+  },
+  {
+    title: "Ginger Garlic Mushroom Stir-fry",
+    image: "https://www.marionskitchen.com/wp-content/uploads/2021/08/20201117_Beef-Mushroom-Ginger-Stir-fry-3-scaled-e1628851791316.jpg",
+    description: "Mushrooms stir-fried with ginger and garlic.",
+    ingredients: ["Mushrooms", "Ginger", "Garlic", "Soy sauce", "Oil"],
+    instructions: "1. Heat oil. 2. Add garlic and ginger. 3. Add mushrooms. 4. Stir-fry. 5. Season and serve."
+  },
+  {
+    title: "Baby Corn & Capsicum Stir-fry",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOliEtFmQc_ZSH0_QUPvvBs0d68PuvBQpoQw&s",
+    description: "Crunchy baby corn and capsicum tossed in sauces.",
+    ingredients: ["Baby corn", "Capsicum", "Soy sauce", "Chili sauce", "Garlic"],
+    instructions: "1. Stir-fry baby corn. 2. Add capsicum. 3. Mix sauces. 4. Toss everything. 5. Serve."
+  },
+  {
+    title: "Zucchini Carrot Stir-fry",
+    image: "https://cdn.sunbasket.com/28f652a1-7ac0-4a4c-8769-e662c68b7eda.jpg",
+    description: "Light stir-fry of zucchini and carrots with sesame.",
+    ingredients: ["Zucchini", "Carrots", "Sesame oil", "Garlic", "Salt"],
+    instructions: "1. Heat sesame oil. 2. Add garlic. 3. Toss in zucchini and carrots. 4. Stir-fry. 5. Serve."
+  },
+  {
+    title: "Paneer-Style Tofu Stir-fry",
+    image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/05/indian-tofu-stir-fry.webp",
+    description: "Tofu cubes stir-fried with Indian spices.",
+    ingredients: ["Tofu", "Turmeric", "Cumin", "Onions", "Bell peppers"],
+    instructions: "1. Cube tofu. 2. Fry with turmeric and cumin. 3. Add veggies. 4. Stir well. 5. Serve."
+  },
+  {
+    title: "Spicy Peanut Noodle Stir-fry",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR46LfFdhIrUnBhj0pKMgSs74hnDui8rmXs8A&s",
+    description: "Noodles stir-fried with veggies and peanut sauce.",
+    ingredients: ["Noodles", "Peanut butter", "Soy sauce", "Veggies", "Garlic"],
+    instructions: "1. Cook noodles. 2. Make peanut sauce. 3. Stir-fry veggies. 4. Mix everything. 5. Serve."
+  },
+  {
+    title: "Sesame Tofu Broccoli Stir-fry",
+    image: "https://hips.hearstapps.com/hmg-prod/images/del113023-sesame-tofu-broccoli-006-ab-web-lead-65808036d6bd2.jpg?crop=1xw:1xh;center,top&resize=640:*",
+    description: "Tofu and broccoli in a sesame-garlic sauce.",
+    ingredients: ["Tofu", "Broccoli", "Garlic", "Soy sauce", "Sesame oil"],
+    instructions: "1. Fry tofu. 2. Blanch broccoli. 3. Stir-fry both with garlic and sauce. 4. Serve hot."
+  },
+  {
+    title: "Chili Garlic Stir-fried Greens",
+    image: "https://carveyourcraving.com/wp-content/uploads/2022/11/Chinese-Spicy-green-beans-1.jpg",
+    description: "Leafy greens stir-fried with garlic and chili.",
+    ingredients: ["Spinach/Kale", "Garlic", "Chili flakes", "Oil", "Salt"],
+    instructions: "1. Heat oil. 2. Add garlic and chili. 3. Add greens. 4. Stir-fry till wilted. 5. Serve warm."
+  },
+],
+tacos : [
+  {
+    title: "Spicy Bean Tacos",
+    image: "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spicy-black-bean-tacos-6ac283a.jpg",
+    description: "Flavorful black beans with spices, served in soft taco shells.",
+    ingredients: ["1 cup black beans", "1 tsp cumin", "1 tsp chili powder", "Taco shells", "Lettuce", "Tomatoes"],
+    instructions: "1. Sauté beans with spices. 2. Warm shells. 3. Add lettuce and tomatoes. 4. Fill with beans. 5. Serve hot."
+  },
+  {
+    title: "Jackfruit Tacos",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTggX3tMLXS4anpdgM-ilkYJDeIQgYXEyKRVw&s",
+    description: "Shredded jackfruit tossed in BBQ sauce for a pulled-pork style filling.",
+    ingredients: ["1 can jackfruit", "1/4 cup BBQ sauce", "Taco shells", "Red onion", "Coriander"],
+    instructions: "1. Shred jackfruit. 2. Cook with BBQ sauce. 3. Add to taco shells. 4. Top with onion and coriander."
+  },
+  {
+    title: "Tofu Scramble Tacos",
+    image: "https://plantbasedonabudget.com/wp-content/uploads/2018/12/Vegan-Tofu-Tacos-Plant-Based-on-a-Budget-1-2.jpg",
+    description: "High-protein tofu scramble stuffed in tacos with veggies.",
+    ingredients: ["1 block tofu", "1/2 tsp turmeric", "Salt", "Pepper", "Spinach", "Taco shells"],
+    instructions: "1. Scramble tofu with spices. 2. Cook for 5 mins. 3. Layer tofu and spinach in tacos."
+  },
+  {
+    title: "Sweet Potato Tacos",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSC5vmzm5ZHiA6iip32wQ8S2s0SkUHE8-Big&s",
+    description: "Roasted sweet potatoes with beans and avocado in warm tacos.",
+    ingredients: ["1 sweet potato", "1/2 cup black beans", "Avocado", "Taco shells", "Lime juice"],
+    instructions: "1. Roast sweet potato. 2. Heat beans. 3. Slice avocado. 4. Assemble tacos and drizzle lime juice."
+  },
+  {
+    title: "Lentil Walnut Tacos",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPxLRp9appwwkNin9qRhn4hodtlI9fttZ37g&s",
+    description: "Crumbled lentils and walnuts for a meaty, satisfying filling.",
+    ingredients: ["1/2 cup lentils", "1/4 cup walnuts", "Garlic", "Cumin", "Taco shells"],
+    instructions: "1. Cook lentils. 2. Blend with walnuts. 3. Sauté with garlic and spices. 4. Fill shells and serve."
+  },
+  {
+    title: "Mushroom Tacos",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNbKIJeU8E0b-M1GjQwKLNXWmHGPtMCx3fog&s",
+    description: "Sautéed mushrooms with garlic and herbs in taco wraps.",
+    ingredients: ["1 cup mushrooms", "1 tsp olive oil", "Garlic", "Taco shells", "Lettuce"],
+    instructions: "1. Sauté mushrooms and garlic. 2. Fill tacos with lettuce and mushrooms. 3. Serve hot."
+  },
+],
+ noodles : [
+  {
+    title: "Spicy Peanut Noodles",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRb_x3PJ--9S6FfhLHU99XzrJR8QkGpqllug&s",
+    description: "Rich peanut sauce tossed with noodles and chili flakes.",
+    ingredients: ["200g noodles", "2 tbsp peanut butter", "Soy sauce", "Chili flakes", "Garlic"],
+    instructions: "1. Cook noodles. 2. Mix sauce ingredients. 3. Toss noodles in sauce. 4. Garnish and serve."
+  },
+  {
+    title: "Garlic Sesame Noodles",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGqo5Ygp0-taD1ZYh8hjq4KffXAl-EDDNN1g&s",
+    description: "Garlicky noodles with toasted sesame oil and soy sauce.",
+    ingredients: ["200g noodles", "Sesame oil", "Garlic", "Spring onions", "Soy sauce"],
+    instructions: "1. Boil noodles. 2. Sauté garlic in oil. 3. Toss with soy sauce. 4. Garnish with onions."
+  },
+  {
+    title: "Coconut Curry Noodles",
+    image: "https://www.halfbakedharvest.com/wp-content/uploads/2021/04/20-Minute-Red-Curry-Noodles-with-Fried-Coconut-Garlic-1.jpg",
+    description: "Noodles in a creamy coconut-based curry with tofu.",
+    ingredients: ["Rice noodles", "Coconut milk", "Curry paste", "Tofu", "Veggies"],
+    instructions: "1. Cook noodles. 2. Simmer curry. 3. Add tofu and veggies. 4. Mix with noodles."
+  },
+  {
+    title: "Chili Garlic Noodles",
+    image: "https://www.connoisseurusveg.com/wp-content/uploads/2022/12/chili-garlic-noodles-sq.jpg",
+    description: "Spicy and flavorful noodles with fresh chili and garlic.",
+    ingredients: ["Noodles", "Red chilies", "Garlic", "Soy sauce", "Scallions"],
+    instructions: "1. Cook noodles. 2. Sauté chili and garlic. 3. Toss with sauce and scallions."
+  },
+  {
+    title: "Teriyaki Stir-Fry Noodles",
+    image: "https://wholeandheavenlyoven.com/wp-content/uploads/2018/04/Teriyaki-Beef-Stirfry-Featured-Image.jpg",
+    description: "Sweet and savory teriyaki noodles with mixed vegetables.",
+    ingredients: ["Noodles", "Teriyaki sauce", "Bell peppers", "Carrots", "Broccoli"],
+    instructions: "1. Stir-fry veggies. 2. Add cooked noodles. 3. Mix in teriyaki sauce."
+  },
+  {
+    title: "Soba Noodles with Veggies",
+    image: "https://cookingwithawallflower.com/wp-content/uploads/2021/05/Soba-Noodle-Vegetable-Stir-Fry-1.jpg",
+    description: "Buckwheat soba noodles with lightly sautéed vegetables.",
+    ingredients: ["Soba noodles", "Carrots", "Cabbage", "Soy sauce", "Toasted sesame"],
+    instructions: "1. Boil soba noodles. 2. Stir-fry veggies. 3. Mix with soy and sesame. 4. Serve warm."
+  },
+],
+cakes : [
+  {
+    title: "Vegan Chocolate Cake",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh8_qPCSnSERH-BUt8AA3qtnrjwOpenwJbPw&s",
+    description: "Moist, rich chocolate cake made dairy-free and eggless.",
+    ingredients: ["Flour", "Cocoa powder", "Almond milk", "Oil", "Sugar", "Baking soda"],
+    instructions: "1. Mix dry ingredients. 2. Add liquids. 3. Pour into pan. 4. Bake at 180°C for 35 min."
+  },
+  {
+    title: "Banana Oat Cake",
+    image: "https://i.ytimg.com/vi/EAs47vClLBA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBGYkWPCHJbR2XSAATRkR0G7B35fQ",
+    description: "Wholesome cake with ripe bananas and rolled oats.",
+    ingredients: ["Bananas", "Oats", "Maple syrup", "Almond milk", "Vanilla"],
+    instructions: "1. Mash bananas. 2. Combine all ingredients. 3. Bake until golden."
+  },
+  {
+    title: "Carrot Walnut Cake",
+    image: "https://www.generalmillsindiabfs.in/wp-content/uploads/2020/10/Pillsbury-India-CarrotWalnutCakeRecipe-770x513-1.jpg",
+    description: "Spiced carrot cake with crunchy walnut bites.",
+    ingredients: ["Grated carrot", "Flour", "Cinnamon", "Walnuts", "Non-dairy milk"],
+    instructions: "1. Mix dry and wet. 2. Fold in carrots and nuts. 3. Bake for 35 mins."
+  },
+  {
+    title: "Lemon Poppy Seed Cake",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgORes_v-puTlO9wmayM16BDhPPTgJ1i0czA&s",
+    description: "Tangy lemon cake with a light crumb and poppy seeds.",
+    ingredients: ["Flour", "Lemon juice", "Poppy seeds", "Almond milk", "Sugar"],
+    instructions: "1. Combine all ingredients. 2. Bake until set. 3. Cool and glaze."
+  },
+  {
+    title: "Coconut Almond Cake",
+    image: "https://www.southernliving.com/thmb/CSoidj2uGmUo4jER5biDkk1mTS8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/coconut-cream-cake-sl-1851552-xl-92ccc5a183db4b94bb31457659b93b55.jpg",
+    description: "Soft cake with shredded coconut and almond flavor.",
+    ingredients: ["Flour", "Shredded coconut", "Almond extract", "Baking powder", "Maple syrup"],
+    instructions: "1. Mix everything. 2. Pour into pan. 3. Bake at 180°C for 30 min."
+  },
+  {
+    title: "Pumpkin Spice Cake",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHpMjGxzKLibO3GpPiRLTvizHINgnvK486Mg&s",
+    description: "Warm spiced cake with pumpkin purée and cinnamon.",
+    ingredients: ["Pumpkin purée", "Flour", "Cinnamon", "Nutmeg", "Non-dairy milk"],
+    instructions: "1. Mix ingredients. 2. Bake for 40 min. 3. Cool and dust with sugar."
+  },
+],
+pancakes : [
+  {
+    title: "Classic Vegan Pancakes",
+    image: "https://cdn.loveandlemons.com/wp-content/uploads/2023/02/vegan-pancakes.jpg",
+    description: "Fluffy pancakes made with almond milk and no eggs.",
+    ingredients: ["1 cup flour", "1 tbsp sugar", "1 tbsp baking powder", "1 cup almond milk", "1 tbsp oil"],
+    instructions: "1. Mix dry ingredients. 2. Add almond milk and oil. 3. Stir into batter. 4. Cook on non-stick pan. 5. Flip when bubbly. 6. Serve with syrup."
+  },
+  {
+    title: "Banana Oat Pancakes",
+    image: "https://www.ambitiouskitchen.com/wp-content/uploads/2019/04/bananaoatmealpancakes-6-725x725-1.jpg",
+    description: "Wholesome pancakes using ripe bananas and oats.",
+    ingredients: ["1 banana", "1/2 cup oats", "1/2 cup plant milk", "1 tsp cinnamon", "1 tsp baking powder"],
+    instructions: "1. Blend all ingredients. 2. Pour onto heated pan. 3. Cook for 2 mins per side. 4. Serve with fruits."
+  },
+  {
+    title: "Blueberry Pancakes",
+    image: "https://lens.usercontent.google.com/image?vsrid=CIyBlbXIxoG3PBACGAEiJDgxZTQzZGNiLTM4ZGQtNDliZi1iNTExLTY4Yjk2ZTE2ZTNmMg&gsessionid=-CksPnWMcqyXBsmEZVvCH_BJ7vJIy8QrnhJ7rHkRPg5ipL9LvXBf7g",
+    description: "Fluffy pancakes with juicy blueberries in every bite.",
+    ingredients: ["1 cup flour", "1 tbsp sugar", "1 cup almond milk", "1/2 cup blueberries", "1 tbsp oil"],
+    instructions: "1. Mix dry ingredients. 2. Add wet and stir. 3. Fold in blueberries. 4. Cook on skillet."
+  },
+  {
+    title: "Chocolate Chip Pancakes",
+    image: "https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_1:1/k%2FPhoto%2FSeries%2F2021-07-how-to-chocolate-chip-pancakes%2F2021-07-20_ATK-7932",
+    description: "Delicious pancakes with vegan chocolate chips.",
+    ingredients: ["1 cup flour", "1 tbsp sugar", "1 cup soy milk", "1/4 cup chocolate chips", "1 tbsp oil"],
+    instructions: "1. Mix ingredients. 2. Add chocolate chips last. 3. Cook till golden. 4. Serve warm."
+  },
+  {
+    title: "Pumpkin Spice Pancakes",
+    image: "https://thebusybaker.ca/wp-content/uploads/2016/09/pumpkin-spice-pancakes-fbig1.jpg",
+    description: "Autumn-inspired pancakes with pumpkin purée and spices.",
+    ingredients: ["1/2 cup pumpkin purée", "1 cup flour", "1 tsp cinnamon", "1 cup almond milk", "1 tbsp maple syrup"],
+    instructions: "1. Mix all ingredients. 2. Cook on low heat. 3. Serve with nuts or syrup."
+  },
+  {
+    title: "Coconut Pancakes",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDf7bU5JKB-rVP396pQ0D9KfL0unaz4z1pAg&s",
+    description: "Tropical-flavored pancakes with shredded coconut.",
+    ingredients: ["1 cup flour", "1 tbsp sugar", "3 tbsp shredded coconut", "1 cup coconut milk", "1 tsp vanilla"],
+    instructions: "1. Combine all ingredients. 2. Cook until edges are crisp. 3. Flip and serve with fruit."
+  },
+  {
+    title: "Spinach Savory Pancakes",
+    image: "https://static.wixstatic.com/media/5839c7_6a2581cbd49a4139bbba08ef5fc8f340~mv2_d_3456_5184_s_4_2.jpg/v1/crop/x_0,y_2312,w_3456,h_2243/fill/w_560,h_368,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_0130_JPG.jpg",
+    description: "Healthy green pancakes packed with spinach.",
+    ingredients: ["1 cup flour", "1 cup spinach purée", "1/2 tsp salt", "1/2 cup water", "1 tbsp oil"],
+    instructions: "1. Mix all into batter. 2. Pour onto pan. 3. Cook evenly. 4. Serve with chutney."
+  },
+],
+cheese : [
+  {
+    title: "Cashew Cheese Spread",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR19DtJpUTjjTK8fY7Br0tMGEMXr7Q-a2YYJg&s",
+    description: "Creamy spreadable cheese made from soaked cashews.",
+    ingredients: ["1 cup cashews", "2 tbsp nutritional yeast", "1 garlic clove", "1 tbsp lemon juice", "Salt"],
+    instructions: "1. Soak cashews for 4 hrs. 2. Blend with other ingredients. 3. Adjust consistency. 4. Chill before use."
+  },
+  {
+    title: "Almond Feta",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapczheih2jvnm3EeQDsxVnUwiSe596INWMw&s",
+    description: "Tangy almond-based cheese that crumbles like feta.",
+    ingredients: ["1 cup blanched almonds", "2 tbsp lemon juice", "1 tbsp olive oil", "Salt", "Garlic"],
+    instructions: "1. Blend almonds with ingredients. 2. Press into mold. 3. Chill for 6 hrs. 4. Crumble and use."
+  },
+  {
+    title: "Vegan Cheddar Block",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS0-WTjmxV97mR_OWyBVCp886YTJpAB4L0aQ&s",
+    description: "Firm cheddar-style block made from coconut oil and starch.",
+    ingredients: ["1/2 cup coconut milk", "2 tbsp tapioca starch", "1 tbsp nutritional yeast", "Agar powder", "Salt"],
+    instructions: "1. Heat all in pan. 2. Stir till thick. 3. Pour into mold. 4. Chill until set."
+  },
+  {
+    title: "Tofu Ricotta",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1CwXLUfHn3Fp-MPEwcHehEjKnDIWNnBhexg&s",
+    description: "Soft and crumbly ricotta-style cheese from tofu.",
+    ingredients: ["1 block firm tofu", "1 tbsp lemon juice", "1 tsp garlic powder", "Salt", "Olive oil"],
+    instructions: "1. Crumble tofu. 2. Mix with seasoning. 3. Blend for smoother texture. 4. Use in lasagna or dips."
+  },
+  {
+    title: "Smoky Vegan Cheese Sauce",
+    image: "https://kneadtocook.com/wp-content/uploads/2014/10/IMG_96001.jpg",
+    description: "Meltable and smoky cheese sauce perfect for nachos.",
+    ingredients: ["1/2 cup cashews", "1 tsp smoked paprika", "1 tbsp lemon juice", "1/4 cup water", "Salt"],
+    instructions: "1. Blend all till creamy. 2. Heat in pan. 3. Stir constantly. 4. Pour over dishes."
+  },
+  {
+    title: "Sunflower Seed Cheese",
+    image: "https://itdoesnttastelikechicken.com/wp-content/uploads/2019/09/vegan-sunflower-seed-cheese-nut-free-cheddar-recipe-easy.jpg",
+    description: "Nut-free spreadable cheese from sunflower seeds.",
+    ingredients: ["1/2 cup sunflower seeds", "1 tbsp lemon juice", "1 tsp garlic", "Salt", "Water"],
+    instructions: "1. Soak seeds. 2. Blend with spices and lemon. 3. Spread on toast or crackers."
+  },
+  {
+    title: "Chili Herb Cheese",
+    image: "https://cdn.alpensepp.shop/wp-content/uploads/2024/11/chilikaese-500g-kaeseteig-alpensepp-2000.webp",
+    description: "A herby and spicy spread perfect for sandwiches.",
+    ingredients: ["1 cup cashews", "Chili flakes", "Mixed herbs", "Lemon juice", "Nutritional yeast"],
+    instructions: "1. Blend all until smooth. 2. Chill for 2 hrs. 3. Spread on bread or use as dip."
+  },
+],
+    }
+
+    function showRecipes(category) {
+      document.getElementById("category-section").style.display = "none";
+      document.getElementById("recipe-list").style.display = "block";
+      const recipes = recipeData[category];
+      const list = document.getElementById("recipe-items");
+      const title = document.getElementById("recipe-list-title");
+      list.innerHTML = "";
+      title.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+
+      recipes.forEach(recipe => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <h3>${recipe.title}</h3>
+          <img src="${recipe.image}" alt="${recipe.title}" style="width:100%;border-radius:10px;margin:10px 0;">
+          <p>${recipe.description}</p>
+          <button onclick='openModal(${JSON.stringify(JSON.stringify(recipe))})'>View Recipe</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+              document.getElementById("back-btn").addEventListener("click", function() {
+  document.getElementById("recipe-modal").style.display = "none";
+});
+
+    function openModal(recipeJSON) {
+      const recipe = JSON.parse(recipeJSON);
+      document.getElementById("recipe-title").textContent = recipe.title;
+      document.getElementById("recipe-image").src = recipe.image;
+      document.getElementById("recipe-description").textContent = recipe.description;
+      document.getElementById("recipe-ingredients").innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join("");
+      document.getElementById("recipe-instructions").textContent = recipe.instructions;
+      document.getElementById("recipe-modal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("recipe-modal").style.display = "none";
+    }
+
+    function goBack() {
+      document.getElementById("recipe-list").style.display = "none";
+      document.getElementById("category-section").style.display = "flex";
+    }
+  </script>
+
+</body>
+</html>
