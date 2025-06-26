@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Tips and Tricks</title>
+      <style>
+    body {
+        font-family: 'Papyrus', sans-serif;
+        background: linear-gradient(135deg, #ffcc00, #ff6699);
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+        color: #00ffcc;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+    .container {
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 15px;
+        background: linear-gradient(180deg, #fbff00, #ff6699);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        width: 80%;
+        max-width: 600px;
+    }
+    textarea {
+        width: 100%;
+        height: 100px;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #ff0066;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        background-color: #fff;
+        color: #333;
+    }
+    textarea:focus {
+        border-color: #00ffcc;
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 2px solid #ff0066;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        background-color: #fff;
+        color: #333;
+    }
+    input[type="text"]:focus {
+        border-color: #00ffcc;
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+    button {
+        background: linear-gradient(90deg, #ff6699, #ffcc00);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    button:hover {
+        background: linear-gradient(90deg, #ffcc00, #ff6699);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+    .tips-list {
+        margin-top: 20px;
+        text-align: left;
+    }
+    .tip {
+        background: linear-gradient(135deg, #68869b, #a1c4d4);
+        border: 2px solid #41130b;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+    .tip:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kitchen Tips and Tricks</h1>
+    <p>Share your best kitchen tips and tricks with the world!</p>
+   
+    <input type="text" id="nameInput" placeholder="Your Name (or leave blank for anonymous)" />
+    <textarea id="tipInput" placeholder="Write your tip here..."></textarea>
+    <label>
+        <input type="checkbox" id="anonymousCheckbox" /> Submit Anonymously
+    </label>
+    <button onclick="submitTip()">Submit Tip</button>
+
+    <div class="tips-list" id="tipsList">
+        <h2>Submitted Tips:</h2>
+    </div>
+</div>
+
+<script>
+    // Load tips from local storage
+    const tips = JSON.parse(localStorage.getItem('tips')) || [];
+
+    function submitTip() {
+        const nameInput = document.getElementById('nameInput').value.trim();
+        const tipInput = document.getElementById('tipInput').value.trim();
+        const isAnonymous = document.getElementById('anonymousCheckbox').checked;
+ if (tipInput) {
+            const tip = {
+                text: tipInput,
+                name: isAnonymous ? "Anonymous" : nameInput || "Unknown"
+            };
+            tips.push(tip);
+            localStorage.setItem('tips', JSON.stringify(tips)); // Save to local storage
+            document.getElementById('tipInput').value = ''; // Clear the input
+            document.getElementById('nameInput').value = ''; // Clear the name input
+            document.getElementById('anonymousCheckbox').checked = false; // Uncheck anonymous
+            displayTips();
+        } else {
+            alert('Please enter a tip before submitting!');
+        }
+    }
+
+    function displayTips() {
+        const tipsList = document.getElementById('tipsList');
+        tipsList.innerHTML = '<h2>Submitted Tips:</h2>'; // Reset the list
+
+        tips.forEach((tip, index) => {
+            tipsList.innerHTML += `<div class="tip">${index + 1}. <strong>${tip.name}:</strong> ${tip.text}</div>`;
+        });
+    }
+
+    // Display tips on page load
+    displayTips();
+</script>
+
+</body>
+</html>
