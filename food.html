@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Search - Find Recipes</title>
+    <link rel="stylesheet" href="food.css">
+</head>
+<body>
+    <header>
+        <h1 class="page-title">✨ Ingredient-Based Recipe Search 🍲</h1>
+        <p class="header-subtitle">Find recipes based on ingredients you have at home! 🥘</p>
+    </header>
+
+    <section class="ingredient-search">
+        <h2>What ingredients do you have? 🌿</h2>
+       
+        <!-- Ingredient categories -->
+        <div class="ingredient-category">
+            <label for="spices">Spices 🌶️:</label>
+            <select id="spices" name="spices">
+                <option value="">Select Spices</option>
+                <option value="turmeric">Turmeric</option>
+                <option value="chili">Chili Powder</option>
+                <option value="cumin">Cumin</option>
+                <option value="garam-masala">Garam Masala</option>
+                <option value="coriander">Coriander Powder</option>
+                <option value="paprika">Paprika</option>
+                <option value="black-pepper">Black Pepper</option>
+                <option value="asafoetida">Asafoetida (Hing)</option>
+                <option value="mustard-seeds">Mustard Seeds</option>
+                <option value="fennel-seeds">Fennel Seeds</option>
+                <option value="fenugreek-seeds">Fenugreek Seeds</option>
+                <option value="cinnamon">Cinnamon</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="vegetables">Vegetables 🥕:</label>
+            <select id="vegetables" name="vegetables">
+                <option value="">Select Vegetables</option>
+                <option value="tomatoes">Tomatoes</option>
+                <option value="potatoes">Potatoes</option>
+                <option value="onions">Onions</option>
+                <option value="spinach">Spinach</option>
+                <option value="peas">Peas</option>
+                <option value="bell-peppers">Bell Peppers</option>
+                <option value="carrots">Carrots</option>
+                <option value="cauliflower">Cauliflower</option>
+                <option value="brinjal">Brinjal (Eggplant)</option>
+                <option value="cabbage">Cabbage</option>
+                <option value="pumpkin">Pumpkin</option>
+                <option value="bitter-gourd">Bitter Gourd</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="dairy">Dairy 🧀:</label>
+            <select id="dairy" name="dairy">
+                <option value="">Select Dairy</option>
+                <option value="milk">Milk</option>
+                <option value="yogurt">Yogurt</option>
+                <option value="butter">Butter</option>
+                <option value="cheese">Cheese</option>
+                <option value="cream">Cream</option>
+                <option value="paneer">Paneer (Cottage Cheese)</option>
+                <option value="ghee">Ghee</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="grains">Grains 🍚:</label>
+            <select id="grains" name="grains">
+                <option value="">Select Grains</option>
+                <option value="rice">Rice</option>
+                <option value="wheat-flour">Wheat Flour</option>
+                <option value="quinoa">Quinoa</option>
+                <option value="oats">Oats</option>
+                <option value="cornflour">Corn Flour</option>
+                <option value="semolina">Semolina (Rava)</option>
+                <option value="millets">Millets</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="fruits">Fruits 🍎:</label>
+            <select id="fruits" name="fruits">
+                <option value="">Select Fruits</option>
+                <option value="bananas">Bananas</option>
+                <option value="apples">Apples</option>
+                <option value="mangoes">Mangoes</option>
+                <option value="oranges">Oranges</option>
+                <option value="berries">Berries</option>
+                <option value="papaya">Papaya</option>
+                <option value="pineapple">Pineapple</option>
+                <option value="grapes">Grapes</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="proteins">Proteins 🍗:</label>
+            <select id="proteins" name="proteins">
+                <option value="">Select Proteins</option>
+                <option value="chicken">Chicken</option>
+                <option value="tofu">Tofu</option>
+                <option value="beans">Beans</option>
+                <option value="egg">Egg</option>
+                <option value="fish">Fish</option>
+                <option value="lentils">Lentils (Dal)</option>
+                <option value="paneer">Paneer</option>
+                <option value="chickpeas">Chickpeas (Garbanzo)</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="sauces">Sauces 🍯:</label>
+            <select id="sauces" name="sauces">
+                <option value="">Select Sauces</option>
+                <option value="soy-sauce">Soy Sauce</option>
+                <option value="tomato-sauce">Tomato Sauce</option>
+                <option value="barbecue-sauce">Barbecue Sauce</option>
+                <option value="hot-sauce">Hot Sauce</option>
+                <option value="mint-sauce">Mint Sauce</option>
+                <option value="tamarind-sauce">Tamarind Sauce</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="bread">Breads 🥖:</label>
+            <select id="bread" name="bread">
+                <option value="">Select Breads</option>
+                <option value="chapati">Chapati</option>
+                <option value="naan">Naan</option>
+                <option value="paratha">Paratha</option>
+                <option value="bread">Bread</option>
+                <option value="pav">Pav</option>
+            </select>
+        </div>
+
+        <div class="ingredient-category">
+            <label for="pulses">Pulses 🌾:</label>
+            <select id="pulses" name="pulses">
+                <option value="">Select Pulses</option>
+                <option value="moong-dal">Moong Dal</option>
+                <option value="toor-dal">Toor Dal</option>
+                <option value="chana-dal">Chana Dal</option>
+                <option value="masoor-dal">Masoor Dal</option>
+                <option value="urad-dal">Urad Dal</option>
+            </select>
+        </div>
+
+        <button id="searchButton">Find Recipes 🍽️</button>
+    </section>
+
+    <section id="recipeSuggestions" class="content">
+        <!-- Recipe suggestions will appear here dynamically -->
+    </section>
+
+    <footer>
+        <p>Made with love for food enthusiasts! 🍽️💛</p>
+    </footer>
+
+    <script src="food.js"></script>
+</body>
+</html>
