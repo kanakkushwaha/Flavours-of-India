@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Suggester</title>
+    <style>
+        body {
+            font-family: "Playfair Display", serif;
+background: linear-gradient(to right,
+    #ffcccb, /* Light Red */
+    #fff3e0, /* Light Peach */
+    #fff9c4, /* Light Yellow */
+    #c8e6c9, /* Light Green */
+    #dcedc8, /* Light Lime */
+    #ffe0b2, /* Light Orange */
+    #d7ccc8  /* Light Brown */
+);
+            text-align: center;
+            padding: 2px;
+            color: #c0392b;
+        }
+  .container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center items horizontally */
+    gap: 20px; /* Space between items */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    padding: 30px; /* Add padding around the container */
+    background: linear-gradient(to right, rgba(255, 204, 204, 0.8), rgba(255, 255, 204, 0.8)); /* Light gradient with transparency */
+    border-radius: 15px; /* Rounded corners for a softer look */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19); /* Enhanced shadow for 3D effect */
+    border: 2px solid #e0a96b; /* Light brown border to enhance the kitchen feel */
+    max-width: 1200px; /* Limit the maximum width for better layout */
+    margin: 0 auto; /* Center the container on the page */
+    position: relative; /* Position relative for absolute children */
+    transform: translateY(0) scale(1); /* Initial transform state */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition effect */
+}
+
+.container:hover {
+    transform: translateY(-10px) scale(1.05); /* Hover state with 3D effect */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 20px 40px rgba(0, 0, 0, 0.25); /* Enhanced shadow on hover */
+}
+
+.container::before {
+    content: ""; /* Create a pseudo-element */
+    background: linear-gradient(to right, rgba(285, 264, 678, 0.5), rgba(255, 255, 204, 0.5)); /* Translucent gradient */
+    position: absolute; /* Position it absolutely */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    right: 0; /* Align to the right */
+    bottom: 0; /* Align to the bottom */
+    opacity: 0.3; /* Set the opacity for translucency */
+    border-radius: 15px; /* Match the border radius */
+    z-index: -1; /* Send it behind the content */
+}
+
+/* Additional 3D Effects */
+.container .item {
+    background: rgba(255, 255, 255, 0.9); /* Slightly opaque white background for items */
+    border-radius: 10px; /* Rounded corners for items */
+    padding: 20px; /* Padding for items */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Shadow for items */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for items */
+}
+
+.container .item:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* Enhanced shadow on hover */
+}
+    .ingredients-list, .drop-container, .recipe-suggestions {
+    width: 45%; /* Set width */
+    min-height: 300px; /* Minimum height */
+    padding: 20px; /* Padding around the content */
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 240, 240, 0.9)); /* Light gradient background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    position: relative; /* Position relative for pseudo-elements */
+}
+
+.ingredients-list:hover, .drop-container:hover, .recipe-suggestions:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
+}
+
+.ingredients-list::before, .drop-container::before, .recipe-suggestions::before {
+    content: ""; /* Create a pseudo-element */
+    position: absolute; /* Position it absolutely */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    right: 0; /* Align to the right */
+    bottom: 0; /* Align to the bottom */
+    background: rgba(255, 255, 255, 0.1); /* Light overlay for depth */
+    border-radius: 10px; /* Match the border radius */
+    z-index: -1; /* Send it behind the content */
+}#ingredients {
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 15px; /* Increased gap for better spacing */
+    justify-content: center; /* Center items horizontally */
+    padding: 20px; /* Add padding around the container */
+    background: rgba(255, 255, 255, 0.9); /* Light background for contrast */
+    border-radius: 10px; /* Rounded corners for the container */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.ingredient {
+    padding: 15px; /* Increased padding for a more spacious feel */
+    margin: 5px; /* Margin around each ingredient */
+    background: linear-gradient(135deg, #ff5722, #ff8a65); /* Gradient background for ingredients */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for ingredients */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline-block; /* Inline-block for proper spacing */
+    font-weight: bold; /* Bold text */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.ingredient:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+        .drop-container {
+    border: 2px dashed #ff5722; /* Dashed border for the drop area */
+    min-height: 200px; /* Minimum height */
+    background: linear-gradient(to bottom right, #fff3e0, #ffe0b2); /* Light gradient background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Padding inside the container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background 0.3s ease; /* Smooth transition for background change */
+}
+
+.drop-container:hover {
+    background: linear-gradient(to bottom right, #ffe0b2, #ffcc80); /* Darker gradient on hover */
+}
+
+.recipe-suggestions {
+    background: linear-gradient(to bottom right, #ffecb3, #ffe082); /* Light gradient background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Padding inside the container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+h1 {
+    color: #d84315; /* Dark orange color */
+    font-family: 'Arial', sans-serif; /* Use a clean, bold font */
+    font-size: 3em; /* Increase font size for emphasis */
+    font-weight: bold; /* Make the font bold */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+}
+
+h2 {
+    color: #e65100; /* Bright orange color */
+    font-family: 'Arial', sans-serif; /* Use a clean, bold font */
+    font-size: 2.5em; /* Increase font size for emphasis */
+    font-weight: bold; /* Make the font bold */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+}
+    </style>
+</head>
+<body>
+    <h1>Recipe Suggester</h1>
+    <div class="container">
+        <div class="ingredients-list">
+            <h2>Ingredients</h2>
+            <div id="ingredients"></div>
+        </div>
+        <div class="drop-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Drop Ingredients Here</h2>
+            <div id="selected-ingredients"></div>
+        </div>
+    </div>
+    <div class="recipe-suggestions" id="recipes">
+        <h2>Suggested Recipes</h2>
+        <p>Drop ingredients to see recipes!</p>
+    </div>
+    <script>
+        const ingredients = [
+           "Tomato", "Onion", "Garlic", "Chicken", "Carrot", "Cheese", "Basil", "Oregano", "Salt",
+"Pepper", "Olive Oil", "Butter", "Milk", "Eggs", "Flour", "Sugar", "Honey", "Yogurt", "Lemon",
+"Ginger", "Chili", "Spinach", "Cucumber", "Broccoli", "Cauliflower", "Mushroom", "Rice", "Pasta", "Bread",
+"Fish", "Shrimp", "Coriander", "Mint", "Cabbage", "Bell Pepper", "Potato", "Sweet Potato", "Lettuce", "Avocado",
+"Apple", "Banana", "Strawberry", "Blueberry", "Raspberry", "Orange", "Pineapple", "Watermelon", "Peach", "Pear",
+"Plum", "Coconut", "Almonds", "Cashews", "Peanuts", "Walnuts", "Hazelnuts", "Chocolate", "Vanilla", "Cinnamon",
+"Cumin", "Paprika", "Soy Sauce", "Vinegar", "Ketchup", "Mustard", "Mayonnaise", "Nutmeg", "Cardamom", "Cloves",
+"Bay Leaf", "Chickpeas", "Lentils", "Black Beans", "Kidney Beans", "Tofu", "Quinoa", "Oats", "Corn", "Peas",
+"Zucchini", "Eggplant", "Beetroot", "Radish", "Celery", "Asparagus", "Pumpkin", "Maple Syrup", "Molasses", "Dates",
+"Figs", "Pomegranate", "Grapes", "Kiwi", "Mango", "Guava", "Lychee", "Passion Fruit", "Dragon Fruit",
+"Turmeric", "Curry Leaves", "Fenugreek", "Mustard Seeds", "Asafoetida", "Black Cardamom", "Fennel Seeds", "Saffron",
+"Tamarind", "Jaggery", "Coconut Milk", "Urad Dal", "Chana Dal", "Moong Dal", "Masoor Dal", "Black Pepper", "Clove",
+"Green Peas", "White Radish", "Spring Onion", "Dill Leaves", "Green Beans", "Horse Gram", "Sesame Seeds",
+"Poppy Seeds", "Raw Mango", "Bottle Gourd", "Bitter Gourd", "Snake Gourd", "Drumstick", "Yam", "Jackfruit",
+"Sago", "Foxtail Millet", "Barnyard Millet", "Finger Millet", "Pearl Millet", "Amaranth", "Black Sesame Seeds",
+"Red Chili Powder", "White Pepper", "Green Chili", "Black Salt", "Rock Salt", "Brown Sugar", "Palm Sugar",
+"Rose Water", "Screw Pine Essence", "Mace", "Gooseberry", "Lotus Seeds", "Betel Leaves", "Raw Banana",
+"Water Chestnut", "Indian Gooseberry", "Kokum", "Curry Powder", "Pav Bhaji Masala", "Chaat Masala", "Garam Masala",
+"Kala Jeera", "Carom Seeds", "Dried Fenugreek Leaves", "Dry Ginger Powder", "Dried Mango Powder", "Pomegranate Seeds",
+"Raisins", "Sultanas", "Star Anise", "Bay Leaf", "Taro Root", "Sapodilla", "Custard Apple", "Wood Apple",
+"Tindora", "Colocasia Root", "Green Mango", "Hog Plum", "Roselle Leaves", "Taro Leaves", "Moringa Leaves",
+"Raw Papaya", "Bamboo Shoots", "Schezwan Pepper", "Javitri", "Black Mustard Seeds", "Yellow Mustard Seeds",
+"Green Gram", "Red Gram", "Split Green Gram", "Split Bengal Gram", "White Lentils", "Soya Chunks",
+"Paneer", "Evaporated Milk", "Condensed Milk", "Ghee", "Buttermilk", "Barley", "Broken Wheat", "Vermicelli",
+"Sorghum", "Puffed Rice", "Flattened Rice", "Raw Peanuts", "Coconut Oil", "Sesame Oil", "Peanut Oil",
+"Mustard Oil", "Sunflower Oil", "Rice Bran Oil", "Wheat Bran", "Tamarind Paste", "Mango Pickle", "Lime Pickle",
+"Indian Bay Leaf", "Dry Coconut", "Khus Khus", "Paan Leaves", "Raw Cashew", "Fox Nuts", "Sabudana",
+"Raw Turmeric", "Red Spinach", "Malabar Spinach", "Brahmi Leaves", "Methi Leaves", "Curry Plant", "Hibiscus Leaves",
+"Neem Leaves", "Mint Chutney", "Coriander Chutney", "Mango Chutney", "Date and Tamarind Chutney", "Sesame Chutney"
+
+        ];
+
+         const recipes = {
+         
+    "Rose Water": [
+        "Rose Water Lemonade",
+        "Rose Water Rice Pudding",
+        "Rose Water Lassi",
+        "Rose Water Cake"
+    ],
+    "Screw Pine Essence": [
+        "Screw Pine Essence Rice Pudding",
+        "Screw Pine Essence Milkshake",
+        "Screw Pine Essence Cake",
+        "Screw Pine Essence Pudding"
+    ],
+    "Mace": [
+        "Mace Infused Rice",
+        "Mace and Cardamom Tea",
+        "Mace Spiced Cake",
+        "Mace and Nutmeg Cookies"
+    ],
+    "Gooseberry": [
+        "Gooseberry Chutney",
+        "Gooseberry Jam",
+        "Gooseberry Smoothie",
+        "Gooseberry Salad"
+    ],
+    "Lotus Seeds": [
+        "Lotus Seed Kheer",
+        "Roasted Lotus Seeds",
+        "Lotus Seed Snack",
+        "Lotus Seed Curry"
+    ],
+    "Betel Leaves": [
+        "Betel Leaf Paan",
+        "Betel Leaf Salad",
+        "Stuffed Betel Leaves",
+        "Betel Leaf Chutney"
+    ],
+    "Raw Banana": [
+        "Raw Banana Curry",
+        "Raw Banana Chips",
+        "Raw Banana Fritters",
+        "Raw Banana Stir Fry"
+    ],
+    "Water Chestnut": [
+        "Water Chestnut Stir Fry",
+        "Water Chestnut Salad",
+        "Water Chestnut Pancakes",
+        "Water Chestnut Soup"
+    ],
+    "Indian Gooseberry": [
+        "Amla Juice",
+        "Amla Chutney",
+        "Amla Candy",
+        "Amla Pickle"
+    ],
+    "Kokum": [
+        "Kokum Sharbat",
+        "Kokum Curry",
+        "Kokum Rice",
+        "Kokum Drink"
+    ],
+    "Curry Powder": [
+        "Curry Powder Chicken",
+        "Curry Powder Vegetables",
+        "Curry Powder Lentils",
+        "Curry Powder Rice"
+    ],
+    "Pav Bhaji Masala": [
+        "Pav Bhaji",
+        "Pav Bhaji Pizza",
+        "Pav Bhaji Sandwich",
+        "Pav Bhaji Pasta"
+    ],
+    "Chaat Masala": [
+        "Chaat Masala Fruit Salad",
+        "Chaat Masala Potato Chaat",
+        "Chaat Masala Dahi Puri",
+        "Chaat Masala Sprouts Salad"
+    ],
+    "Garam Masala": [
+        "Garam Masala Chicken",
+        "Garam Masala Lentils",
+        "Garam Masala Rice",
+        "Garam Masala Vegetables"
+    ],
+    "Kala Jeera": [
+        "Kala Jeera Rice",
+        "Kala Jeera Chicken",
+        "Kala Jeera Vegetable Curry",
+        "Kala Jeera Lentils"
+    ],
+    "Carom Seeds": [
+        "Carom Seed Paratha",
+        "Carom Seed Tea",
+        "Carom Seed Cookies",
+        "Carom Seed Vegetable Stir Fry"
+    ],
+    "Dried Fenugreek Leaves": [
+        "Fenugreek Leaves Curry",
+        "Fenugreek Leaves Paratha",
+        "Fenugreek Leaves Rice",
+        "Fenugreek Leaves Raita"
+    ],
+    "Dry Ginger Powder": [
+        "Ginger Tea",
+        "Dry Ginger Powder Cookies",
+        "Dry Ginger Powder Smoothie",
+        "Dry Ginger Powder Curry"
+    ],
+    "Dried Mango Powder": [
+        "Dried Mango Powder Chutney",
+        "Dried Mango Powder Salad",
+        "Dried Mango Powder Rice",
+        "Dried Mango Powder Lassi"
+    ],
+    "Pomegranate Seeds": [
+        "Pomegranate Salad",
+        "Pomegranate Juice",
+        "Pomegranate Yogurt Parfait",
+        "Pomegranate Molasses Glaze"
+    ],
+    "Raisins": [
+        "Raisin Oatmeal",
+        "Raisin Cookies",
+        "Raisin Rice Pudding",
+        "Raisin Salad"
+    ],
+    "Sultanas": [
+        "Sultana Cake",
+        "Sultana Pudding",
+        "Sultana Bread",
+        "Sultana Salad"
+    ],
+    "Star Anise": [
+        "Star Anise Tea",
+        "Star Anise Rice",
+        "Star Anise Chicken",
+        "Star Anise Infused Syrup"
+    ],
+    "Bay Leaf": [
+        "Bay Leaf Rice",
+        "Bay Leaf Chicken",
+        "Bay Leaf Vegetable Soup",
+        "Bay Leaf Lentils"
+    ],
+    "Taro Root": [
+        "Taro Root Curry",
+        "Taro Root Chips",
+        "Taro Root Mash",
+        "Taro Root Stir Fry"
+    ],
+    "Sapodilla": [
+        "Sapodilla Smoothie",
+        "Sapodilla Salad",
+        "Sapodilla Jam",
+        "Sapodilla Dessert"
+    ],
+    "Custard Apple": [
+        "Custard Apple Smoothie",
+        "Custard Apple Salad",
+        "Custard Apple Ice Cream",
+        "Custard Apple Pudding"
+    ],
+    "Wood Apple": [
+        "Wood Apple Chutney",
+        "Wood Apple Juice",
+        "Wood Apple Smoothie",
+        "Wood Apple Salad"
+    ],
+    "Tindora": [
+        "Tindora Stir Fry",
+        "Tindora Curry",
+        "Tindora Salad",
+        "Stuffed Tindora"
+    ],
+    "Colocasia Root": [
+        "Colocasia Curry",
+        "Colocasia Chips",
+        "Colocasia Stir Fry",
+        "Colocasia Soup"
+    ],
+    "Green Mango": [
+        "Green Mango Salad",
+        "Green Mango Chutney",
+        "Green Mango Pickle",
+        "Green Mango Rice"
+    ],
+    "Hog Plum": [
+        "Hog Plum Chutney",
+        "Hog Plum Salad",
+        "Hog Plum Juice",
+        "Hog Plum Curry"
+    ],
+    "Roselle Leaves": [
+        "Roselle Leaf Salad",
+        "Roselle Leaf Soup",
+        "Roselle Leaf Stir Fry",
+        "Roselle Leaf Chutney"
+    ],
+    "Taro Leaves": [
+        "Taro Leaf Curry",
+        "Taro Leaf Stir Fry",
+        "Taro Leaf Wraps",
+        "Taro Leaf Soup"
+    ],
+    "Moringa Leaves": [
+        "Moringa Leaf Curry",
+        "Moringa Leaf Soup",
+        "Moringa Leaf Salad",
+        "Moringa Leaf Smoothie"
+    ],
+    "Raw Papaya": [
+        "Raw Papaya Salad",
+        "Raw Papaya Curry",
+        "Raw Papaya Stir Fry",
+        "Raw Papaya Soup"
+    ],
+    "Bamboo Shoots": [
+        "Bamboo Shoot Stir Fry",
+        "Bamboo Shoot Curry",
+        "Bamboo Shoot Salad",
+        "Bamboo Shoot Soup"
+    ],
+    "Schezwan Pepper": [
+        "Schezwan Pepper Chicken",
+        "Schezwan Pepper Noodles",
+        "Schezwan Pepper Sauce",
+        "Schezwan Pepper Stir Fry"
+    ],
+    "Javitri": [
+        "Javitri Rice",
+        "Javitri Infused Milk",
+        "Javitri Chicken",
+        "Javitri Cake"
+    ],
+    "Black Mustard Seeds": [
+        "Black Mustard Seed Tempering",
+        "Black Mustard Seed Pickle"
+      ],
+     
+    "Zucchini": [
+        "Zucchini Noodles",
+        "Stuffed Zucchini Boats",
+        "Zucchini Fritters",
+        "Zucchini Bread"
+    ],
+    "Eggplant": [
+        "Eggplant Parmesan",
+        "Baba Ganoush",
+        "Stuffed Eggplant",
+        "Grilled Eggplant"
+    ],
+    "Beetroot": [
+        "Beetroot Salad",
+        "Beetroot Hummus",
+        "Roasted Beetroot",
+        "Beetroot Soup"
+    ],
+    "Radish": [
+        "Radish Salad",
+        "Pickled Radish",
+        "Radish Soup",
+        "Radish and Cucumber Salad"
+    ],
+    "Celery": [
+        "Celery Soup",
+        "Celery and Peanut Butter Sticks",
+        "Celery Salad",
+        "Braised Celery"
+    ],
+    "Asparagus": [
+        "Grilled Asparagus",
+        "Asparagus Risotto",
+        "Roasted Asparagus",
+        "Asparagus Soup"
+    ],
+    "Pumpkin": [
+        "Pumpkin Pie",
+        "Pumpkin Soup",
+        "Roasted Pumpkin",
+        "Pumpkin Bread"
+    ],
+    "Maple Syrup": [
+        "Maple Syrup Pancakes",
+        "Maple Glazed Carrots",
+        "Maple Pecan Pie",
+        "Maple Syrup Granola"
+    ],
+    "Molasses": [
+        "Molasses Cookies",
+        "Molasses Bread",
+        "Molasses BBQ Sauce",
+        "Molasses Oatmeal"
+    ],
+    "Dates": [
+        "Stuffed Dates",
+        "Date and Walnut Cake",
+        "Date Smoothie",
+        "Date Energy Balls"
+    ],
+    "Figs": [
+        "Fig Jam",
+        "Stuffed Figs",
+        "Fig Salad",
+        "Roasted Figs"
+    ],
+    "Pomegranate": [
+        "Pomegranate Salad",
+        "Pomegranate Juice",
+        "Pomegranate Molasses Glaze",
+        "Pomegranate Yogurt Parfait"
+    ],
+    "Grapes": [
+        "Grape Salad",
+        "Frozen Grapes",
+        "Grape Jam",
+        "Grape Smoothie"
+    ],
+    "Kiwi": [
+        "Kiwi Smoothie",
+        "Kiwi Salad",
+        "Kiwi Sorbet",
+        "Kiwi Tart"
+    ],
+    "Mango": [
+        "Mango Salsa",
+        "Mango Lassi",
+        "Mango Sticky Rice",
+        "Mango Chutney"
+    ],
+    "Guava": [
+        "Guava Juice",
+        "Guava Salad",
+        "Guava Jam",
+        "Guava Smoothie"
+    ],
+    "Lychee": [
+        "Lychee Sorbet",
+        "Lychee Martini",
+        "Lychee Salad",
+        "Lychee Coconut Pudding"
+    ],
+    "Passion Fruit": [
+        "Passion Fruit Mousse",
+        "Passion Fruit Sorbet",
+        "Passion Fruit Salad",
+        "Passion Fruit Cheesecake"
+    ],
+    "Dragon Fruit": [
+        "Dragon Fruit Smoothie",
+        "Dragon Fruit Salad",
+        "Dragon Fruit Bowl",
+        "Dragon Fruit Sorbet"
+    ],
+    "Turmeric": [
+        "Turmeric Latte",
+        "Turmeric Rice",
+        "Turmeric Chicken",
+        "Turmeric Smoothie"
+    ],
+    "Curry Leaves": [
+        "Curry Leaf Rice",
+        "Curry Leaf Chutney",
+        "Curry Leaf Chicken",
+        "Curry Leaf Potato Fry"
+    ],
+    "Fenugreek": [
+        "Fenugreek Leaves Curry",
+        "Fenugreek Paratha",
+        "Fenugreek Tea",
+        "Fenugreek and Potato Stir Fry"
+    ],
+    "Mustard Seeds": [
+        "Mustard Seed Tempering",
+        "Mustard Seed Pickle",
+        "Mustard Seed Salad Dressing",
+        "Mustard Seed Curry"
+    ],
+    "Asafoetida": [
+        "Asafoetida Lentil Soup",
+        "Asafoetida Vegetable Stir Fry",
+        "Asafoetida Rice",
+        "Asafoetida Potato Curry"
+    ],
+    "Black Cardamom": [
+        "Black Cardamom Rice",
+        "Black Cardamom Tea",
+        "Black Cardamom Chicken",
+        "Black Cardamom Curry"
+    ],
+    "Fennel Seeds": [
+        "Fennel Seed Tea",
+        "Fennel Seed Salad",
+        "Fennel Seed Cookies",
+        "Fennel Seed Curry"
+    ],
+    "Saffron": [
+        "Saffron Rice",
+        "Saffron Milk",
+        "Saffron Infused Cake",
+        "Saffron Risotto"
+    ],
+    "Tamarind": [
+        "Tamarind Chutney",
+        "Tamarind Rice",
+        "Tamarind Drink",
+        "Tamarind Curry"
+    ],
+    "Jaggery": [
+        "Jaggery Ladoo",
+        "Jaggery Rice",
+        "Jaggery and Coconut Balls",
+        "Jaggery Tea"
+    ],
+    "Coconut Milk": [
+        "Coconut Milk Curry",
+        "Coconut Milk Rice",
+        "Coconut Milk Smoothie",
+        "Coconut Milk Pudding"
+    ],
+    "Urad Dal": [
+        "Urad Dal Tadka",
+        "Urad Dal Curry",
+        "Urad Dal Dosa",
+        "Urad Dal Soup"
+    ],
+    "Chana Dal": [
+        "Chana Dal Curry",
+        "Chana Dal Pancakes",
+        "Chana Dal Salad",
+        "Chana Dal Soup"
+    ],
+    "Moong Dal": [
+        "Moong Dal Khichdi",
+        "Moong Dal Curry",
+        "Moong Dal Soup",
+        "Moong Dal Pancakes"
+    ],
+    "Masoor Dal": [
+        "Masoor Dal Curry",
+        "Masoor Dal Soup",
+        "Masoor Dal Salad",
+        "Masoor Dal Tadka"
+    ],
+    "Black Pepper": [
+        "Pepper Chicken",
+        "Black Pepper Sauce",
+        "Peppercorn Beef",
+        "Black Pepper Tofu"
+    ],
+    "Clove": [
+        "Clove-Spiced Rice",
+        "Clove Tea",
+        "Clove Cookies",
+        "Clove Infused Milk"
+    ],
+    "Green Peas": [
+        "Green Peas Pulao",
+        "Green Peas Soup",
+        "Green Peas Curry",
+        "Green Peas Salad"
+    ],
+    "White Radish": [
+        "White Radish Salad",
+        "White Radish Stir Fry",
+        "White Radish Soup",
+        "Pickled White Radish"
+    ],
+    "Spring Onion": [
+        "Spring Onion Pancakes",
+        "Spring Onion Soup",
+        "Spring Onion Stir Fry",
+        "Spring Onion Salad"
+    ],
+    "Dill Leaves": [
+        "Dill Potato",
+        "Dill Salad",
+        "Dill Sauce",
+        "Dill and Yogurt Dip"
+    ],
+    "Green Beans": [
+        "Green Bean Casserole",
+        "Stir-Fried Green Beans",
+        "Green Bean Salad",
+        "Green Bean Almondine"
+    ],
+    "Horse Gram": [
+        "Horse Gram Curry",
+        "Horse Gram Soup",
+        "Horse Gram Salad",
+        "Horse Gram Sprouts"],
+       
+    "Tomato": [
+        "Tomato Salad",
+        "Tomato Soup",
+        "Bruschetta with Tomato",
+        "Stuffed Tomatoes"
+    ],
+    "Onion": [
+        "Caramelized Onion Tart",
+        "French Onion Soup",
+        "Onion Rings",
+        "Onion Bhaji"
+    ],
+    "Garlic": [
+        "Garlic Butter Shrimp",
+        "Garlic Bread",
+        "Garlic Mashed Potatoes",
+        "Roasted Garlic Hummus"
+    ],
+    "Chicken": [
+        "Grilled Chicken Breast",
+        "Chicken Alfredo Pasta",
+        "Chicken Tikka Masala",
+        "Chicken Stir Fry"
+    ],
+    "Beef": [
+        "Beef Stroganoff",
+        "Beef Tacos",
+        "Beef Stew",
+        "Grilled Beef Skewers"
+    ],
+    "Carrot": [
+        "Honey Glazed Carrots",
+        "Carrot Cake",
+        "Carrot Soup",
+        "Roasted Carrots"
+    ],
+    "Cheese": [
+        "Cheese Fondue",
+        "Macaroni and Cheese",
+        "Cheese Quesadilla",
+        "Cheese Stuffed Peppers"
+    ],
+    "Basil": [
+        "Basil Pesto",
+        "Caprese Salad",
+        "Basil Chicken",
+        "Basil Tomato Soup"
+    ],
+    "Oregano": [
+        "Oregano Chicken",
+        "Oregano Garlic Bread",
+        "Oregano Pizza Sauce",
+        "Oregano Roasted Vegetables"
+    ],
+    "Salt": [
+        "Salted Caramel Sauce",
+        "Salted Butter Cookies",
+        "Salted Popcorn",
+        "Salted Egg Yolk Cookies"
+    ],
+    "Pepper": [
+        "Peppercorn Steak",
+        "Pepper Chicken Stir Fry",
+        "Pepper and Onion Frittata",
+        "Spicy Pepper Sauce"
+    ],
+    "Olive Oil": [
+        "Olive Oil Dressing",
+        "Olive Oil Cake",
+        "Olive Oil Roasted Vegetables",
+        "Olive Oil Pasta"
+    ],
+    "Butter": [
+        "Garlic Butter Sauce",
+        "Butter Chicken",
+        "Butter Cookies",
+        "Brown Butter Pasta"
+    ],
+    "Milk": [
+        "Creamy Milkshake",
+        "Milk Pudding",
+        "Milk Rice",
+        "Milk and Honey Smoothie"
+    ],
+    "Eggs": [
+        "Classic Scrambled Eggs",
+        "Eggs Benedict",
+        "Shakshuka",
+        "Deviled Eggs"
+    ],
+    "Flour": [
+        "Basic Pancake Batter",
+        "Flour Tortillas",
+        "Homemade Bread",
+        "Flourless Chocolate Cake"
+    ],
+    "Sugar": [
+        "Sugar Cookies",
+        "Brown Sugar Oatmeal",
+        "Sugar Glazed Donuts",
+        "Sugar Syrup"
+    ],
+    "Honey": [
+        "Honey Lemon Tea",
+        "Honey Glazed Carrots",
+        "Honey Mustard Dressing",
+        "Honey Yogurt Parfait"
+    ],
+    "Yogurt": [
+        "Yogurt Parfait",
+        "Yogurt Smoothie",
+        "Raita",
+        "Yogurt Marinated Chicken"
+    ],
+    "Lemon": [
+        "Lemonade",
+        "Lemon Tart",
+        "Lemon Chicken",
+        "Lemon Garlic Shrimp"
+    ],
+    "Ginger": [
+        "Ginger Tea",
+        "Ginger Cookies",
+        "Ginger Chicken Stir Fry",
+        "Pickled Ginger"
+    ],
+    "Chili": [
+        "Chili Con Carne",
+        "Chili Garlic Noodles",
+        "Spicy Chili Sauce",
+        "Chili Chicken"
+    ],
+    "Spinach": [
+        "Sautéed Spinach",
+        "Spinach Salad",
+        "Spinach Quiche",
+        "Creamed Spinach"
+    ],
+    "Cucumber": [
+        "Cucumber Salad",
+        "Cucumber Sandwiches",
+        "Cucumber Raita",
+        "Pickled Cucumbers"
+    ],
+    "Broccoli": [
+        "Steamed Broccoli",
+        "Broccoli Cheese Casserole",
+        "Broccoli Stir Fry",
+        "Broccoli Salad"
+    ],
+    "Cauliflower": [
+        "Roasted Cauliflower",
+        "Cauliflower Rice",
+        "Cauliflower Soup",
+        "Buffalo Cauliflower Bites"
+    ],
+    "Mushroom": [
+        "Mushroom Risotto",
+        "Stuffed Mushrooms",
+        "Mushroom Soup",
+        "Mushroom Stir Fry"
+    ],
+    "Rice": [
+        "Fried Rice",
+        "Rice Pilaf",
+        "Risotto",
+        "Rice Pudding"
+    ],
+    "Pasta": [
+        "Spaghetti Aglio e Olio",
+        "Pasta Primavera",
+        "Pasta Salad",
+        "Macaroni and Cheese"
+    ],
+    "Bread": [
+        "Homemade Bread",
+        "Garlic Bread",
+        "Bread Pudding",
+        "French Toast"
+    ],
+    "Fish": [
+        "Grilled Fish Tacos",
+        "Baked Salmon",
+        "Fish Curry",
+        "Fish and Chips"
+    ],
+    "Shrimp": [
+        "Shrimp Scampi",
+        "Shrimp Fried Rice",
+        "Garlic Shrimp",
+        "Shrimp Tacos"
+    ],
+    "Coriander": [
+        "Coriander Chutney",
+        "Coriander Rice",
+        "Coriander Chicken",
+        "Coriander Salad"
+    ],
+    "Mint": [
+        "Mint Chutney",
+        "Mint Tea",
+        "Mint Yogurt Sauce",
+        "Minted Pea Soup"
+    ],
+    "Cabbage": [
+        "Cabbage Slaw",
+        "Stuffed Cabbage Rolls",
+        "Cabbage Stir Fry",
+        "Cabbage Soup"
+    ],
+    "Bell Pepper": [
+        "Stuffed Bell Peppers",
+        "Bell Pepper Stir Fry",
+        "Roasted Bell Peppers",
+        "Bell Pepper Salad"
+    ],
+    "Potato": [
+        "Mashed Potatoes",
+        "Baked Potatoes",
+        "Potato Wedges",
+        "Potato Salad"
+    ],
+    "Sweet Potato": [
+        "Baked Sweet Potatoes",
+        "Sweet Potato Fries",
+        "Sweet Potato Mash",
+        "Sweet Potato Casserole"
+    ],
+    "Lettuce": [
+        "Lettuce Wraps",
+        "Caesar Salad",
+        "Lettuce Salad",
+        "Lettuce Soup"
+    ],
+    "Avocado": [
+        "Guacamole",
+        "Avocado Toast",
+        "Avocado Salad",
+        "Avocado Smoothie"
+    ],
+    "Apple": [
+        "Apple Pie",
+        "Apple Crisp",
+        "Baked Apples",
+        "Apple Salad"
+    ],
+    "Banana": [
+        "Banana Bread",
+        "Banana Pancakes",
+        "Banana Smoothie",
+        "Banana Pudding"
+    ],
+    "Strawberry": [
+        "Strawberry Shortcake",
+        "Strawberry Jam",
+        "Strawberry Smoothie",
+        "Chocolate Covered Strawberries"
+    ],
+    "Blueberry": [
+        "Blueberry Muffins",
+        "Blueberry Pancakes",
+        "Blueberry Smoothie",
+        "Blueberry Pie"
+    ],
+   
+    "Sorghum": [
+        "Sorghum Porridge",
+        "Sorghum Salad",
+        "Sorghum Pilaf",
+        "Sorghum Pancakes"
+    ],
+    "Puffed Rice": [
+        "Puffed Rice Snack Mix",
+        "Puffed Rice Chaat",
+        "Puffed Rice Pudding",
+        "Puffed Rice Bars"
+    ],
+    "Flattened Rice": [
+        "Flattened Rice Poha",
+        "Flattened Rice Upma",
+        "Flattened Rice Chaat",
+        "Flattened Rice Pudding"
+    ],
+    "Raw Peanuts": [
+        "Spicy Roasted Peanuts",
+        "Peanut Chutney",
+        "Peanut Butter",
+        "Peanut Salad"
+    ],
+    "Coconut Oil": [
+        "Coconut Oil Rice",
+        "Coconut Oil Cake",
+        "Coconut Oil Roasted Vegetables",
+        "Coconut Oil Smoothie"
+    ],
+    "Sesame Oil": [
+        "Sesame Oil Dressing",
+        "Sesame Oil Noodles",
+        "Sesame Oil Stir Fry",
+        "Sesame Oil Marinade"
+    ],
+    "Peanut Oil": [
+        "Peanut Oil Fried Rice",
+        "Peanut Oil Stir Fry",
+        "Peanut Oil Salad Dressing",
+        "Peanut Oil Chicken"
+    ],
+    "Mustard Oil": [
+        "Mustard Oil Fish Curry",
+        "Mustard Oil Salad Dressing",
+        "Mustard Oil Pickles",
+        "Mustard Oil Stir Fry"
+    ],
+    "Sunflower Oil": [
+        "Sunflower Oil Cake",
+        "Sunflower Oil Fried Chicken",
+        "Sunflower Oil Salad Dressing",
+        "Sunflower Oil Roasted Vegetables"
+    ],
+    "Rice Bran Oil": [
+        "Rice Bran Oil Fried Rice",
+        "Rice Bran Oil Salad Dressing",
+        "Rice Bran Oil Stir Fry",
+        "Rice Bran Oil Cake"
+    ],
+    "Wheat Bran": [
+        "Wheat Bran Muffins",
+        "Wheat Bran Porridge",
+        "Wheat Bran Cookies",
+        "Wheat Bran Pancakes"
+    ],
+    "Tamarind Paste": [
+        "Tamarind Chutney",
+        "Tamarind Rice",
+        "Tamarind Drink",
+        "Tamarind Curry"
+    ],
+    "Mango Pickle": [
+        "Mango Pickle with Paratha",
+        "Mango Pickle Rice",
+        "Mango Pickle Sandwich",
+        "Mango Pickle Salad"
+    ],
+    "Lime Pickle": [
+        "Lime Pickle with Rice",
+        "Lime Pickle Chutney",
+        "Lime Pickle Salad",
+        "Lime Pickle Sandwich"
+    ],
+    "Indian Bay Leaf": [
+        "Bay Leaf Rice",
+        "Bay Leaf Chicken",
+        "Bay Leaf Vegetable Curry",
+        "Bay Leaf Lentils"
+    ],
+    "Dry Coconut": [
+        "Dry Coconut Chutney",
+        "Dry Coconut Ladoo",
+        "Dry Coconut Curry",
+        "Dry Coconut Rice"
+    ],
+    "Khus Khus": [
+        "Khus Khus Pudding",
+        "Khus Khus Smoothie",
+        "Khus Khus Curry",
+        "Khus Khus Salad"
+    ],
+    "Paan Leaves": [
+        "Paan with Betel Nut",
+        "Paan Leaf Chutney",
+        "Stuffed Paan Leaves",
+        "Paan Leaf Salad"
+    ],
+    "Raw Cashew": [
+        "Raw Cashew Curry",
+        "Raw Cashew Salad",
+        "Raw Cashew Stir Fry",
+        "Raw Cashew Milk"
+    ],
+    "Fox Nuts": [
+        "Fox Nut Kheer",
+        "Fox Nut Snack",
+        "Fox Nut Curry",
+        "Fox Nut Salad"
+    ],
+    "Sabudana": [
+        "Sabudana Khichdi",
+        "Sabudana Vada",
+        "Sabudana Pudding",
+        "Sabudana Salad"
+    ],
+    "Raw Turmeric": [
+        "Raw Turmeric Tea",
+        "Raw Turmeric Paste",
+        "Raw Turmeric Curry",
+        "Raw Turmeric Smoothie"
+    ],
+    "Red Spinach": [
+        "Red Spinach Curry",
+        "Red Spinach Salad",
+        "Red Spinach Soup",
+        "Red Spinach Stir Fry"
+    ],
+    "Malabar Spinach": [
+        "Malabar Spinach Curry",
+        "Malabar Spinach Stir Fry",
+        "Malabar Spinach Soup",
+        "Malabar Spinach Salad"
+    ],
+    "Brahmi Leaves": [
+        "Brahmi Leaf Salad",
+        "Brahmi Leaf Smoothie",
+        "Brahmi Leaf Chutney",
+        "Brahmi Leaf Stir Fry"
+    ],
+    "Methi Leaves": [
+        "Methi Paratha",
+        "Methi Thepla",
+        "Methi Dal",
+        "Methi and Potato Stir Fry"
+    ],
+    "Curry Plant": [
+        "Curry Plant Rice",
+        "Curry Plant Chicken",
+        "Curry Plant Soup",
+        "Curry Plant Chutney"
+    ],
+    "Hibiscus Leaves": [
+        "Hibiscus Leaf Salad",
+        "Hibiscus Leaf Soup",
+        "Hibiscus Leaf Stir Fry",
+        "Hibiscus Leaf Chutney"
+    ],
+    "Neem Leaves": [
+        "Neem Leaf Chutney",
+        "Neem Leaf Salad",
+        "Neem Leaf Tea",
+        "Neem Leaf Stir Fry"
+    ],
+    "Mint Chutney": [
+        "Mint Chutney with Samosa",
+        "Mint Chutney Sandwich",
+        "Mint Chutney Rice",
+        "Mint Chutney Salad"
+    ],
+    "Coriander Chutney": [
+        "Coriander Chutney with Dhokla",
+        "Coriander Chutney Sandwich",
+        "Coriander Chutney Rice",
+        "Coriander Chutney Salad"
+    ],
+    "Mango Chutney": [
+        "Mango Chutney with Cheese",
+        "Mango Chutney Sandwich",
+        "Mango Chutney Rice",
+        "Mango Chutney Salad"
+    ],
+    "Date and Tamarind Chutney": [
+        "Date Tamarind Chutney with Pakora",
+        "Date Tamarind Chutney Sandwich",
+        "Date Tamarind Chutney Rice",
+        "Date Tamarind Chutney Salad"
+    ],
+    "Sesame Chutney": [
+        "Sesame Chutney with Idli",
+        "Sesame Chutney Sandwich",
+        "Sesame Chutney Rice",
+        "Sesame Chutney Salad"
+    ]
+};
+
+
+        function allowDrop(event) {
+            event.preventDefault();
+            if (window.innerHeight - event.clientY < 100) {
+                window.scrollBy({ top: 10, behavior: 'smooth' });
+            }
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.innerText);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            let ingredient = event.dataTransfer.getData("text");
+            addIngredient(ingredient);
+        }
+
+        function addIngredient(ingredient) {
+            let container = document.getElementById("selected-ingredients");
+            if (!container.innerHTML.includes(ingredient)) {
+                let div = document.createElement("div");
+                div.className = "ingredient";
+                div.innerText = ingredient;
+                container.appendChild(div);
+                suggestRecipes();
+            }
+        }
+
+        function suggestRecipes() {
+            let selected = Array.from(document.getElementById("selected-ingredients").children).map(e => e.innerText);
+            let recipeContainer = document.getElementById("recipes");
+            recipeContainer.innerHTML = "<h2>Suggested Recipes</h2>";
+            let found = false;
+            for (let key in recipes) {
+                let keyIngredients = key.split(", ");
+                if (keyIngredients.every(ing => selected.includes(ing))) {
+                    let p = document.createElement("p");
+                    p.innerText = recipes[key];
+                    recipeContainer.appendChild(p);
+                    found = true;
+                }
+            }
+            if (!found) {
+                recipeContainer.innerHTML += "<p>No matching recipes found. Try adding more ingredients!</p>";
+            }
+        }
+
+        window.onload = () => {
+            let ingredientsContainer = document.getElementById("ingredients");
+            ingredients.forEach(ing => {
+                let div = document.createElement("div");
+                div.className = "ingredient";
+                div.innerText = ing;
+                div.draggable = true;
+                div.ondragstart = drag;
+                div.onclick = () => addIngredient(ing);
+                ingredientsContainer.appendChild(div);
+            });
+        };
+    </script>
+</body>
+</html>
+
