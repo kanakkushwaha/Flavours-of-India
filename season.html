@@ -1,0 +1,2290 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seasonal Recipes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background-color: #fff7f0;
+    }
+
+    h1 {
+      background-color: #99ccff;
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      background-color: #3399ff;
+      color: white;
+      padding: 10px;
+      margin: 0;
+    }
+
+    .section {
+      padding: 30px 20px;
+    }
+
+    .card {
+      display: inline-block;
+      margin: 15px;
+      padding: 15px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+      width: 180px;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background-color: #ffe0d4;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .back-button {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ff8a65;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background-color: #ff7043;
+    }
+
+    .recipe-details {
+      text-align: left;
+      background-color: #f0f8ff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .recipe-step {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌿 Seasonal Recipes</h1>
+
+  <!-- Season Selection -->
+  <div id="season-section" class="section">
+    <h2>Select a season</h2>
+    <div class="card" onclick="selectSeason('spring')">
+      <img src="https://media.istockphoto.com/id/674833094/photo/cherry-tree-blossom.jpg?s=612x612&w=0&k=20&c=Mcdqod2YZRzIbP3juutyYe2warEFMWHrBsvOoB1xFAc=" alt="Spring">
+      🌸 Spring
+    </div>
+    <div class="card" onclick="selectSeason('summer')">
+      <img src="https://static.vecteezy.com/system/resources/thumbnails/045/784/835/small_2x/summer-text-written-on-a-sand-of-a-beach-photo.jpg" alt="Summer">
+      🌞 Summer
+    </div>
+    <div class="card" onclick="selectSeason('rainy')">
+      <img src="https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="rainy">
+      🍂 Rainy
+    </div>
+    <div class="card" onclick="selectSeason('winter')">
+      <img src="https://th.bing.com/th/id/OIP.rMfCu-0f5wnSzETqq3dqawHaEo?rs=1&pid=ImgDetMain" alt="Winter">
+      ❄️ Winter
+    </div>
+  </div>
+
+  <!-- Ingredient Selection -->
+  <div id="ingredient-section" class="section hidden">
+    <h2 id="season-title"></h2>
+    <div id="ingredients-container"></div>
+    <button class="back-button" onclick="goBackToSeason()">⬅ Back</button>
+  </div>
+
+  <!-- Recipe Selection -->
+  <div id="recipe-section" class="section hidden">
+    <h2 id="ingredient-title"></h2>
+    <div id="recipes-container"></div>
+    <button class="back-button" onclick="goBackToIngredients()">⬅ Back</button>
+  </div>
+
+  <!-- Recipe Details Section -->
+  <div id="recipe-details-section" class="section hidden">
+    <h2 id="recipe-name"></h2>
+    <div id="recipe-steps" class="recipe-details"></div>
+    <button class="back-button" onclick="goBackToRecipes()">⬅ Back</button>
+  </div>
+
+  <script>
+   const seasonalIngredients = {
+  spring: [
+    'Beetroot', 'Peas', 'Strawberries', 'Radish', 'Spinach', 'Carrots', 'Cabbage',
+    'Potatoes', 'Tomatoes', 'Garlic', 'Lettuce'
+  ],
+  summer: [
+    'Mango', 'Cucumber', 'Tomatoes', 'Coconut', 'Mint', 'Watermelon',
+    'BellPeppers', 'Onions', 'Coriander', 'ChiliPeppers'
+  ],
+  rainy: [
+    'Corn', 'GreenChili', 'Onion', 'Coriander',
+    'Rice', 'Garlic', 'Tomatoes', 'Ginger', 'Spinach'
+  ],
+  winter: [
+    'Cabbage', 'Carrots', 'Cauliflower', 'Spinach', 'Pomegranate', 'Potatoes',
+    'Onion', 'Garlic', 'Leeks',
+  ]
+};
+
+
+    const ingredientImages = {
+      Mango: 'https://plantparadise.in/cdn/shop/products/1_854ee821-b298-4bd8-95ce-f2d75ac806f7.jpg?v=1691199889',
+      Cucumber: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaR-4zywv14FV-GdynhOHO3KZ2fS75Fwu58g&s',
+      Tomatoes: 'https://images-prod.healthline.com/hlcmsresource/images/AN_images/tomatoes-1296x728-feature.jpg',
+      Coconut: 'https://th.bing.com/th/id/OIP.BZGTj3jNhFkdhUR0APQpGwHaFh?rs=1&pid=ImgDetMain',
+      Mint: 'https://cdn-prod.medicalnewstoday.com/content/images/articles/275/275944/mint-on-a-wooden-table.jpg',
+      GreenChili: 'https://th.bing.com/th/id/OIP.qET_nWnlqPmHqDYLnSf1JgHaHa?rs=1&pid=ImgDetMain',
+      Beetroot: 'https://media.istockphoto.com/id/493446908/photo/fresh-sliced-beetroot-on-wooden-surface.jpg?s=612x612&w=0&k=20&c=z94X8FkGe5Mm6lN5HcZsGaD4nm_vMlkdlBzhut1spes=',
+      Peas: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLSgLEL9poThysWyP4ZtOTJzylhhRUADPeA&s',
+      Strawberries: 'https://media.istockphoto.com/id/911678646/photo/strawberry-on-wooden-background-copy-space.jpg?s=612x612&w=0&k=20&c=cGNe3gyqD6FuVDKnHqEw8FNy8olN2a4osHrLQapG8d4=',
+      Corn: 'https://seed2plant.in/cdn/shop/products/maizeseeds.jpg?v=1604034397&width=1500',
+     Leeks: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7E7AtLtVzoKO-5cnel4wjNJ-mQlUgC_2H4Q&s',
+      Cabbage: 'https://images.healthshots.com/healthshots/en/uploads/2021/09/29144251/cabbage.jpg',
+      Carrots: 'https://media.istockphoto.com/id/1388403435/photo/fresh-carrots-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=XmrTb_nASc7d-4zVKUz0leeTT4fibDzWi_GpIun0Tlc=',
+      'Citrus Fruits': 'https://images.unsplash.com/photo-1615484477860-3b7b8ab8de88?fit=crop&w=500&q=60',
+      Radish: 'https://media.istockphoto.com/id/158690297/photo/daikon-radishes-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=k_KVuE_UbE-shIiG2z2xY8Fu7BqKy_bk4D9NfZdrTfM=',
+      Spinach: 'https://media.istockphoto.com/id/1006196472/photo/bunch-of-spinach-leaves-on-isolated-white-background.jpg?s=612x612&w=0&k=20&c=OAIswtUC1aMNDwtMEFIaZv6fSIftsoAV-cgJZSGLJ7A=',
+      Watermelon: 'https://media.istockphoto.com/id/1496179914/photo/watermelon-slice-in-the-summer.jpg?s=612x612&w=0&k=20&c=-dEIRWjVtoyXxJiEXJSLj7MfoiNVlGXo4ku6ckZX1eQ=',
+      Onion: 'https://media.istockphoto.com/id/499146870/photo/red-onions.jpg?s=612x612&w=0&k=20&c=OaZUynAtxIJyPaSgAsAGWwAbpTs_EfKF5zT_UvBDpbY=',
+      Potatoes: 'https://m.media-amazon.com/images/I/51gMSeWnmgL._AC_UF894,1000_QL80_.jpg',
+      Pomegranate: 'https://healthyfamilyproject.com/wp-content/uploads/2020/05/Pomegranate-background.jpg',
+      Cauliflower: 'https://m.media-amazon.com/images/I/91EdPVzD99L._AC_UF1000,1000_QL80_.jpg',
+      Garlic:'https://media.istockphoto.com/id/104822116/photo/close-up-of-purple-garlic-bunch.jpg?s=612x612&w=0&k=20&c=dSTSczpOxQSow9WuT-sYV4Rd9wETlXRsvNkjcSwCQTM=',
+      Lettuce:'https://www.shutterstock.com/image-photo/lettuce-leaves-breakfast-lunch-salad-260nw-2518782599.jpg',
+      Onions: 'https://media.istockphoto.com/id/499146870/photo/red-onions.jpg?s=612x612&w=0&k=20&c=OaZUynAtxIJyPaSgAsAGWwAbpTs_EfKF5zT_UvBDpbY=',
+      BellPeppers:'https://images.healthshots.com/healthshots/en/uploads/2024/07/24112903/1-40.jpg',
+      Coriander:'https://th.bing.com/th/id/OIP.9jfrFjl_T1Ty6icKdaKtiQHaEK?rs=1&pid=ImgDetMain',
+      ChiliPeppers:'https://media.istockphoto.com/id/1359811139/photo/wooden-plate-with-hot-chili-peppers.jpg?s=612x612&w=0&k=20&c=IqaYg2tAqC8_Zd7saQfIYYxtyWDF_ZwWTN2n8Cm9d2M=',
+      Rice:'https://www.indianhealthyrecipes.com/wp-content/uploads/2023/07/basmati-rice-recipe.jpg',
+      Ginger:'https://media.istockphoto.com/id/162711007/photo/fresh-ginger-whole-and-chopped-on-rustic-wood-surface.jpg?s=612x612&w=0&k=20&c=DRfdLfPE7VM6yDR4sldD5uytjjH_ZJ2cBTFDgXlmSZE=',
+     
+     
+    };
+   const recipes = {
+  Mango: [
+    'Aamras', 'Mango Lassi', 'Mango Panna', 'Mango Chutney', 'Mango Cake', 'Mango Ice Cream',
+    'Mango Pudding', 'Mango Smoothie', 'Mango Curry', 'Mango Pickle'
+  ],
+  Cucumber: [
+    'Kakdi Salad', 'Cucumber Raita', 'Cucumber Chutney', 'Cucumber Soup', 'Cucumber Sandwich',
+    'Cucumber Juice', 'Cucumber Pickle', 'Cucumber Tzatziki', 'Cucumber Slices with Salt', 'Cucumber Detox Water'
+  ],
+  Tomatoes: [
+    'Tomato Soup', 'Tomato Pulao', 'Stuffed Tomatoes', 'Tomato Chutney', 'Tomato Salad',
+    'Tomato Curry', 'Tomato Juice', 'Tomato Pizza', 'Tomato Rasam', 'Tomato Bruschetta'
+  ],
+  Coconut: [
+    'Coconut Burfi', 'Coconut Ladoo', 'Sol Kadhi', 'Coconut Milk Curry', 'Coconut Rice',
+    'Coconut Chutney', 'Coconut Water Smoothie', 'Coconut Sweets', 'Coconut Ice Cream', 'Coconut Barfi'
+  ],
+  Mint: [
+    'Mint Chutney', 'Mint Lemonade', 'Pudina Paratha', 'Mint Rice', 'Mint Pulao',
+    'Mint Yogurt Dip', 'Mint Mojito', 'Mint Tea', 'Mint Salad', 'Mint Raita'
+  ],
+  GreenChili: [
+    'Green Chili Pickle', 'Stuffed Green Chili', 'Green Chili Sauce', 'Green Chili Curry',
+    'Green Chili Soup', 'Green Chili Sauté', 'Green Chili Raita', 'Green Chili Masala', 'Spicy Green Chili Dip', 'Green Chili Pakora'
+  ],
+  Potatoes: [
+    'Aloo Gobi', 'Aloo Paratha', 'Aloo Tikki', 'Aloo Curry', 'Aloo Bhindi',
+    'Aloo Methi', 'Aloo Masala', 'Aloo Fry', 'Aloo Chaat', 'Aloo Keema'
+  ],
+  Onion: [
+    'Onion Bhaji', 'Onion Pakora', 'Onion Rings', 'Onion Chutney',
+    'Onion Curry', 'Stuffed Onions', 'Pickled Onions', 'Onion Paratha'
+  ],
+  Garlic: [
+    'Garlic Bread', 'Garlic Butter Shrimp', 'Garlic Chicken', 'Garlic Soup', 'Garlic Mashed Potatoes',
+    'Garlic Rice', 'Garlic Pickle', 'Garlic Naan', 'Garlic Butter Pasta', 'Garlic Aioli'
+  ],
+  Lettuce: [
+    'Lettuce Salad', 'Lettuce Wraps', 'Lettuce Soup', 'Lettuce Smoothie', 'Lettuce Stir-fry',
+    'Lettuce Tacos', 'Lettuce Sandwich', 'Lettuce with Avocado', 'Lettuce Juice', 'Lettuce Chutney'
+  ],
+  Carrots: [
+    'Carrot Halwa', 'Carrot Soup', 'Carrot Salad', 'Carrot Paratha', 'Carrot Cake',
+    'Carrot Juice', 'Carrot Pudding', 'Carrot Pickle', 'Carrot Stir-fry', 'Carrot Stew'
+  ],
+  BellPeppers: [
+    'Stuffed Bell Peppers', 'Bell Pepper Salad', 'Bell Pepper Soup', 'Bell Pepper Stir-fry',
+    'Grilled Bell Peppers', 'Bell Pepper Sandwich', 'Bell Pepper Salsa', 'Bell Pepper Curry',
+    'Bell Pepper Pasta', 'Bell Pepper Rice'
+  ],
+  Coriander: [
+    'Coriander Chutney', 'Coriander Pesto', 'Coriander Rice', 'Coriander Soup',
+    'Coriander Chicken', 'Coriander Curry', 'Coriander Raita', 'Coriander Salad',
+    'Coriander Paratha', 'Coriander Smoothie'
+  ],
+  Radish: [
+    'Radish Salad', 'Radish Paratha', 'Radish Curry', 'Radish Soup', 'Radish Pickle',
+    'Radish Stir-fry', 'Radish Raita', 'Radish Chutney', 'Radish Smoothie', 'Radish Stew'
+  ],
+   Cabbage: [
+    'Cabbage Stir-fry','Cabbage Paratha','Cabbage Sabzi','Cabbage Pakora','Stuffed Cabbage Rolls','Cabbage Soup',
+    'Cabbage Thoran','Cabbage Manchurian','Cabbage and Peas Curry','Cabbage Slaw'
+  ],
+  Spinach: [
+    'Spinach Soup', 'Palak Paneer', 'Spinach Salad', 'Spinach Paratha', 'Spinach Rice',
+    'Spinach Curry', 'Spinach Smoothie', 'Spinach Daal', 'Spinach Stir-fry', 'Spinach Pulao'
+  ],
+  Beetroot: [
+    'Beetroot Salad', 'Beetroot Soup', 'Beetroot Juice', 'Beetroot Curry', 'Beetroot Paratha',
+    'Beetroot Pickle', 'Beetroot Smoothie', 'Beetroot Risotto', 'Beetroot Stir-fry', 'Beetroot Halwa'
+  ],
+  Pomegranate: [
+    'Pomegranate Salad', 'Pomegranate Chutney', 'Pomegranate Juice', 'Pomegranate Smoothie',
+    'Pomegranate Rice', 'Pomegranate Curry', 'Pomegranate Sorbet', 'Pomegranate Salsa',
+    'Pomegranate Raita', 'Pomegranate Pulao'
+  ],
+  Cauliflower: [
+    'Gobi Masala', 'Cauliflower Soup', 'Cauliflower Paratha', 'Cauliflower Stir-fry',
+    'Cauliflower Curry', 'Stuffed Cauliflower', 'Cauliflower Rice', 'Cauliflower Tikka',
+    'Cauliflower Pakora', 'Cauliflower Salad'
+  ],
+  Leeks: [
+    'Leek Soup', 'Leek and Potato Gratin', 'Leek Stir-fry', 'Leek Salad', 'Leek Risotto',
+    'Leek Pie', 'Leek and Mushroom Curry', 'Leek and Bacon Wraps', 'Leek Frittata', 'Leek Curry'
+  ],
+  Corn: [
+    'Corn Soup', 'Corn Salad', 'Corn Fritters', 'Corn Curry', 'Corn Paratha',
+    'Corn on the Cob', 'Sweet Corn Pulao', 'Corn Chaat', 'Corn and Potato Tikki', 'Corn Masala'
+  ],
+  Ginger: [
+    'Ginger Tea', 'Ginger Lemonade', 'Ginger Garlic Paste', 'Ginger Soup',
+    'Ginger Cookies', 'Ginger Curry', 'Ginger Pickle', 'Ginger Stir-fry', 'Ginger Smoothie'
+  ],
+  ChiliPeppers: [
+    'Chili Pickle', 'Chili Sauce', 'Chili Curry', 'Chili Raita', 'Stuffed Chilies',
+    'Chili Soup', 'Chili Fried Rice', 'Chili Stir-fry', 'Chili Paneer'
+  ],
+  Strawberries: [
+    'Strawberry Milkshake', 'Strawberry Jam', 'Strawberry Ice Cream', 'Strawberry Smoothie',
+    'Strawberry Salad', 'Strawberry Pancakes', 'Strawberry Tart', 'Strawberry Yogurt',
+    'Strawberry Mousse', 'Strawberry Cheesecake'
+  ],
+  Watermelon: [
+    'Watermelon Juice', 'Watermelon Salad', 'Watermelon Sorbet', 'Watermelon Popsicles',
+    'Watermelon Smoothie', 'Watermelon Salsa', 'Watermelon Gazpacho', 'Grilled Watermelon',
+    'Watermelon Slushie', 'Watermelon Mojito'
+  ],
+  Rice: [
+    'Plain Rice', 'Jeera Rice', 'Fried Rice', 'Biryani', 'Pulao',
+    'Curd Rice', 'Lemon Rice', 'Tamarind Rice', 'Tomato Rice', 'Garlic Rice'
+  ],
+  Peas: [
+    'Matar Paneer', 'Peas Pulao', 'Peas Soup', 'Peas Curry', 'Aloo Matar',
+    'Peas Masala', 'Peas Stir-fry', 'Peas Kachori'
+  ]
+};
+const recipeDetails = {
+  Ginger: {
+    'Ginger Tea': [
+      '1. Boil water in a pot and add sliced ginger.',
+      '2. Let it simmer for 5-10 minutes.',
+      '3. Add honey or sugar to taste.',
+      '4. Pour into a cup and add lemon juice if desired.',
+      '5. Serve hot.'
+    ],
+    'Ginger Lemonade': [
+      '1. Boil water with ginger slices and let it cool.',
+      '2. Add lemon juice and sugar to the ginger water.',
+      '3. Stir well and chill in the refrigerator.',
+      '4. Serve over ice with lemon slices.'
+    ],
+    'Ginger Garlic Paste': [
+      '1. Blend equal parts ginger and garlic into a smooth paste.',
+      '2. Store in an airtight container and refrigerate.',
+      '3. Use as a base for curries, stir-fries, and marinades.'
+    ],
+    'Ginger Soup': [
+      '1. Sauté onions, garlic, and ginger in a pot.',
+      '2. Add vegetable stock and bring to a boil.',
+      '3. Simmer for 10 minutes.',
+      '4. Season with salt, pepper, and a pinch of turmeric.',
+      '5. Blend until smooth and serve hot.'
+    ],
+    'Ginger Cookies': [
+      '1. Mix butter, sugar, and ginger powder in a bowl.',
+      '2. Add flour, baking soda, and spices.',
+      '3. Roll the dough into balls and flatten.',
+      '4. Bake at 180°C for 10-12 minutes.',
+      '5. Let them cool and serve.'
+    ],
+    'Ginger Curry': [
+      '1. Sauté onions, garlic, and ginger in oil.',
+      '2. Add chopped tomatoes and cook until soft.',
+      '3. Add water and simmer.',
+      '4. Garnish with fresh cilantro and serve with rice.'
+    ],
+    'Ginger Pickle': [
+      '1. Chop ginger into thin slices.',
+      '2. Heat mustard oil and add spices like mustard seeds and turmeric.',
+      '3. Add ginger slices and cook for 5-7 minutes.',
+      '4. Add vinegar, sugar, and salt.',
+      '5. Cool and store in a jar.'
+    ],
+    'Ginger Stir-fry': [
+      '1. Slice ginger and vegetables of your choice.',
+      '2. Heat oil in a pan and sauté ginger.',
+      '3. Add vegetables and stir-fry for 5-7 minutes.',
+      '4. Season with soy sauce and pepper.',
+      '5. Serve hot as a side dish.'
+    ],
+    'Ginger Smoothie': [
+      '1. Blend ginger, banana, and yogurt.',
+      '2. Add honey and a pinch of cinnamon.',
+      '3. Add ice cubes and blend again.',
+      '4. Serve cold.'
+    ]
+  },
+  ChiliPeppers: {
+    'Chili Pickle': [
+      '1. Wash and chop chili peppers.',
+      '2. Heat mustard oil and add fenugreek seeds.',
+      '3. Add chili peppers and cook for 5-7 minutes.',
+      '4. Add vinegar, salt, and sugar.',
+      '5. Let the pickle cool and store in a jar.'
+    ],
+    'Chili Sauce': [
+      '1. Blend red chilies, garlic, and vinegar.',
+      '2. Heat oil in a pan and sauté the blend.',
+      '3. Add sugar, salt, and cook for 10 minutes.',
+      '4. Cool and bottle the sauce.'
+    ],
+    'Chili Curry': [
+      '1. Sauté onions, garlic, and ginger in oil.',
+      '2. Add chopped tomatoes and spices.',
+      '3. Add chopped chilies and cook for 5 minutes.',
+      '4. Add water and simmer.',
+      '5. Serve hot with rice or bread.'
+    ],
+    'Chili Raita': [
+      '1. Chop chilies and mix with yogurt.',
+      '2. Add cumin powder, salt, and coriander.',
+      '3. Stir well and serve chilled.'
+    ],
+    'Stuffed Chilies': [
+      '1. Slit green chilies and remove seeds.',
+      '2. Stuff with a mixture of mashed potatoes, spices, and herbs.',
+      '3. Shallow fry in oil until crispy.'
+    ],
+    'Chili Soup': [
+      '1. Sauté onions, garlic, and chopped chilies in a pot.',
+      '2. Add tomatoes and spices.',
+      '3. Pour in vegetable broth and bring to a boil.',
+      '4. Simmer for 10 minutes.',
+      '5. Blend until smooth and serve hot.'
+    ],
+    'Chili Fried Rice': [
+      '1. Cook rice and let it cool.',
+      '2. Sauté onions, garlic, and chilies in a pan.',
+      '3. Add vegetables and stir-fry.',
+      '4. Add rice and soy sauce, and cook for 5 minutes.',
+      '5. Serve hot.'
+    ],
+    'Chili Stir-fry': [
+      '1. Slice chilies and vegetables of choice.',
+      '2. Stir-fry in hot oil with garlic and ginger.',
+      '3. Add soy sauce and chili sauce.',
+      '4. Cook for 5-7 minutes.',
+      '5. Serve hot with rice.'
+    ],
+    'Chili Paneer': [
+      '1. Fry paneer cubes until golden brown.',
+      '2. Sauté onions, garlic, and chilies in oil.',
+      '3. Add paneer and toss in chili sauce.',
+      '4. Cook for 5 minutes.',
+      '5. Serve hot with rice or naan.'
+    ]
+  },
+  Strawberries: {
+    'Strawberry Milkshake': [
+      '1. Blend fresh strawberries with milk and sugar.',
+      '2. Add ice cubes and blend again.',
+      '3. Serve chilled with a whipped cream topping.'
+    ],
+    'Strawberry Jam': [
+      '1. Cook chopped strawberries with sugar.',
+      '2. Add lemon juice and cook until it thickens.',
+      '3. Pour into sterilized jars and let it cool.'
+    ],
+    'Strawberry Ice Cream': [
+      '1. Blend fresh strawberries with cream and sugar.',
+      '2. Freeze the mixture in an ice cream maker.',
+      '3. Serve cold.'
+    ],
+    'Strawberry Smoothie': [
+      '1. Blend fresh strawberries, yogurt, and honey.',
+      '2. Add ice cubes and blend again.',
+      '3. Serve chilled.'
+    ],
+    'Strawberry Salad': [
+      '1. Slice fresh strawberries and mix with lettuce.',
+      '2. Add walnuts, feta cheese, and balsamic vinegar.',
+      '3. Serve immediately.'
+    ],
+    'Strawberry Pancakes': [
+      '1. Make pancake batter and fold in chopped strawberries.',
+      '2. Cook pancakes on a griddle.',
+      '3. Serve with syrup and fresh strawberries.'
+    ],
+    'Strawberry Tart': [
+      '1. Prepare a tart crust and bake until golden.',
+      '2. Fill with fresh strawberries and custard.',
+      '3. Refrigerate before serving.'
+    ],
+    'Strawberry Yogurt': [
+      '1. Mix fresh strawberries with yogurt.',
+      '2. Add honey or sugar to taste.',
+      '3. Serve chilled.'
+    ],
+    'Strawberry Mousse': [
+      '1. Blend strawberries with whipped cream.',
+      '2. Add sugar and refrigerate to set.',
+      '3. Serve cold.'
+    ],
+    'Strawberry Cheesecake': [
+      '1. Prepare cheesecake filling and pour into a crust.',
+      '2. Top with fresh strawberries.',
+      '3. Refrigerate before serving.'
+    ]
+  },
+  Watermelon: {
+    'Watermelon Juice': [
+      '1. Blend watermelon pieces with lime juice.',
+      '2. Strain to remove pulp.',
+      '3. Serve chilled with mint leaves.'
+    ],
+    'Watermelon Salad': [
+      '1. Cut watermelon into cubes.',
+      '2. Mix with feta cheese, mint, and olives.',
+      '3. Drizzle with olive oil and balsamic vinegar.',
+      '4. Serve immediately.'
+    ],
+    'Watermelon Sorbet': [
+      '1. Blend watermelon with sugar and lemon juice.',
+      '2. Freeze the mixture in an ice cream maker.',
+      '3. Serve as a refreshing dessert.'
+    ],
+    'Watermelon Popsicles': [
+      '1. Blend watermelon and pour into molds.',
+      '2. Freeze for 4-5 hours.',
+      '3. Serve as a cool snack.'
+    ],
+    'Watermelon Smoothie': [
+      '1. Blend watermelon, yogurt, and honey.',
+      '2. Add ice cubes and blend again.',
+      '3. Serve chilled.'
+    ],
+    'Watermelon Salsa': [
+      '1. Dice watermelon and mix with chopped onions and cilantro.',
+      '2. Add lime juice and chili flakes.',
+      '3. Serve with chips or grilled meats.'
+    ],
+    'Watermelon Gazpacho': [
+      '1. Blend watermelon with cucumber, tomatoes, and bell peppers.',
+      '2. Season with salt, pepper, and olive oil.',
+      '3. Chill and serve cold.'
+    ],
+    'Grilled Watermelon': [
+      '1. Slice watermelon into thick slices.',
+      '2. Grill for 2-3 minutes on each side.',
+      '3. Serve with a drizzle of honey.'
+    ],
+    'Watermelon Slushie': [
+      '1. Blend watermelon and ice.',
+      '2. Add lime juice and sugar.',
+      '3. Serve cold.'
+    ],
+    'Watermelon Mojito': [
+      '1. Muddle mint leaves with lime and sugar.',
+      '2. Add watermelon juice and rum.',
+      '3. Serve over ice with a mint garnish.'
+    ]
+  },
+  Rice: {
+    'Plain Rice': [
+      '1. Rinse rice until the water runs clear.',
+      '2. Add rice to a pot with double the amount of water.',
+      '3. Bring to a boil, then simmer until water is absorbed.',
+      '4. Fluff with a fork and serve.'
+    ],
+    'Jeera Rice': [
+      '1. Heat oil in a pan and sauté cumin seeds.',
+      '2. Add cooked rice and mix well.',
+      '3. Serve as a fragrant side dish.'
+    ],
+    'Fried Rice': [
+      '1. Cook rice and let it cool.',
+      '2. Sauté vegetables and garlic in oil.',
+      '3. Add rice and soy sauce, and stir-fry.',
+      '4. Serve hot.'
+    ],
+    'Biryani': [
+      '1. Cook rice and set aside.',
+      '2. Sauté onions, garlic, and spices.',
+      '3. Layer rice with marinated vegetables and cook until fragrant.'
+    ],
+    'Pulao': [
+      '1. Sauté onions and spices in oil.',
+      '2. Add rice and water, and cook until tender.',
+      '3. Serve as a side dish.'
+    ],
+    'Curd Rice': [
+      '1. Cook rice and let it cool.',
+      '2. Mix with yogurt and salt.',
+      '3. Serve as a cooling dish.'
+    ],
+    'Lemon Rice': [
+      '1. Sauté mustard seeds and curry leaves.',
+      '2. Add cooked rice, lemon juice, and turmeric.',
+      '3. Serve hot.'
+    ],
+    'Tamarind Rice': [
+      '1. Cook rice and set aside.',
+      '2. Mix tamarind pulp, spices, and rice.',
+      '3. Serve with a side of chutney.'
+    ],
+    'Tomato Rice': [
+      '1. Sauté onions, tomatoes, and spices.',
+      '2. Add cooked rice and mix.',
+      '3. Serve hot.'
+    ],
+    'Garlic Rice': [
+      '1. Sauté garlic in butter.',
+      '2. Add cooked rice and stir-fry.',
+      '3. Serve hot.'
+    ]
+  },
+  Peas: {
+    'Matar Paneer': [
+      '1. Sauté onions, garlic, and ginger.',
+      '2. Add tomatoes and spices.',
+      '3. Add peas and paneer, cook until tender.',
+      '4. Serve hot with rice.'
+    ],
+    'Peas Pulao': [
+      '1. Sauté onions and spices.',
+      '2. Add peas and rice.',
+      '3. Add water and cook until tender.',
+      '4. Serve hot.'
+    ],
+    'Peas Soup': [
+      '1. Boil peas with onions and garlic.',
+      '2. Blend the mixture until smooth.',
+      '3. Season with salt, pepper, and serve hot.'
+    ],
+    'Peas Salad': [
+      '1. Boil peas and cool.',
+      '2. Mix with onions, tomatoes, and cucumbers.',
+      '3. Add olive oil and lemon juice.',
+      '4. Serve chilled.'
+    ],
+    'Peas Masala': [
+      '1. Sauté onions, tomatoes, and spices.',
+      '2. Add peas and cook until tender.',
+      '3. Serve hot with naan.'
+    ],
+    'Peas Stir-fry': [
+      '1. Sauté peas with garlic and ginger.',
+      '2. Add soy sauce and stir-fry.',
+      '3. Serve hot.'
+    ],
+    'Peas Curry': [
+      '1. Cook peas and carrots in a curry sauce.',
+      '2. Add spices and simmer.',
+      '3. Serve hot with rice or naan.'
+    ],
+    'Peas Kachori': [
+      '1. Stuff kachori dough with spiced peas.',
+      '2. Fry until golden brown.',
+      '3. Serve with chutney.'
+    ],
+    'Peas Pilaf': [
+      '1. Sauté onions and garlic in oil.',
+      '2. Add peas, rice, and water.',
+      '3. Cook until rice is tender.'
+    ],
+    'Aloo Matar': [
+      '1. Cook potatoes and peas in curry sauce.',
+      '2. Add spices and simmer.',
+      '3. Serve hot with rice or roti.'
+    ]
+  },
+
+
+  Beetroot: {
+    'Beetroot Salad': [
+      '1. Peel and grate the beetroot.',
+      '2. Chop onions, tomatoes, and cucumbers.',
+      '3. Combine all vegetables in a bowl.',
+      '4. Add lemon juice and olive oil.',
+      '5. Season with salt and pepper.',
+      '6. Toss and serve chilled.'
+    ],
+    'Beetroot Soup': [
+      '1. Peel and chop the beetroot into chunks.',
+      '2. Sauté onions and garlic in a pot.',
+      '3. Add chopped beetroot and vegetable stock.',
+      '4. Boil until beetroot is tender.',
+      '5. Blend the soup until smooth.',
+      '6. Add salt, pepper, and cream, then serve hot.'
+    ],
+    'Beetroot Juice': [
+      '1. Peel and chop beetroot into small pieces.',
+      '2. Add the beetroot pieces to a juicer.',
+      '3. Extract the juice.',
+      '4. Add lemon juice and honey for extra flavor.',
+      '5. Stir and serve chilled.'
+    ],
+    'Beetroot Curry': [
+      '1. Peel and chop beetroot into small cubes.',
+      '2. Heat oil and sauté onions, ginger, and garlic.',
+      '3. Add chopped beetroot, tomatoes, and spices.',
+      '4. Add water and cook until the beetroot is tender.',
+      '5. Simmer to reduce the curry to your desired consistency.',
+      '6. Garnish with fresh coriander and serve hot.'
+    ],
+    'Beetroot Paratha': [
+      '1. Grate the beetroot and squeeze out excess water.',
+      '2. Combine the beetroot with whole wheat flour and spices.',
+      '3. Knead the mixture into a smooth dough.',
+      '4. Roll out the dough into flat circles.',
+      '5. Cook on a hot tawa, applying ghee on both sides.',
+      '6. Serve hot with yogurt or pickle.'
+    ],
+    'Beetroot Pickle': [
+      '1. Peel and slice the beetroot into thin strips.',
+      '2. Boil the beetroot until tender.',
+      '3. Prepare a tempering with mustard seeds, fenugreek, and turmeric.',
+      '4. Add the beetroot to the tempering and stir well.',
+      '5. Add vinegar, sugar, and salt to taste.',
+      '6. Store in a jar and let it mature for a week before serving.'
+    ],
+    'Beetroot Smoothie': [
+      '1. Peel and chop the beetroot into small pieces.',
+      '2. Add the beetroot to a blender with yogurt and honey.',
+      '3. Blend until smooth.',
+      '4. Add ice cubes and blend again.',
+      '5. Pour into a glass and serve immediately.'
+    ],
+    'Beetroot Risotto': [
+      '1. Grate the beetroot and set aside.',
+      '2. Heat oil and sauté onions and garlic.',
+      '3. Add the rice and cook for a few minutes.',
+      '4. Gradually add vegetable stock and cook until the rice is tender.',
+      '5. Stir in the grated beetroot and cook for a few more minutes.',
+      '6. Add cheese and season with salt and pepper before serving.'
+    ],
+    'Beetroot Stir-fry': [
+      '1. Peel and chop the beetroot into thin slices.',
+      '2. Heat oil in a pan and sauté onions and garlic.',
+      '3. Add the beetroot slices and cook until tender.',
+      '4. Season with salt, pepper, and a dash of vinegar.',
+      '5. Stir-fry for a few more minutes until everything is well combined.',
+      '6. Serve hot as a side dish.'
+    ],
+    'Beetroot Halwa': [
+      '1. Grate the beetroot and cook in ghee until soft.',
+      '2. Add milk and sugar, and cook until the mixture thickens.',
+      '3. Stir continuously to avoid burning.',
+      '4. Once the halwa thickens, add cardamom powder and nuts.',
+      '5. Serve warm as a dessert.'
+    ]
+  },
+  Pomegranate: {
+    'Pomegranate Salad': [
+      '1. Peel the pomegranate and extract the seeds.',
+      '2. Chop cucumbers, tomatoes, and onions.',
+      '3. Mix the chopped vegetables and pomegranate seeds.',
+      '4. Add lemon juice and olive oil.',
+      '5. Season with salt, pepper, and fresh herbs.',
+      '6. Toss gently and serve chilled.'
+    ],
+    'Pomegranate Chutney': [
+      '1. Remove the seeds from the pomegranate.',
+      '2. Sauté chopped onions, ginger, and garlic in oil.',
+      '3. Add the pomegranate seeds, sugar, and vinegar.',
+      '4. Cook until the chutney thickens.',
+      '5. Season with salt and spices.',
+      '6. Let it cool and store in a jar.'
+    ],
+    'Pomegranate Juice': [
+      '1. Peel the pomegranate and extract the seeds.',
+      '2. Add the seeds to a blender.',
+      '3. Blend until smooth.',
+      '4. Strain the juice to remove any pulp.',
+      '5. Add honey and lemon juice to taste.',
+      '6. Serve chilled with ice cubes.'
+    ],
+    'Pomegranate Smoothie': [
+      '1. Extract the seeds from the pomegranate.',
+      '2. Add the seeds to a blender along with yogurt and honey.',
+      '3. Blend until smooth.',
+      '4. Add ice cubes and blend again.',
+      '5. Pour into a glass and serve immediately.'
+    ],
+    'Pomegranate Rice': [
+      '1. Cook rice and set it aside.',
+      '2. Sauté onions and garlic in a pan.',
+      '3. Add the cooked rice and pomegranate seeds.',
+      '4. Add spices like cumin and coriander.',
+      '5. Stir gently and cook for a few more minutes.',
+      '6. Garnish with cilantro and serve.'
+    ],
+    'Pomegranate Curry': [
+      '1. Sauté onions, garlic, and ginger in oil.',
+      '2. Add chopped tomatoes and cook until soft.',
+      '3. Add spices like turmeric, cumin, and coriander.',
+      '4. Stir in the pomegranate seeds and cook for a few minutes.',
+      '5. Add water and simmer the curry until the flavors meld.',
+      '6. Serve with rice or flatbread.'
+    ],
+    'Pomegranate Sorbet': [
+      '1. Extract the pomegranate seeds and blend them into a juice.',
+      '2. Add sugar and lemon juice to the juice.',
+      '3. Pour the mixture into a shallow tray.',
+      '4. Freeze the mixture for 4-6 hours.',
+      '5. Scrape the frozen juice to create the sorbet texture.',
+      '6. Serve chilled as a refreshing dessert.'
+    ],
+    'Pomegranate Salsa': [
+      '1. Peel the pomegranate and extract the seeds.',
+      '2. Chop tomatoes, onions, and cilantro.',
+      '3. Combine all the ingredients in a bowl.',
+      '4. Add lime juice and salt to taste.',
+      '5. Toss gently and serve with tortilla chips or as a topping.'
+    ],
+    'Pomegranate Raita': [
+      '1. Whisk yogurt in a bowl until smooth.',
+      '2. Add pomegranate seeds to the yogurt.',
+      '3. Add chopped cucumber, onions, and coriander.',
+      '4. Season with cumin powder, salt, and pepper.',
+      '5. Mix well and refrigerate for an hour before serving.'
+    ],
+    'Pomegranate Pulao': [
+      '1. Cook rice and set aside.',
+      '2. Sauté onions, garlic, and ginger in oil.',
+      '3. Add the cooked rice and pomegranate seeds.',
+      '4. Add spices like cardamom, cloves, and cinnamon.',
+      '5. Cook for a few minutes until the flavors combine.',
+      '6. Garnish with cilantro and serve.'
+    ]
+  },
+  Cauliflower: {
+    'Gobi Masala': [
+      '1. Heat oil in a pan and sauté onions, ginger, and garlic.',
+      '2. Add chopped tomatoes and cook until soft.',
+      '3. Add spices like cumin, coriander, and turmeric.',
+      '4. Add cauliflower florets and cook for 5 minutes.',
+      '5. Add water, cover, and cook until cauliflower is tender.',
+      '6. Garnish with fresh cilantro and serve with roti or rice.'
+    ],
+    'Cauliflower Soup': [
+      '1. Chop cauliflower into small pieces.',
+      '2. Sauté onions and garlic in a pot.',
+      '3. Add cauliflower and vegetable stock.',
+      '4. Boil until cauliflower is soft.',
+      '5. Blend until smooth, then season with salt and pepper.',
+      '6. Serve hot with a drizzle of cream.'
+    ],
+    'Cauliflower Paratha': [
+      '1. Grate cauliflower and squeeze out excess moisture.',
+      '2. Mix the cauliflower with whole wheat flour and spices.',
+      '3. Knead the mixture into a smooth dough.',
+      '4. Roll out the dough into flat circles.',
+      '5. Cook on a tawa with ghee until golden brown.',
+      '6. Serve hot with yogurt or pickle.'
+    ],
+    'Cauliflower Stir-fry': [
+      '1. Chop cauliflower into bite-sized florets.',
+      '2. Heat oil in a pan and sauté onions, garlic, and ginger.',
+      '3. Add cauliflower and stir-fry for 5-7 minutes.',
+      '4. Season with salt, pepper, and your choice of spices.',
+      '5. Add fresh herbs and cook for another 2 minutes.',
+      '6. Serve hot as a side dish.'
+    ],
+    'Cauliflower Curry': [
+      '1. Heat oil in a pot and sauté onions, garlic, and ginger.',
+      '2. Add chopped tomatoes and cook until soft.',
+      '3. Add cauliflower florets and spices.',
+      '4. Pour in water and cook until the cauliflower is tender.',
+      '5. Simmer to thicken the curry.',
+      '6. Garnish with cilantro and serve hot with rice or naan.'
+    ],
+    'Stuffed Cauliflower': [
+      '1. Boil cauliflower until tender.',
+      '2. Make a filling with rice, peas, and spices.',
+      '3. Stuff the cauliflower with the filling.',
+      '4. Wrap in foil and bake at 180°C for 15-20 minutes.',
+      '5. Serve with a side of tomato chutney.'
+    ],
+    'Cauliflower Rice': [
+      '1. Grate cauliflower into rice-sized pieces.',
+      '2. Heat oil and sauté onions, garlic, and spices.',
+      '3. Add grated cauliflower and cook for 5-7 minutes.',
+      '4. Add salt, pepper, and fresh herbs.',
+      '5. Stir well and serve as a low-carb rice alternative.'
+    ],
+    'Cauliflower Tikka': [
+      '1. Marinate cauliflower florets in yogurt, spices, and lemon juice.',
+      '2. Preheat the oven to 200°C.',
+      '3. Skewer the marinated cauliflower and grill for 15-20 minutes.',
+      '4. Serve with mint chutney and a sprinkle of chaat masala.'
+    ],
+    'Cauliflower Pakora': [
+      '1. Mix chickpea flour, spices, and water to make a batter.',
+      '2. Dip cauliflower florets into the batter.',
+      '3. Deep fry in hot oil until crispy and golden.',
+      '4. Serve with tamarind chutney.'
+    ],
+    'Cauliflower Salad': [
+      '1. Steam cauliflower florets until tender.',
+      '2. Chop cucumbers, onions, and tomatoes.',
+      '3. Toss the cauliflower with the chopped vegetables.',
+      '4. Add lemon juice, olive oil, salt, and pepper.',
+      '5. Garnish with fresh parsley and serve chilled.'
+    ]
+  },
+  Leeks: {
+    'Leek Soup': [
+      '1. Slice leeks and sauté in butter until soft.',
+      '2. Add potatoes, vegetable stock, and bring to a boil.',
+      '3. Simmer until potatoes are soft.',
+      '4. Blend the soup until smooth.',
+      '5. Season with salt, pepper, and herbs.',
+      '6. Serve hot with crusty bread.'
+    ],
+    'Leek and Potato Gratin': [
+      '1. Slice leeks and potatoes thinly.',
+      '2. Layer the potatoes and leeks in a baking dish.',
+      '3. Pour cream and grated cheese over the layers.',
+      '4. Bake at 180°C for 35-40 minutes until golden and tender.',
+      '5. Serve hot as a side dish.'
+    ],
+    'Leek Stir-fry': [
+      '1. Slice leeks thinly.',
+      '2. Heat oil in a pan and sauté leeks until soft.',
+      '3. Add spices and stir-fry for 5 minutes.',
+      '4. Season with soy sauce or vinegar.',
+      '5. Serve hot with rice or as a side dish.'
+    ],
+    'Leek Salad': [
+      '1. Slice leeks thinly and blanch them in hot water.',
+      '2. Toss leeks with chopped tomatoes, cucumbers, and herbs.',
+      '3. Add lemon juice and olive oil.',
+      '4. Season with salt and pepper.',
+      '5. Serve chilled as a light salad.'
+    ],
+    'Leek Risotto': [
+      '1. Slice leeks and sauté in butter until soft.',
+      '2. Add rice and cook for a few minutes.',
+      '3. Gradually add vegetable stock and cook until rice is tender.',
+      '4. Stir in cheese and fresh herbs.',
+      '5. Season with salt and pepper and serve hot.'
+    ],
+    'Leek Pie': [
+      '1. Prepare pie dough and line a baking dish.',
+      '2. Sauté leeks, onions, and garlic.',
+      '3. Add cooked leeks to the pie dish.',
+      '4. Top with pie crust and bake at 180°C for 30 minutes.',
+      '5. Serve warm with a side of salad.'
+    ],
+    'Leek and Mushroom Curry': [
+      '1. Sauté leeks, mushrooms, and onions in oil.',
+      '2. Add tomatoes and spices.',
+      '3. Simmer until the mixture thickens.',
+      '4. Serve with rice or bread.'
+    ],
+    'Leek and Bacon Wraps': [
+      '1. Blanch leek stalks and wrap them around strips of bacon.',
+      '2. Secure with toothpicks and bake at 180°C for 20 minutes.',
+      '3. Serve as an appetizer.'
+    ],
+    'Leek Frittata': [
+      '1. Sauté leeks in olive oil until soft.',
+      '2. Beat eggs and pour over the cooked leeks.',
+      '3. Cook until eggs are set, then finish under the grill.',
+      '4. Serve warm as a brunch dish.'
+    ],
+    'Leek Curry': [
+      '1. Sauté leeks, ginger, and garlic in oil.',
+      '2. Add tomatoes and spices.',
+      '3. Cook until the leeks are tender.',
+      '4. Simmer the curry until the flavors meld.',
+      '5. Serve with rice or naan.'
+    ]
+  },
+  Corn: {
+    'Corn Soup': [
+      '1. Boil corn kernels in vegetable stock.',
+      '2. Blend the corn and stock into a smooth soup.',
+      '3. Sauté onions, garlic, and spices in a pan.',
+      '4. Add the blended soup and bring to a boil.',
+      '5. Season with salt and pepper.',
+      '6. Serve hot with a drizzle of cream.'
+    ],
+    'Corn Salad': [
+      '1. Boil corn kernels and let them cool.',
+      '2. Add chopped onions, tomatoes, and cucumbers.',
+      '3. Toss with lime juice, olive oil, and salt.',
+      '4. Garnish with cilantro and serve chilled.'
+    ],
+    'Corn Fritters': [
+      '1. Mix corn kernels, flour, eggs, and spices.',
+      '2. Form small fritters and fry them in hot oil.',
+      '3. Serve with a dipping sauce.'
+    ],
+    'Corn Curry': [
+      '1. Sauté onions, garlic, and ginger in oil.',
+      '2. Add chopped tomatoes and spices.',
+      '3. Stir in boiled corn kernels.',
+      '4. Add coconut milk and cook until the curry thickens.',
+      '5. Serve with rice or roti.'
+    ],
+    'Corn Paratha': [
+      '1. Mix boiled corn with whole wheat flour and spices.',
+      '2. Knead into dough and roll into flat circles.',
+      '3. Cook on a tawa with ghee until golden brown.',
+      '4. Serve with yogurt or pickle.'
+    ],
+    'Corn on the Cob': [
+      '1. Boil or grill corn cobs.',
+      '2. Brush with butter and sprinkle with seasoning.',
+      '3. Serve hot as a snack or side dish.'
+    ],
+    'Sweet Corn Pulao': [
+      '1. Sauté onions and garlic in oil.',
+      '2. Add boiled corn kernels and spices.',
+      '3. Add rice and water and cook until the rice is tender.',
+      '4. Serve with a raita or curry.'
+    ],
+    'Corn Chaat': [
+      '1. Boil corn kernels and toss with onions, tomatoes, and spices.',
+      '2. Add chutneys and lime juice.',
+      '3. Serve as a savory snack.'
+    ],
+    'Corn and Potato Tikki': [
+      '1. Mash boiled potatoes and corn kernels.',
+      '2. Add spices and form into patties.',
+      '3. Shallow fry in oil until golden brown.',
+      '4. Serve with chutney.'
+    ],
+    'Corn Masala': [
+      '1. Sauté onions, garlic, and ginger in oil.',
+      '2. Add corn kernels and cook for 5 minutes.',
+      '3. Add tomatoes, spices, and cook for a few more minutes.',
+      '4. Serve with rice or naan.'
+    ]
+  },
+
+
+
+  BellPeppers: {
+  'Stuffed Bell Peppers': [
+    '1. Cut bell peppers in half and remove seeds.',
+    '2. Prepare a filling using cooked rice, sautéed onions, tomatoes, and spices.',
+    '3. Stuff the filling into the pepper halves.',
+    '4. Top with grated cheese if desired.',
+    '5. Bake at 180°C for 20-25 minutes.',
+    '6. Serve hot with a side salad.'
+  ],
+  'Bell Pepper Salad': [
+    '1. Chop red, yellow, and green bell peppers.',
+    '2. Add sliced onions, cucumbers, and cherry tomatoes.',
+    '3. Drizzle olive oil and lemon juice.',
+    '4. Sprinkle salt, pepper, and oregano.',
+    '5. Toss gently and chill before serving.',
+    '6. Garnish with crumbled feta cheese if desired.'
+  ],
+  'Bell Pepper Soup': [
+    '1. Roast bell peppers until charred, then peel the skin.',
+    '2. Sauté garlic and onions in olive oil.',
+    '3. Add roasted peppers and vegetable broth.',
+    '4. Simmer for 15 minutes.',
+    '5. Blend into a smooth soup.',
+    '6. Season and serve hot with cream or croutons.'
+  ],
+  'Bell Pepper Stir-fry': [
+    '1. Slice bell peppers and onions.',
+    '2. Heat oil in a wok and add cumin seeds.',
+    '3. Add onions and cook till soft.',
+    '4. Add bell peppers and stir-fry for 5 minutes.',
+    '5. Season with salt, pepper, and chili flakes.',
+    '6. Serve hot with rice or roti.'
+  ],
+  'Grilled Bell Peppers': [
+    '1. Cut bell peppers into quarters.',
+    '2. Drizzle with olive oil and sprinkle salt.',
+    '3. Grill on a pan or BBQ until charred.',
+    '4. Flip and grill the other side.',
+    '5. Let cool and peel off any loose skin.',
+    '6. Serve with a drizzle of balsamic vinegar.'
+  ]
+},
+Coriander: {
+  'Coriander Chutney': [
+    '1. Wash and chop fresh coriander leaves.',
+    '2. Blend with green chilies, garlic, lemon juice, and salt.',
+    '3. Add little water for smooth blending.',
+    '4. Check seasoning and adjust to taste.',
+    '5. Optionally add roasted peanuts for texture.',
+    '6. Serve fresh with snacks or meals.'
+  ],
+  'Coriander Pesto': [
+    '1. Combine coriander leaves, garlic, and almonds or cashews.',
+    '2. Add grated cheese and lemon juice.',
+    '3. Slowly drizzle in olive oil while blending.',
+    '4. Blend until smooth paste forms.',
+    '5. Add salt and pepper to taste.',
+    '6. Store in a jar or serve with pasta.'
+  ],
+  'Coriander Rice': [
+    '1. Cook rice and let it cool slightly.',
+    '2. Blend coriander, green chili, and garlic to make a paste.',
+    '3. Heat oil and add mustard seeds, then add paste.',
+    '4. Sauté till aromatic.',
+    '5. Mix in the cooked rice.',
+    '6. Stir well and serve hot.'
+  ],
+  'Coriander Soup': [
+    '1. Sauté onions and garlic in oil.',
+    '2. Add chopped coriander and cook briefly.',
+    '3. Pour in vegetable stock.',
+    '4. Simmer for 10-15 minutes.',
+    '5. Blend the soup until smooth.',
+    '6. Season and serve with croutons.'
+  ],
+  'Coriander Chicken': [
+    '1. Marinate chicken with coriander paste, yogurt, and spices.',
+    '2. Heat oil and add chopped onions.',
+    '3. Add marinated chicken and cook until browned.',
+    '4. Cover and cook till chicken is tender.',
+    '5. Stir in fresh coriander for flavor.',
+    '6. Serve with rice or naan.'
+  ]
+},
+Radish: {
+  'Radish Salad': [
+    '1. Grate or thinly slice radish.',
+    '2. Add chopped green chilies and coriander.',
+    '3. Squeeze in lemon juice.',
+    '4. Sprinkle salt and chaat masala.',
+    '5. Toss well and chill.',
+    '6. Serve as a crunchy side dish.'
+  ],
+  'Radish Paratha': [
+    '1. Grate radish and squeeze excess water.',
+    '2. Mix with spices and chopped coriander.',
+    '3. Stuff into rolled dough and seal.',
+    '4. Roll into parathas.',
+    '5. Roast on hot tawa with ghee.',
+    '6. Serve hot with curd or pickle.'
+  ],
+  'Radish Curry': [
+    '1. Peel and chop radish into pieces.',
+    '2. Sauté mustard seeds and curry leaves.',
+    '3. Add radish, turmeric, and salt.',
+    '4. Pour water and simmer until soft.',
+    '5. Add coconut paste or tomato puree.',
+    '6. Cook till thickened and serve with rice.'
+  ],
+  'Radish Soup': [
+    '1. Sauté onions and garlic in oil.',
+    '2. Add chopped radish and carrot.',
+    '3. Pour in vegetable stock.',
+    '4. Simmer till veggies are soft.',
+    '5. Blend into a smooth soup.',
+    '6. Season and serve hot.'
+  ],
+  'Radish Pickle': [
+    '1. Cut radish into sticks and sun-dry slightly.',
+    '2. Mix with salt, turmeric, and mustard powder.',
+    '3. Heat mustard oil and let it cool.',
+    '4. Mix oil into radish pieces.',
+    '5. Add chili powder and lemon juice.',
+    '6. Store in airtight jar for few days.'
+  ]
+},
+Cabbage: {
+  'Cabbage Stir-fry': [
+    '1. Shred cabbage finely.',
+    '2. Heat oil and add mustard seeds.',
+    '3. Add green chilies and curry leaves.',
+    '4. Add cabbage, turmeric, and salt.',
+    '5. Stir-fry till tender but not mushy.',
+    '6. Garnish with grated coconut and serve.'
+  ],
+  'Cabbage Paratha': [
+    '1. Grate cabbage and mix with spices.',
+    '2. Mix into whole wheat flour and knead dough.',
+    '3. Roll into parathas.',
+    '4. Cook on hot tawa with ghee.',
+    '5. Flip and roast both sides.',
+    '6. Serve with butter or curd.'
+  ],
+  'Cabbage Sabzi': [
+    '1. Shred cabbage and rinse well.',
+    '2. Heat oil and add cumin seeds.',
+    '3. Add onions and sauté till golden.',
+    '4. Add cabbage, turmeric, and salt.',
+    '5. Cook uncovered till dry and tender.',
+    '6. Add garam masala and serve.'
+  ],
+  'Cabbage Pakora': [
+    '1. Mix chopped cabbage with gram flour and spices.',
+    '2. Add water to form thick batter.',
+    '3. Heat oil for deep frying.',
+    '4. Drop spoonfuls into hot oil.',
+    '5. Fry till golden brown.',
+    '6. Serve hot with chutney.'
+  ],
+  'Stuffed Cabbage Rolls': [
+    '1. Boil cabbage leaves till soft.',
+    '2. Prepare filling with rice and spices.',
+    '3. Place filling in leaves and roll tightly.',
+    '4. Arrange in baking tray.',
+    '5. Top with tomato sauce.',
+    '6. Bake at 180°C for 20 minutes.'
+  ]
+},
+Spinach: {
+  'Spinach Soup': [
+    '1. Blanch spinach and cool it.',
+    '2. Blend to a puree with garlic and onion.',
+    '3. Heat butter and sauté the puree.',
+    '4. Add vegetable stock and simmer.',
+    '5. Season with salt and pepper.',
+    '6. Add cream and serve hot.'
+  ],
+  'Palak Paneer': [
+    '1. Blanch spinach and blend into puree.',
+    '2. Sauté onions, garlic, and tomatoes.',
+    '3. Add spinach puree and cook with spices.',
+    '4. Add paneer cubes and simmer.',
+    '5. Stir in cream for richness.',
+    '6. Serve with roti or naan.'
+  ],
+  'Spinach Salad': [
+    '1. Wash and dry spinach leaves.',
+    '2. Add sliced onions, tomatoes, and nuts.',
+    '3. Mix olive oil, lemon juice, salt, and pepper.',
+    '4. Drizzle over salad and toss.',
+    '5. Add grated cheese if desired.',
+    '6. Serve fresh.'
+  ],
+  'Spinach Paratha': [
+    '1. Make spinach puree and mix with flour and spices.',
+    '2. Knead into a smooth dough.',
+    '3. Roll into parathas.',
+    '4. Cook on hot tawa with ghee.',
+    '5. Flip and cook both sides.',
+    '6. Serve hot with curd.'
+  ],
+  'Spinach Rice': [
+    '1. Cook rice and keep aside.',
+    '2. Sauté garlic and chopped spinach.',
+    '3. Add cooked rice and spices.',
+    '4. Mix well and cook for a few minutes.',
+    '5. Add lemon juice and coriander.',
+    '6. Serve warm.'
+  ]
+},
+
+
+
+
+
+  Mango: {
+    'Aamras': [
+      '1. Peel the mangoes and chop them into pieces.',
+      '2. Blend the mango pieces to form a smooth puree.',
+      '3. Add sugar and cardamom powder as per taste.',
+      '4. Blend again until well mixed.',
+      '5. Serve chilled, garnished with saffron or dry fruits if desired.'
+    ],
+    'Mango Lassi': [
+      '1. Peel the mangoes and blend them into a smooth puree.',
+      '2. Add yogurt, sugar, and a pinch of cardamom powder.',
+      '3. Blend all ingredients together until smooth.',
+      '4. Add ice cubes and blend again for a cool, creamy texture.',
+      '5. Serve chilled with a mint leaf garnish.'
+    ],
+    'Mango Panna': [
+      '1. Boil raw mangoes until soft and peel them.',
+      '2. Scoop out the pulp and blend with sugar and spices.',
+      '3. Add roasted cumin powder, black salt, and mint leaves.',
+      '4. Add cold water and mix well.',
+      '5. Chill and serve with ice cubes.'
+    ],
+    'Mango Chutney': [
+      '1. Peel and grate raw mangoes.',
+      '2. Heat oil and add mustard seeds, fenugreek, and asafoetida.',
+      '3. Add grated mango, salt, turmeric, and red chili powder.',
+      '4. Cook until the mixture thickens.',
+      '5. Cool and store in an airtight jar.'
+    ],
+    'Mango Cake': [
+      '1. Preheat oven to 180°C and grease a cake pan.',
+      '2. In a bowl, mix mango puree, sugar, oil, and vanilla.',
+      '3. Add flour, baking powder, and a pinch of salt.',
+      '4. Mix into a smooth batter and pour into pan.',
+      '5. Bake for 35-40 mins. Cool before serving.'
+    ],
+    'Mango Ice Cream': [
+      '1. Blend mangoes into a smooth puree.',
+      '2. Mix with condensed milk, cream, and a pinch of cardamom.',
+      '3. Pour the mixture into a container and freeze for 4-5 hours.',
+      '4. Stir once or twice to break ice crystals.',
+      '5. Serve scooped into bowls with a mint garnish.'
+    ],
+    'Mango Pudding': [
+      '1. Cook mango puree, sugar, and cornstarch over low heat.',
+      '2. Stir continuously until the mixture thickens.',
+      '3. Add a pinch of cardamom and mix well.',
+      '4. Pour into serving glasses and chill.',
+      '5. Garnish with whipped cream and serve.'
+    ],
+    'Mango Smoothie': [
+      '1. Blend mango, yogurt, honey, and ice cubes.',
+      '2. Add a pinch of cardamom for flavor.',
+      '3. Blend until smooth and creamy.',
+      '4. Pour into glasses and garnish with mint.',
+      '5. Serve chilled.'
+    ],
+    'Mango Curry': [
+      '1. Heat oil in a pan and sauté onions, ginger, and garlic.',
+      '2. Add chopped mangoes, turmeric, chili powder, and salt.',
+      '3. Add water and simmer until mangoes are tender.',
+      '4. Stir in coconut milk and cook for another 5 minutes.',
+      '5. Garnish with fresh coriander and serve hot.'
+    ],
+    'Mango Pickle': [
+      '1. Cut mangoes into small pieces and mix with salt.',
+      '2. Add mustard seeds, cumin, and turmeric powder.',
+      '3. Heat oil and pour over the mango mixture.',
+      '4. Stir and store in a jar for 2-3 days.',
+      '5. Serve with paratha or rice.'
+    ]
+  },
+  GreenChili: {
+  'Green Chili Pickle': [
+    '1. Wash and dry green chilies, then slit them lengthwise.',
+    '2. Dry roast mustard and fenugreek seeds, then grind coarsely.',
+    '3. Heat oil and add asafoetida, mustard seeds, and ground spices.',
+    '4. Add the green chilies and sauté for 2–3 minutes.',
+    '5. Add salt, turmeric, and lemon juice.',
+    '6. Mix well and let it cool before storing in a sterilized jar.',
+    '7. Keep for a day or two to marinate fully before using.'
+  ],
+  'Stuffed Green Chili': [
+    '1. Slit the green chilies lengthwise and remove seeds if desired.',
+    '2. Mix roasted gram flour with spices (amchur, salt, turmeric, chili powder).',
+    '3. Stuff the mixture into each chili.',
+    '4. Heat oil in a pan and place the stuffed chilies.',
+    '5. Cover and cook on low flame, turning occasionally.',
+    '6. Cook until chilies are tender and lightly charred.',
+    '7. Serve with roti or paratha.'
+  ],
+  'Green Chili Sauce': [
+    '1. Chop green chilies, garlic, and ginger.',
+    '2. Sauté them in oil until soft.',
+    '3. Add vinegar, salt, and sugar to taste.',
+    '4. Simmer the mix for 5–7 minutes.',
+    '5. Blend to a smooth paste once cooled.',
+    '6. Adjust consistency with a bit of water if needed.',
+    '7. Store in a jar and refrigerate.'
+  ],
+  'Green Chili Curry': [
+    '1. Slit green chilies and soak in water for 10 mins.',
+    '2. Sauté onions, garlic, and ginger in oil.',
+    '3. Add chopped tomatoes and cook till soft.',
+    '4. Add turmeric, cumin, and coriander powder.',
+    '5. Add the drained green chilies and some water.',
+    '6. Cook on medium heat until chilies soften.',
+    '7. Garnish with coriander leaves and serve.'
+  ],
+  'Green Chili Soup': [
+    '1. Sauté onions, garlic, and chopped green chilies.',
+    '2. Add chopped carrots or celery for balance.',
+    '3. Pour in vegetable stock and bring to a boil.',
+    '4. Simmer for 10 minutes until veggies are soft.',
+    '5. Blend until smooth and strain if needed.',
+    '6. Season with salt, pepper, and lemon juice.',
+    '7. Serve hot with a swirl of cream.'
+  ],
+  'Green Chili Sauté': [
+    '1. Slit green chilies and soak in salted water for 10 mins.',
+    '2. Heat oil in a pan and add cumin and mustard seeds.',
+    '3. Add green chilies and stir-fry on medium heat.',
+    '4. Sprinkle salt, turmeric, and a pinch of sugar.',
+    '5. Cook until slightly blistered but not burnt.',
+    '6. Add lemon juice and stir.',
+    '7. Serve hot with dal and rice.'
+  ],
+  'Green Chili Raita': [
+    '1. Finely chop green chilies and mix with curd.',
+    '2. Add salt, roasted cumin powder, and chopped coriander.',
+    '3. Optionally mix in grated cucumber or carrot.',
+    '4. Prepare a tempering of mustard seeds and curry leaves.',
+    '5. Pour over the raita for extra flavor.',
+    '6. Mix gently and chill.',
+    '7. Serve cold as a side dish.'
+  ],
+  'Green Chili Masala': [
+    '1. Blend ginger, garlic, onion, and tomato into a paste.',
+    '2. Sauté the paste in oil until oil separates.',
+    '3. Add turmeric, chili powder, and garam masala.',
+    '4. Add green chilies and coat them in the masala.',
+    '5. Add a little water and cook covered.',
+    '6. Simmer until chilies are soft and coated in thick gravy.',
+    '7. Serve hot with rice or roti.'
+  ],
+  'Spicy Green Chili Dip': [
+    '1. Blend green chilies with garlic, lemon juice, and salt.',
+    '2. Add yogurt or sour cream to tone down heat.',
+    '3. Mix until creamy and smooth.',
+    '4. Add roasted cumin powder for aroma.',
+    '5. Adjust spice by balancing with honey or sugar.',
+    '6. Chill before serving.',
+    '7. Serve as a dip with snacks.'
+  ],
+  'Green Chili Pakora': [
+    '1. Slit green chilies and remove seeds if too spicy.',
+    '2. Prepare a batter with besan, salt, turmeric, and ajwain.',
+    '3. Dip each chili into the batter.',
+    '4. Heat oil and deep fry the battered chilies.',
+    '5. Fry until golden and crisp.',
+    '6. Drain on paper towels.',
+    '7. Serve hot with chutney.'
+  ]
+},
+Potatoes: {
+  'Aloo Gobi': [
+    '1. Heat oil and add cumin seeds until they splutter.',
+    '2. Add chopped onions and sauté until golden.',
+    '3. Add chopped potatoes and cauliflower.',
+    '4. Mix in turmeric, coriander, chili powder, and salt.',
+    '5. Cover and cook on low until vegetables are soft.',
+    '6. Garnish with fresh coriander and serve hot.'
+  ],
+  'Aloo Paratha': [
+    '1. Boil and mash potatoes, add spices like garam masala, salt, and chili.',
+    '2. Make dough using wheat flour and water.',
+    '3. Roll out dough balls, stuff with potato filling.',
+    '4. Seal and roll flat gently.',
+    '5. Cook on a tawa with ghee until golden on both sides.',
+    '6. Serve with curd and pickle.'
+  ],
+  'Aloo Tikki': [
+    '1. Boil, peel, and mash potatoes.',
+    '2. Add chopped green chilies, coriander, spices, and breadcrumbs.',
+    '3. Shape into patties.',
+    '4. Heat oil in a pan and shallow fry.',
+    '5. Cook until both sides are crispy and golden.',
+    '6. Serve with chutney or as a chaat.'
+  ],
+  'Aloo Curry': [
+    '1. Heat oil and add cumin and mustard seeds.',
+    '2. Add chopped onions, garlic, and sauté.',
+    '3. Add tomatoes, turmeric, chili powder, and salt.',
+    '4. Add diced boiled potatoes.',
+    '5. Mix well and add water for desired consistency.',
+    '6. Simmer and garnish with coriander.'
+  ],
+  'Aloo Bhindi': [
+    '1. Wash and dry okra; chop into small pieces.',
+    '2. Cut potatoes into thin slices.',
+    '3. Heat oil and fry potatoes till half-cooked.',
+    '4. Add bhindi and cook together.',
+    '5. Add salt, turmeric, and dry spices.',
+    '6. Cook uncovered until everything is crisp.'
+  ],
+  'Aloo Methi': [
+    '1. Chop and wash fresh methi leaves.',
+    '2. Heat oil, add cumin and garlic.',
+    '3. Add diced potatoes and sauté.',
+    '4. Add salt, turmeric, chili powder.',
+    '5. Add methi and cook covered.',
+    '6. Stir and serve hot.'
+  ],
+  'Aloo Masala': [
+    '1. Boil and cube potatoes.',
+    '2. Heat oil, add mustard seeds and curry leaves.',
+    '3. Add ginger, green chilies, and turmeric.',
+    '4. Add potatoes and salt.',
+    '5. Mix well and cook for 5 minutes.',
+    '6. Garnish with lemon juice and coriander.'
+  ],
+  'Aloo Fry': [
+    '1. Cut potatoes into thin slices.',
+    '2. Heat oil in a pan.',
+    '3. Add potatoes and fry till crisp.',
+    '4. Add salt, turmeric, and red chili powder.',
+    '5. Fry till golden and serve as a side.',
+    '6. Sprinkle chat masala before serving.'
+  ],
+  'Aloo Chaat': [
+    '1. Boil and dice potatoes.',
+    '2. Shallow fry till crispy.',
+    '3. Mix with onions, green chilies, and chutneys.',
+    '4. Add spices and lemon juice.',
+    '5. Toss well and serve with sev on top.',
+    '6. Garnish with coriander.'
+  ],
+  'Aloo Keema': [
+    '1. Sauté onions, ginger, and garlic in oil.',
+    '2. Add minced meat and cook till brown.',
+    '3. Add chopped tomatoes and spices.',
+    '4. Add diced potatoes.',
+    '5. Cover and cook till potatoes are soft.',
+    '6. Garnish with coriander and serve.'
+  ]
+},
+Onion: {
+  'Onion Bhaji': [
+    '1. Slice onions thinly and place in a bowl.',
+    '2. Add gram flour, rice flour, spices (turmeric, chili powder, cumin), and salt.',
+    '3. Mix well and add a little water to bind the mixture.',
+    '4. Heat oil in a pan.',
+    '5. Drop spoonfuls of the mixture into hot oil.',
+    '6. Fry until golden brown and crispy.',
+    '7. Drain on paper towels and serve hot with chutney.'
+  ],
+  'Onion Pakora': [
+    '1. Cut onions into thin long slices.',
+    '2. In a bowl, combine onions, besan, ajwain, turmeric, and salt.',
+    '3. Add water gradually and mix to form a thick batter.',
+    '4. Heat oil for frying.',
+    '5. Drop small portions into the hot oil.',
+    '6. Fry until crispy and brown.',
+    '7. Serve with ketchup or mint chutney.'
+  ],
+  'Onion Rings': [
+    '1. Slice onions into thick rings and separate them.',
+    '2. Mix flour, cornstarch, baking powder, and seasoning.',
+    '3. Add cold water to make a smooth batter.',
+    '4. Dip each ring into the batter.',
+    '5. Heat oil and fry the rings in batches.',
+    '6. Fry until golden brown.',
+    '7. Serve hot with mayonnaise or dip.'
+  ],
+  'Onion Chutney': [
+    '1. Heat oil in a pan and sauté chopped onions.',
+    '2. Add garlic, dried red chilies, and tamarind.',
+    '3. Cook until onions are golden and soft.',
+    '4. Cool and blend to a paste.',
+    '5. In another pan, prepare tempering with mustard seeds and curry leaves.',
+    '6. Add the tempering to the chutney.',
+    '7. Mix and serve with dosa or idli.'
+  ],
+  'Onion Curry': [
+    '1. Slice onions and sauté in oil until soft.',
+    '2. Add ginger-garlic paste and sauté.',
+    '3. Add tomatoes and cook until mushy.',
+    '4. Add spices (turmeric, chili powder, garam masala).',
+    '5. Pour water and bring to a boil.',
+    '6. Simmer until gravy thickens.',
+    '7. Garnish with coriander and serve with roti or rice.'
+  ],
+  'Stuffed Onions': [
+    '1. Peel and scoop the center of large onions.',
+    '2. Mix mashed potatoes with spices and herbs.',
+    '3. Stuff this mixture into onion shells.',
+    '4. Heat oil in a pan and place onions gently.',
+    '5. Cover and cook on low until onions are tender.',
+    '6. Flip and brown on all sides.',
+    '7. Serve hot with paratha or rice.'
+  ],
+  'Pickled Onions': [
+    '1. Peel small onions and blanch in hot water.',
+    '2. Drain and pack them into a sterilized jar.',
+    '3. Boil vinegar with sugar, salt, and spices.',
+    '4. Pour the hot vinegar mixture over onions.',
+    '5. Let cool and seal the jar.',
+    '6. Store in a cool place for a few days.',
+    '7. Serve with meals or use in sandwiches.'
+  ],
+  'Onion Paratha': [
+    '1. Mix wheat flour with water to make soft dough.',
+    '2. Finely chop onions and mix with salt, chili, and coriander.',
+    '3. Roll out small dough balls and fill with onion mixture.',
+    '4. Seal and flatten the dough into parathas.',
+    '5. Heat a pan and cook the paratha on both sides.',
+    '6. Add ghee or oil and cook until golden.',
+    '7. Serve with yogurt or pickle.'
+  ]
+},
+Garlic: {
+  'Garlic Bread': [
+    '1. Mix softened butter with minced garlic and chopped parsley.',
+    '2. Slice a baguette or bread loaf in half.',
+    '3. Spread the garlic butter generously over the bread slices.',
+    '4. Preheat oven to 180°C.',
+    '5. Bake for 10–12 minutes or until golden and crispy.',
+    '6. Optionally sprinkle with cheese and broil for a minute.',
+    '7. Slice and serve hot.'
+  ],
+  'Garlic Butter Shrimp': [
+    '1. Clean and devein shrimp.',
+    '2. Heat butter in a pan and add minced garlic.',
+    '3. Sauté garlic until fragrant.',
+    '4. Add shrimp and cook until pink and opaque.',
+    '5. Season with salt, pepper, and lemon juice.',
+    '6. Garnish with parsley.',
+    '7. Serve with rice or pasta.'
+  ],
+  'Garlic Chicken': [
+    '1. Marinate chicken with garlic paste, salt, and pepper.',
+    '2. Heat oil and sauté chopped onions and garlic.',
+    '3. Add chicken pieces and cook on high heat.',
+    '4. Reduce heat and cover until cooked through.',
+    '5. Add soy sauce or chili sauce for flavor.',
+    '6. Stir and cook until sauce thickens.',
+    '7. Garnish and serve hot.'
+  ],
+  'Garlic Soup': [
+    '1. Sauté minced garlic and onions in butter.',
+    '2. Add chopped potatoes and cook for a few minutes.',
+    '3. Pour in vegetable broth and bring to a boil.',
+    '4. Simmer until potatoes are soft.',
+    '5. Blend the soup until smooth.',
+    '6. Add cream and season with salt and pepper.',
+    '7. Serve hot with croutons.'
+  ],
+  'Garlic Mashed Potatoes': [
+    '1. Boil peeled potatoes until soft.',
+    '2. In another pan, sauté minced garlic in butter.',
+    '3. Mash the boiled potatoes.',
+    '4. Mix in garlic butter and warm milk.',
+    '5. Add salt and pepper to taste.',
+    '6. Whip until creamy.',
+    '7. Serve warm as a side.'
+  ],
+  'Garlic Rice': [
+    '1. Cook rice and let it cool slightly.',
+    '2. Heat oil and sauté finely chopped garlic until golden.',
+    '3. Add cooked rice to the pan.',
+    '4. Season with salt, pepper, and soy sauce if desired.',
+    '5. Stir-fry for a few minutes.',
+    '6. Garnish with spring onions.',
+    '7. Serve hot with curry or vegetables.'
+  ],
+  'Garlic Pickle': [
+    '1. Peel garlic cloves and sun-dry slightly.',
+    '2. Heat mustard oil and add mustard seeds.',
+    '3. Add garlic and sauté briefly.',
+    '4. Mix with salt, chili powder, turmeric, and vinegar.',
+    '5. Let it cool and store in a sterilized jar.',
+    '6. Keep in a cool, dry place for a few days.',
+    '7. Enjoy with roti or rice.'
+  ],
+  'Garlic Naan': [
+    '1. Make dough using flour, yogurt, and baking powder.',
+    '2. Let the dough rest for 1–2 hours.',
+    '3. Roll out small portions and sprinkle minced garlic.',
+    '4. Press the garlic into the surface.',
+    '5. Cook on a hot tawa or tandoor.',
+    '6. Brush with butter after cooking.',
+    '7. Serve hot with curry.'
+  ],
+  'Garlic Butter Pasta': [
+    '1. Cook pasta until al dente and set aside.',
+    '2. Sauté garlic in butter and olive oil.',
+    '3. Add chili flakes and parsley.',
+    '4. Toss in the cooked pasta.',
+    '5. Add grated cheese or lemon zest for flavor.',
+    '6. Mix well and cook for a minute.',
+    '7. Serve hot.'
+  ],
+  'Garlic Aioli': [
+    '1. In a bowl, whisk egg yolk with lemon juice.',
+    '2. Gradually add olive oil while whisking.',
+    '3. Add finely minced garlic.',
+    '4. Continue whisking until thick and creamy.',
+    '5. Season with salt and pepper.',
+    '6. Chill before serving.',
+    '7. Use as a dip or spread.'
+  ]
+},
+Lettuce: {
+  'Lettuce Salad': [
+    '1. Wash and tear lettuce into bite-sized pieces.',
+    '2. Add sliced cucumber, tomato, and onion.',
+    '3. Toss in olives or nuts for extra crunch.',
+    '4. Drizzle with olive oil and lemon juice.',
+    '5. Season with salt and pepper.',
+    '6. Mix gently to combine.',
+    '7. Serve immediately.'
+  ],
+  'Lettuce Wraps': [
+    '1. Separate lettuce leaves and set aside.',
+    '2. Cook minced meat or tofu with garlic, ginger, and soy sauce.',
+    '3. Add chopped vegetables and cook until tender.',
+    '4. Spoon filling into lettuce cups.',
+    '5. Top with chili sauce or herbs.',
+    '6. Roll and serve.',
+    '7. Enjoy as a light appetizer.'
+  ],
+  'Lettuce Soup': [
+    '1. Sauté onions and garlic in olive oil.',
+    '2. Add chopped lettuce and cook for 2 minutes.',
+    '3. Pour in vegetable broth.',
+    '4. Simmer for 10–15 minutes.',
+    '5. Blend until smooth.',
+    '6. Add salt, pepper, and a touch of cream.',
+    '7. Serve warm.'
+  ],
+  'Lettuce Smoothie': [
+    '1. Wash lettuce leaves thoroughly.',
+    '2. Add to blender with banana and apple.',
+    '3. Pour in coconut water or yogurt.',
+    '4. Add honey and ice cubes.',
+    '5. Blend until smooth.',
+    '6. Strain if desired.',
+    '7. Serve chilled.'
+  ],
+  'Lettuce Stir-fry': [
+    '1. Chop lettuce roughly.',
+    '2. Heat oil and sauté garlic.',
+    '3. Add lettuce and stir-fry quickly.',
+    '4. Sprinkle with soy sauce.',
+    '5. Stir until just wilted.',
+    '6. Season with pepper.',
+    '7. Serve hot with rice.'
+  ],
+  'Lettuce Tacos': [
+    '1. Use large lettuce leaves as taco shells.',
+    '2. Fill with seasoned beans or tofu.',
+    '3. Add chopped tomatoes, onions, and cheese.',
+    '4. Drizzle with sauce or yogurt.',
+    '5. Fold like a taco.',
+    '6. Garnish with cilantro.',
+    '7. Serve fresh.'
+  ],
+  'Lettuce Sandwich': [
+    '1. Toast bread slices.',
+    '2. Layer with lettuce, tomato, and cheese.',
+    '3. Spread mayo or mustard on one side.',
+    '4. Add a sprinkle of salt and pepper.',
+    '5. Close sandwich and cut in half.',
+    '6. Optionally grill for a warm bite.',
+    '7. Serve with chips or salad.'
+  ],
+  'Lettuce with Avocado': [
+    '1. Mix chopped lettuce with avocado cubes.',
+    '2. Add cherry tomatoes and onion rings.',
+    '3. Squeeze fresh lemon juice.',
+    '4. Drizzle olive oil.',
+    '5. Add salt and chili flakes.',
+    '6. Toss gently.',
+    '7. Serve chilled.'
+  ],
+  'Lettuce Juice': [
+    '1. Wash and blend lettuce with cucumber.',
+    '2. Add lemon juice and a pinch of salt.',
+    '3. Strain through a fine sieve.',
+    '4. Add cold water or ice.',
+    '5. Optionally add mint leaves.',
+    '6. Stir well.',
+    '7. Serve fresh.'
+  ],
+  'Lettuce Chutney': [
+    '1. Sauté lettuce leaves with green chilies and garlic.',
+    '2. Add coconut and tamarind pulp.',
+    '3. Blend into a smooth paste.',
+    '4. Add salt and mix.',
+    '5. Prepare tempering with mustard seeds.',
+    '6. Pour tempering on chutney.',
+    '7. Serve with idli or dosa.'
+  ]
+},
+Carrots: {
+  'Carrot Halwa': [
+    '1. Grate carrots finely.',
+    '2. Sauté in ghee until soft.',
+    '3. Add milk and cook until absorbed.',
+    '4. Stir in sugar and cardamom.',
+    '5. Cook until the mixture thickens.',
+    '6. Add chopped nuts.',
+    '7. Serve warm or chilled.'
+  ],
+  'Carrot Soup': [
+    '1. Sauté onions and garlic in butter.',
+    '2. Add chopped carrots and cook briefly.',
+    '3. Pour in vegetable stock.',
+    '4. Simmer until carrots are soft.',
+    '5. Blend until smooth.',
+    '6. Add cream and seasonings.',
+    '7. Serve hot.'
+  ],
+  'Carrot Salad': [
+    '1. Grate fresh carrots.',
+    '2. Add lemon juice and salt.',
+    '3. Mix in chopped coriander.',
+    '4. Add a pinch of sugar if desired.',
+    '5. Toss with roasted peanuts.',
+    '6. Chill before serving.',
+    '7. Serve as a side dish.'
+  ],
+  'Carrot Paratha': [
+    '1. Mix grated carrots into wheat flour.',
+    '2. Add salt, chili, and ajwain.',
+    '3. Knead into soft dough.',
+    '4. Roll out and cook on a hot tawa.',
+    '5. Flip and add ghee.',
+    '6. Cook until golden on both sides.',
+    '7. Serve with curd or pickle.'
+  ],
+  'Carrot Cake': [
+    '1. Mix grated carrots with flour, sugar, and baking soda.',
+    '2. Add cinnamon, eggs, and oil.',
+    '3. Stir until well combined.',
+    '4. Pour into greased cake tin.',
+    '5. Bake at 180°C for 30–35 minutes.',
+    '6. Cool and frost if desired.',
+    '7. Slice and serve.'
+  ],
+  'Carrot Juice': [
+    '1. Peel and chop carrots.',
+    '2. Blend with water and lemon juice.',
+    '3. Strain through a sieve.',
+    '4. Add salt or honey.',
+    '5. Stir and chill.',
+    '6. Pour into glasses.',
+    '7. Serve fresh.'
+  ],
+  'Carrot Pudding': [
+    '1. Grate carrots and cook in milk.',
+    '2. Add sugar and stir continuously.',
+    '3. Mix in cornflour paste for thickness.',
+    '4. Add cardamom and nuts.',
+    '5. Cook until thick and glossy.',
+    '6. Chill for a few hours.',
+    '7. Serve cold.'
+  ],
+},
+
+
+
+
+
+ 
+  Cucumber: {
+    'Kakdi Salad': [
+      '1. Peel and slice cucumbers thinly.',
+      '2. Add chopped green chilies, coriander, and salt.',
+      '3. Squeeze in lemon juice and mix well.',
+      '4. Optionally add roasted peanuts for crunch.',
+      '5. Serve chilled as a refreshing side.'
+    ],
+    'Cucumber Raita': [
+      '1. Grate cucumber and squeeze out excess water.',
+      '2. Mix it with beaten curd in a bowl.',
+      '3. Add salt, roasted cumin powder, and chopped coriander.',
+      '4. Stir well and chill before serving.',
+      '5. Garnish with a pinch of chili powder or mint.'
+    ],
+    'Cucumber Chutney': [
+      '1. Blend chopped cucumber with green chilies and coconut.',
+      '2. Add tamarind, salt, and a bit of water.',
+      '3. Blend until smooth and adjust seasoning.',
+      '4. Prepare a tempering of mustard seeds and curry leaves.',
+      '5. Pour the tempering over the chutney and serve.'
+    ],
+    'Cucumber Soup': [
+      '1. Sauté chopped onions and garlic in olive oil.',
+      '2. Add chopped cucumber and cook for 2-3 minutes.',
+      '3. Pour in vegetable stock and simmer until soft.',
+      '4. Blend the mixture and strain if needed.',
+      '5. Chill and serve with mint or yogurt swirl.'
+    ],
+    'Cucumber Sandwich': [
+      '1. Slice cucumbers thinly and sprinkle with salt.',
+      '2. Spread butter or cream cheese on bread slices.',
+      '3. Layer cucumber slices and add pepper.',
+      '4. Top with another bread slice and trim edges.',
+      '5. Cut into triangles and serve.'
+    ],
+    'Cucumber Juice': [
+      '1. Peel and chop cucumbers into chunks.',
+      '2. Blend with lemon juice, mint leaves, and honey.',
+      '3. Strain the juice and serve chilled.',
+      '4. Garnish with cucumber slices.',
+      '5. Serve immediately.'
+    ],
+    'Cucumber Pickle': [
+      '1. Slice cucumbers and sprinkle salt.',
+      '2. Add mustard seeds, fenugreek, and mustard oil.',
+      '3. Let it rest for a few hours to release water.',
+      '4. Store in a jar for a few days.',
+      '5. Serve with rice or roti.'
+    ],
+    'Cucumber Tzatziki': [
+      '1. Grate cucumbers and squeeze out excess water.',
+      '2. Mix with Greek yogurt, garlic, olive oil, and lemon juice.',
+      '3. Add salt, pepper, and fresh dill.',
+      '4. Chill for 30 minutes before serving.',
+      '5. Serve as a dip with pita or vegetables.'
+    ],
+    'Cucumber Slices with Salt': [
+      '1. Slice cucumbers thinly.',
+      '2. Sprinkle with salt and pepper.',
+      '3. Optionally add a squeeze of lemon juice.',
+      '4. Toss well and serve as a quick snack.',
+      '5. Chill for a refreshing snack.'
+    ],
+    'Cucumber Detox Water': [
+      '1. Slice cucumbers into thin rounds.',
+      '2. Add slices to a jug of water.',
+      '3. Optionally add lemon slices and mint leaves.',
+      '4. Let it infuse for 1-2 hours in the fridge.',
+      '5. Serve chilled.'
+    ]
+  },
+ 
+  Tomatoes: {
+    'Tomato Soup': [
+      '1. Heat oil and sauté onions and garlic.',
+      '2. Add chopped tomatoes and cook till soft.',
+      '3. Add water or stock and simmer for 10 mins.',
+      '4. Blend the mixture to a smooth consistency.',
+      '5. Strain, season, and serve hot with cream or croutons.'
+    ],
+    'Tomato Pulao': [
+      '1. Heat oil and add spices (cumin, bay leaf).',
+      '2. Add sliced onions and cook until golden.',
+      '3. Add chopped tomatoes, turmeric, and chili powder.',
+      '4. Cook until tomatoes soften, then add rice and water.',
+      '5. Cover and cook until rice is done. Garnish with coriander.'
+    ],
+    'Stuffed Tomatoes': [
+      '1. Cut off tops and scoop out tomato pulp.',
+      '2. Sauté onions, garlic, and spices with paneer or potato.',
+      '3. Stuff the tomato shells with this filling.',
+      '4. Bake at 180°C for 20 minutes or until soft.',
+      '5. Serve warm with rice or roti.'
+    ],
+    'Tomato Chutney': [
+      '1. Heat oil and add mustard seeds and curry leaves.',
+      '2. Add chopped tomatoes, red chilies, and salt.',
+      '3. Cook until tomatoes are mushy.',
+      '4. Cool and blend into a paste.',
+      '5. Serve with dosa, idli, or rice.'
+    ],
+    'Tomato Salad': [
+      '1. Slice tomatoes and onions thinly.',
+      '2. Add chopped coriander and green chilies.',
+      '3. Drizzle with lemon juice and sprinkle salt.',
+      '4. Toss gently and chill before serving.',
+      '5. Optionally add cucumber or olives for variety.'
+    ],
+    'Tomato Curry': [
+      '1. Heat oil and sauté onions, garlic, and ginger.',
+      '2. Add chopped tomatoes and spices (turmeric, chili powder).',
+      '3. Cook until tomatoes soften and oil separates.',
+      '4. Add water or stock and simmer.',
+      '5. Serve with rice or roti.'
+    ],
+    'Tomato Juice': [
+      '1. Blend fresh tomatoes with salt, pepper, and lemon.',
+      '2. Optionally add a pinch of sugar.',
+      '3. Strain the juice and serve chilled.',
+      '4. Garnish with fresh herbs.',
+      '5. Serve immediately.'
+    ],
+    'Tomato Pizza': [
+      '1. Roll out pizza dough and spread tomato sauce.',
+      '2. Top with fresh sliced tomatoes, cheese, and herbs.',
+      '3. Bake at 200°C for 10-15 minutes.',
+      '4. Garnish with basil leaves and serve hot.',
+      '5. Cut into slices and enjoy.'
+    ],
+    'Tomato Rasam': [
+      '1. Sauté garlic, mustard seeds, and curry leaves in oil.',
+      '2. Add chopped tomatoes, tamarind paste, and water.',
+      '3. Season with salt, pepper, and coriander powder.',
+      '4. Bring to a boil, simmer for 5 minutes.',
+      '5. Serve hot with rice.'
+    ],
+    'Tomato Bruschetta': [
+      '1. Toast slices of baguette until crispy.',
+      '2. Top with diced tomatoes, basil, garlic, and olive oil.',
+      '3. Season with salt, pepper, and a drizzle of balsamic vinegar.',
+      '4. Serve immediately as a snack or appetizer.',
+      '5. Optionally garnish with more basil.'
+    ]
+  },
+  Coconut: {
+    'Coconut Burfi': [
+      '1. Grate fresh coconut and set aside.',
+      '2. In a pan, add coconut and sugar in equal parts.',
+      '3. Cook on low flame, stirring constantly until the sugar melts.',
+      '4. Add a splash of milk and cardamom powder.',
+      '5. Cook until the mixture thickens and leaves the sides.',
+      '6. Pour into a greased tray, flatten, and let it cool.',
+      '7. Cut into pieces and store in an airtight container.'
+    ],
+    'Coconut Ladoo': [
+      '1. In a pan, combine grated coconut and condensed milk.',
+      '2. Cook on medium heat while stirring continuously.',
+      '3. Add cardamom powder for flavor.',
+      '4. Cook until the mixture thickens and comes together.',
+      '5. Allow it to cool slightly and shape into balls.',
+      '6. Roll the ladoos in desiccated coconut.',
+      '7. Let them set and serve.'
+    ],
+    'Sol Kadhi': [
+      '1. Soak kokum in warm water for 30 minutes.',
+      '2. Extract the juice and discard the skins.',
+      '3. Add coconut milk to the kokum extract.',
+      '4. Add minced garlic, green chilies, and salt.',
+      '5. Mix well and let it sit for 15 minutes.',
+      '6. Strain if desired and chill.',
+      '7. Serve cold as a digestive drink.'
+    ],
+    'Coconut Milk Curry': [
+      '1. Heat oil and sauté onions, ginger, and garlic.',
+      '2. Add chopped vegetables or meat and cook for 5–6 mins.',
+      '3. Stir in curry powder, turmeric, and salt.',
+      '4. Add coconut milk and bring to a simmer.',
+      '5. Cook on low heat until everything is cooked through.',
+      '6. Adjust seasoning and consistency with water if needed.',
+      '7. Serve hot with rice.'
+    ],
+    'Coconut Rice': [
+      '1. Cook rice and allow it to cool slightly.',
+      '2. Heat oil and add mustard seeds, urad dal, and curry leaves.',
+      '3. Add grated coconut and sauté until light golden.',
+      '4. Mix in the rice and season with salt.',
+      '5. Stir well and cook for 2–3 minutes.',
+      '6. Garnish with coriander or cashews.',
+      '7. Serve warm with chutney or raita.'
+    ],
+    'Coconut Chutney': [
+      '1. Grind grated coconut, green chilies, and roasted chana dal.',
+      '2. Add tamarind or yogurt and salt.',
+      '3. Blend into a smooth paste using little water.',
+      '4. Prepare tempering with mustard seeds, urad dal, and curry leaves.',
+      '5. Pour tempering over the chutney.',
+      '6. Mix and let it sit for 10 minutes.',
+      '7. Serve with dosa or idli.'
+    ],
+    'Coconut Water Smoothie': [
+      '1. Pour coconut water into a blender.',
+      '2. Add fresh fruits like banana or pineapple.',
+      '3. Add a spoonful of honey or dates for sweetness.',
+      '4. Blend until smooth.',
+      '5. Add ice cubes and blend again.',
+      '6. Pour into a glass and chill.',
+      '7. Garnish with mint leaves before serving.'
+    ],
+    'Coconut Sweets': [
+      '1. Combine grated coconut and sugar in a pan.',
+      '2. Heat and stir until sugar dissolves.',
+      '3. Add milk powder or khoya and cardamom.',
+      '4. Cook until thickened and doughy.',
+      '5. Pour into a greased plate and flatten.',
+      '6. Let it cool and set.',
+      '7. Cut into squares and enjoy.'
+    ],
+    'Coconut Ice Cream': [
+      '1. Whisk coconut milk with sugar until dissolved.',
+      '2. Add vanilla essence or coconut extract.',
+      '3. Pour into a container and freeze for 1 hour.',
+      '4. Stir to break ice crystals.',
+      '5. Repeat the freezing and stirring process twice.',
+      '6. Let it freeze completely.',
+      '7. Scoop and serve chilled.'
+    ],
+    'Coconut Barfi': [
+      '1. Mix grated coconut and condensed milk in a pan.',
+      '2. Cook on low flame while stirring.',
+      '3. Add cardamom powder and ghee.',
+      '4. Cook until mixture leaves the pan sides.',
+      '5. Pour onto greased tray and flatten.',
+      '6. Let it cool completely.',
+      '7. Cut into diamond shapes and store.'
+    ]
+  },
+
+  Mint: {
+    'Mint Chutney': [
+      '1. Wash and chop mint and coriander leaves.',
+      '2. Add green chilies, lemon juice, and salt.',
+      '3. Blend with a bit of water to a smooth paste.',
+      '4. Add cumin powder for extra flavor.',
+      '5. Adjust salt and spice.',
+      '6. Chill in fridge for 15 mins.',
+      '7. Serve with snacks or meals.'
+    ],
+    'Mint Lemonade': [
+      '1. Squeeze fresh lemons and collect the juice.',
+      '2. Add sugar and salt to the juice.',
+      '3. Blend with mint leaves and cold water.',
+      '4. Strain the mixture if desired.',
+      '5. Add ice cubes.',
+      '6. Garnish with mint leaves.',
+      '7. Serve chilled.'
+    ],
+    'Pudina Paratha': [
+      '1. Mix wheat flour, salt, and chopped mint leaves.',
+      '2. Add water and knead into a soft dough.',
+      '3. Roll into flat parathas.',
+      '4. Cook on a hot tawa with oil or ghee.',
+      '5. Flip and cook both sides till golden.',
+      '6. Brush with ghee.',
+      '7. Serve hot with curd or pickle.'
+    ],
+    'Mint Rice': [
+      '1. Cook rice and set aside.',
+      '2. Blend mint, green chilies, and garlic into a paste.',
+      '3. Sauté onions in oil, then add the mint paste.',
+      '4. Cook till oil separates.',
+      '5. Mix in the cooked rice and salt.',
+      '6. Stir well and cook for 2 mins.',
+      '7. Serve with raita.'
+    ],
+    'Mint Pulao': [
+      '1. Heat oil and sauté bay leaf and cloves.',
+      '2. Add chopped onions and cook till golden.',
+      '3. Add mint paste and sauté well.',
+      '4. Add washed rice and mix.',
+      '5. Pour water and add salt.',
+      '6. Cover and cook until rice is done.',
+      '7. Fluff with a fork and serve.'
+    ],
+    'Mint Yogurt Dip': [
+      '1. Chop fresh mint leaves finely.',
+      '2. Mix with thick curd.',
+      '3. Add cumin powder and salt.',
+      '4. Whisk until smooth.',
+      '5. Add a splash of lemon juice.',
+      '6. Chill in fridge.',
+      '7. Serve with kebabs or snacks.'
+    ],
+    'Mint Mojito': [
+      '1. Muddle mint leaves with lemon and sugar in a glass.',
+      '2. Add crushed ice.',
+      '3. Pour soda or sparkling water.',
+      '4. Stir gently.',
+      '5. Add a slice of lemon for garnish.',
+      '6. Insert a straw.',
+      '7. Serve immediately.'
+    ],
+    'Mint Tea': [
+      '1. Boil water in a pan.',
+      '2. Add tea leaves and mint leaves.',
+      '3. Simmer for 3–4 minutes.',
+      '4. Strain into cups.',
+      '5. Add sugar or honey as desired.',
+      '6. Optionally add a splash of lemon.',
+      '7. Serve hot.'
+    ],
+    'Mint Salad': [
+      '1. Chop cucumbers, tomatoes, and onions.',
+      '2. Add chopped mint leaves.',
+      '3. Drizzle lemon juice and olive oil.',
+      '4. Sprinkle salt and pepper.',
+      '5. Toss well.',
+      '6. Chill before serving.',
+      '7. Serve as a side dish.'
+    ],
+    'Mint Raita': [
+      '1. Finely chop mint leaves.',
+      '2. Mix with beaten curd.',
+      '3. Add roasted cumin powder and salt.',
+      '4. Optionally add grated cucumber.',
+      '5. Stir well.',
+      '6. Chill in refrigerator.',
+      '7. Serve cold.'
+    ]
+  },
+
+  GreenChili: {
+    'Green Chili Pickle': [
+      '1. Wash and dry green chilies completely.',
+      '2. Slit and stuff with a spice mix of mustard, fennel, and salt.',
+      '3. Heat mustard oil and cool it.',
+      '4. Pour over the chilies in a jar.',
+      '5. Add lemon juice or vinegar.',
+      '6. Shake the jar and let it sit for 3–4 days.',
+      '7. Serve with meals.'
+    ],
+    'Stuffed Green Chili': [
+      '1. Slit green chilies and deseed.',
+      '2. Mix gram flour, spices, and oil for stuffing.',
+      '3. Fill the chilies with the mixture.',
+      '4. Heat oil in a pan.',
+      '5. Shallow fry the stuffed chilies.',
+      '6. Cook until golden and soft.',
+      '7. Serve as a side.'
+    ],
+    'Green Chili Sauce': [
+      '1. Blend green chilies with garlic and vinegar.',
+      '2. Add salt and sugar.',
+      '3. Cook the mixture until thick.',
+      '4. Cool and store in bottles.',
+      '5. Refrigerate for longer shelf life.',
+      '6. Shake before use.',
+      '7. Use as a dip or marinade.'
+    ],
+    'Green Chili Curry': [
+      '1. Fry green chilies lightly in oil.',
+      '2. Sauté onions, garlic, and tomatoes in the same pan.',
+      '3. Add turmeric, salt, and coriander.',
+      '4. Add fried chilies and water.',
+      '5. Simmer for 10 mins.',
+      '6. Garnish with coriander.',
+      '7. Serve with rice or roti.'
+    ],
+    'Green Chili Soup': [
+      '1. Sauté green chilies, onions, and garlic.',
+      '2. Add vegetable stock and bring to a boil.',
+      '3. Simmer until chilies soften.',
+      '4. Blend the soup to smooth.',
+      '5. Strain and adjust seasoning.',
+      '6. Add cream or lemon for balance.',
+      '7. Serve warm.'
+    ],
+    'Green Chili Sauté': [
+      '1. Slice green chilies lengthwise.',
+      '2. Heat oil and add mustard seeds.',
+      '3. Add chilies and sauté.',
+      '4. Sprinkle salt and turmeric.',
+      '5. Cook until soft.',
+      '6. Finish with lemon juice.',
+      '7. Serve as a spicy side.'
+    ],
+    'Green Chili Raita': [
+      '1. Finely chop green chilies.',
+      '2. Mix with beaten curd.',
+      '3. Add roasted cumin and salt.',
+      '4. Stir well and chill.',
+      '5. Garnish with mint or coriander.',
+      '6. Optionally add chopped onions.',
+      '7. Serve cold.'
+    ],
+    'Green Chili Masala': [
+      '1. Fry green chilies and set aside.',
+      '2. Sauté onions and tomatoes in oil.',
+      '3. Add spices and make a thick masala.',
+      '4. Add the fried chilies.',
+      '5. Cook for 5 more minutes.',
+      '6. Adjust salt.',
+      '7. Serve with roti.'
+    ],
+    'Spicy Green Chili Dip': [
+      '1. Blend green chilies, garlic, and yogurt.',
+      '2. Add salt and lemon juice.',
+      '3. Mix until creamy.',
+      '4. Chill before serving.',
+      '5. Drizzle olive oil if desired.',
+      '6. Sprinkle herbs for flavor.',
+      '7. Use with snacks or chips.'
+    ],
+    'Green Chili Pakora': [
+      '1. Slit green chilies and deseed if needed.',
+      '2. Dip in besan (gram flour) batter.',
+      '3. Heat oil in a pan.',
+      '4. Deep fry until golden.',
+      '5. Drain excess oil.',
+      '6. Sprinkle chaat masala.',
+      '7. Serve hot.'
+    ]
+  }
+};
+    function selectSeason(season) {
+      document.getElementById("season-section").classList.add("hidden");
+      document.getElementById("ingredient-section").classList.remove("hidden");
+      document.getElementById("season-title").innerText = `Ingredients for ${season}`;
+      const ingredientsContainer = document.getElementById("ingredients-container");
+      ingredientsContainer.innerHTML = '';
+      seasonalIngredients[season].forEach(ingredient => {
+        const ingredientCard = document.createElement("div");
+        ingredientCard.classList.add("card");
+        ingredientCard.innerHTML = `<img src="${ingredientImages[ingredient]}" alt="${ingredient}"><div>${ingredient}</div>`;
+        ingredientCard.onclick = () => showRecipes(ingredient);
+        ingredientsContainer.appendChild(ingredientCard);
+      });
+    }
+
+    function showRecipes(ingredient) {
+      document.getElementById("ingredient-section").classList.add("hidden");
+      document.getElementById("recipe-section").classList.remove("hidden");
+      document.getElementById("ingredient-title").innerText = `${ingredient} Recipes`;
+
+      const recipesContainer = document.getElementById("recipes-container");
+      recipesContainer.innerHTML = '';
+
+      recipes[ingredient].forEach(recipe => {
+        const recipeCard = document.createElement("div");
+        recipeCard.classList.add("card");
+        recipeCard.innerHTML = `<div>${recipe}</div>`;
+        recipeCard.onclick = () => showRecipeDetails(ingredient, recipe);
+        recipesContainer.appendChild(recipeCard);
+      });
+    }
+
+    function showRecipeDetails(ingredient, recipe) {
+      document.getElementById("recipe-section").classList.add("hidden");
+      document.getElementById("recipe-details-section").classList.remove("hidden");
+      document.getElementById("recipe-name").innerText = recipe;
+      const recipeStepsContainer = document.getElementById("recipe-steps");
+      recipeStepsContainer.innerHTML = '';
+
+      recipeDetails[ingredient][recipe].forEach(step => {
+        const stepElement = document.createElement("div");
+        stepElement.classList.add("recipe-step");
+        stepElement.innerText = step;
+        recipeStepsContainer.appendChild(stepElement);
+      });
+    }
+
+    function goBackToSeason() {
+      document.getElementById("ingredient-section").classList.add("hidden");
+      document.getElementById("season-section").classList.remove("hidden");
+    }
+
+    function goBackToIngredients() {
+      document.getElementById("recipe-section").classList.add("hidden");
+      document.getElementById("ingredient-section").classList.remove("hidden");
+    }
+
+    function goBackToRecipes() {
+      document.getElementById("recipe-details-section").classList.add("hidden");
+      document.getElementById("recipe-section").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
