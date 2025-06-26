@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Share Favourite Recipes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(90deg, #ff6347, #ffcc00);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-bottom: 5px solid #ffcc00;
+        }
+        h1 {
+            margin: 0;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+        }
+        h2 {
+            color: #3333cc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        h3 {
+            font-size: 30px;
+            color: #ff0066;
+        }
+        main {
+            background-image: url('https://biteeatrepeat.com/wp-content/uploads/2023/12/pizza-christmas-tree.gif');
+            padding: 100px;
+            max-width: 900px;
+            margin: auto;
+        }
+        section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #recipes {
+            list-style-type: none;
+            padding: 0;
+        }
+        .recipe-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f2f2f2;
+        }
+        .recipe-item img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color:grey;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SHARE FAVOURITE RECIPES 🍽️</h1>
+    </header>
+
+    <main>
+        <section id="recipe-form">
+            <h2>Submit a Recipe 🥘</h2>
+            <form id="new-recipe" action="/submit-recipe" method="POST">
+                <label for="recipe-name">Recipe Name:</label>
+                <input type="text" id="recipe-name" name="recipe-name" required>
+
+                <label for="ingredients">Ingredients:</label>
+                <textarea id="ingredients" name="ingredients" rows="4" required></textarea>
+
+                <label for="instructions">Cooking Instructions:</label>
+                <textarea id="instructions" name="instructions" rows="6" required></textarea>
+
+                <label for="photo">Upload a Photo:</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+
+                <button type="submit">Submit Recipe</button>
+            </form>
+        </section>
+
+        <section id="recipe-list">
+            <h2>Community Recipes 🍲</h2>
+            <ul id="recipes">
+                <!-- Recipe items go here -->
+                <!-- Example: -->
+                <li class="recipe-item">
+                    <h3>Spaghetti Carbonara 🍝</h3>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3bR0rG-pIJqSyd6dWtsZZdSlFKIEHcuAN_A&s" alt="Spaghetti Carbonara" width="300" height="400">
+                    <p><strong>Ingredients:</strong> 200g spaghetti,2 eggs,1/2 cup grated Parmesan,100g pancetta or bacon,2 cloves garlic (optional),salt & black pepper,a splash of pasta water</p>
+                    <p><strong>Instructions:</strong> 1. Boil spaghetti. 2. Cook pancetta. 3. Whisk eggs with cheese. 4. Combine all and mix off heat.</p>
+                </li>
+                <li class="recipe-item">
+                    <h3>Chocolate Chip Cookies 🍪</h3>
+                    <img src="https://www.hummingbirdhigh.com/wp-content/uploads/2023/01/Chocolate-Types-GIF.gif" alt="Chocolate Chip Cookies" width="300" height="400">
+                    <p><strong>Ingredients:</strong>3/4 cup granulated sugar,3/4 cup granulated sugar,2 large eggs,2 teaspoons vanilla extract,2 1/4 cups all-purpose flour,1 teaspoon baking soda,1/2 teaspoon salt,2 cups semi-sweet chocolate chips, 1 cup chopped nuts (walnuts or pecans)</p>
+                    <p><strong>Instructions:</strong>1.Preheat oven to 375°F (190°C). 2.Cream butter, white sugar, and brown sugar. 3.Mix in eggs and vanilla. 4.Stir together flour, baking soda, salt. Add to wet mix. 5.Fold in chocolate chips (and nuts if using). 6.Scoop dough onto baking sheet (1 tbsp size). 7.Bake 9–11 mins until edges are golden. 8.Cool on sheet 5 mins, then move to rack.</p>
+                </li>
+                <li class="recipe-item">
+                    <h3>Khachapuri🥖</h3>
+                    <img src="https://media.istockphoto.com/id/1191485822/photo/fresh-homemade-khachapuri-ajarian-on-rustic-wooden-background.jpg?s=612x612&w=0&k=20&c=hPbV1W-BN6kUtHwWG9OEqiRacjzlebiB_xrEUObwEys=" alt="Khachapuri" width="500" height="400">
+                    <p><strong>Ingredients:</strong>2 cups all-purpose flour,1 tsp yeast,½ tsp sugar,½ tsp salt,¾ cup warm water,1 cup shredded mozzarella,1 cup crumbled feta,1 egg per khachapuri,1 tbsp butter</p>
+                    <p><strong>Instructions:</strong>1.Mix flour, yeast, sugar, salt, and warm water. Knead and let it rise for 1 hour. 2. Roll into an oval, twist the sides inward to form a boat shape. 3.Combine mozzarella and feta. Fill the center of the dough boat with the cheese. 4.At 450°F (230°C) for 12–15 minutes until golden and bubbly. 5.Crack an egg on top and return to oven for 2–3 mins (yolk should stay runny). Add a knob of butter. 6.Stir egg and butter into the hot cheese.</p>
+                </li>
+                 <li class="recipe-item">
+                    <h3>Mofongo 🍛</h3>
+                    <img src="https://t3.ftcdn.net/jpg/12/30/68/50/360_F_1230685096_piCHm96nBD43x2janz6UIDA5yBBmBp5t.jpg" alt="Mofongo" width="500" height="400">
+                    <p><strong>Ingredients:</strong>3 green plantains,3–4 garlic cloves,¼ cup olive oil,½ cup chicharrón or bacon bits,salt,Optional:chicken broth</p>
+                    <p><strong>Instructions:</strong>1.Cut plantains into chunks and fry until golden 2.In a mortar (or bowl), mash garlic with oil, then add plantains and chicharrón.Pound and mix into a chunky mash. 3.Shape into a dome or scoop into a bowl. 4.Serve with a side of broth,shrimp,chicken.</p>
+                </li>
+                <li class="recipe-item">
+                    <h3>Coquilles Saint-Jacques 🧇</h3>
+                    <img src="https://merroir.me/wp-content/uploads/2022/08/frame_00_delay-0.08s-4.gif" width="500" height="400">
+                    <p><strong>Ingredients:</strong>225g scallops,2 tbsp butter,1 shallot chopped,¼ cup white wine,½ cup heavy cream,½ cup grated Gruyère or Parmesan,Salt & pepper,Pinch of nutmeg,Breadcrumbs,Optional:mushrooms,sliced.</p>
+                    <p><strong>Instructions:</strong>1.Cook shallots (and mushrooms,if using) in butter.Add scallops,cook lightly.Remove scallops. 2.Add wine to pan,reduce.Stir in cream,season,simmer till thick. 3.Return scallops to sauce.Spoon into scallop shells or ramekins. 4.Sprinkle with cheese and breadcrumbs. 5.Under broiler for 2–3 minutes till golden and bubbly.</p>
+                </li>
+                <li class="recipe-item">
+                    <h3>Ceviche 🥗</h3>
+                    <img src="https://cdn-ideeb.nitrocdn.com/ASAqUlceSLYIrjDMfwSRgXUwoCQDtUdf/assets/images/optimized/rev-66a623f/mztrealestate.com/wp-content/uploads/elementor/thumbs/What-is-Ceviche-qj4mn1nnbem9eamswe2h8cnipz0vvvze6pbbhscvpk.jpg" width="500" height="400">
+                    <p><strong>Ingredients:</strong>1 lb fresh white fish(like sea bass or snapper),¾ cup fresh lime juice,½ red onion,1 chili,fresh cilantro,salt,Optional:corn,sweet potato slices,avocado.</p>
+                    <p><strong>Instructions:</strong>1.Toss fish in lime juice.Let sit 15–20 mins. 2.Stir in onions,chili,cilantro and salt. 3.Serve with corn,sweet potato or avocado on the side.</p>
+                </li>
+                <li class="recipe-item">
+                    <h3>Patoleo 🥖</h3>
+                    <img src="https://i.pinimg.com/736x/3f/e6/6c/3fe66ce5bdafe8142c0f47641d280138.jpg" width="300" height="500">
+                    <p><strong>Ingredients:</strong>Fresh turmeric leaves,rice paste (made from soaked rice,ground fine),grated coconut,jaggery,cardamom.</p>
+                    <p><strong>Instructions:</strong>1.Spread rice paste thinly on a turmeric leaf. 2.Fill with a mix of coconut, jaggery, and cardamom. 3.Fold the leaf and steam for 10–15 minutes. 4.Peel leaf before eating-aromatic, sweet, and tropical.</p>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        &copy;Share Your Recipes. All rights reserved.
+    </footer>
+</body>
+</html>
+
