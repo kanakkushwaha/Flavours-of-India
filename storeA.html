@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StoreA</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #007bff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .grocery-item {
+      background-color: #ffffff;
+      border: 1px solid #e3e3e3;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
+      transition: transform 0.3s ease;
+    }
+    .grocery-item:hover {
+      transform: translateY(-5px);
+    }
+    .grocery-item h2 {
+      font-size: 1.1rem;
+      margin: 0 0 10px;
+      color: #007bff;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .cart {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #ffffff;
+      padding: 15px;
+      width: 250px;
+      border: 1px solid #e3e3e3;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+    }
+    .cart h2 {
+      text-align: center;
+      color: #007bff;
+    }
+    #cart-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #checkout-btn {
+      margin-top: 10px;
+      background-color: #007bff;
+    }
+    #checkout-btn:hover {
+      background-color: #0056b3;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 123, 255, 0.3);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 80%;
+      max-width: 500px;
+      max-height: 80%;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    .modal h3 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .close-btn {
+      background-color: #dc3545;
+      margin-top: 15px;
+    }
+    .close-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Store A</h1>
+    <div class="grid">
+      <!-- Product Items Start -->
+      <div class="grocery-item"><h2>🍚 Rice (1kg)</h2><p><b>Price:</b> ₹50</p><button onclick="addToCart('Rice', 50)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🌾 Wheat (1kg)</h2><p><b>Price:</b> ₹45</p><button onclick="addToCart('Wheat', 45)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍬 Sugar (1kg)</h2><p><b>Price:</b> ₹40</p><button onclick="addToCart('Sugar', 40)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🛢️ Oil (1L)</h2><p><b>Price:</b> ₹120</p><button onclick="addToCart('Oil', 120)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧂 Salt (1kg)</h2><p><b>Price:</b> ₹20</p><button onclick="addToCart('Salt', 20)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥛 Milk (1L)</h2><p><b>Price:</b> ₹55</p><button onclick="addToCart('Milk', 55)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍞 Bread (1 loaf)</h2><p><b>Price:</b> ₹30</p><button onclick="addToCart('Bread', 30)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥚 Eggs (1 dozen)</h2><p><b>Price:</b> ₹70</p><button onclick="addToCart('Eggs', 70)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍗 Chicken (500g)</h2><p><b>Price:</b> ₹140</p><button onclick="addToCart('Chicken', 140)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍅 Tomatoes (1kg)</h2><p><b>Price:</b> ₹30</p><button onclick="addToCart('Tomatoes', 30)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥔 Potatoes (1kg)</h2><p><b>Price:</b> ₹25</p><button onclick="addToCart('Potatoes', 25)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧅 Onions (1kg)</h2><p><b>Price:</b> ₹35</p><button onclick="addToCart('Onions', 35)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍎 Apples (1kg)</h2><p><b>Price:</b> ₹90</p><button onclick="addToCart('Apples', 90)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍌 Bananas (1 dozen)</h2><p><b>Price:</b> ₹50</p><button onclick="addToCart('Bananas', 50)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🫖 Tea Powder (500g)</h2><p><b>Price:</b> ₹130</p><button onclick="addToCart('Tea Powder', 130)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>☕ Coffee (200g)</h2><p><b>Price:</b> ₹150</p><button onclick="addToCart('Coffee', 150)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧼 Detergent (1kg)</h2><p><b>Price:</b> ₹60</p><button onclick="addToCart('Detergent', 60)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧴 Shampoo (180ml)</h2><p><b>Price:</b> ₹95</p><button onclick="addToCart('Shampoo', 95)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🪥 Toothpaste (100g)</h2><p><b>Price:</b> ₹40</p><button onclick="addToCart('Toothpaste', 40)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧼 Soap (125g)</h2><p><b>Price:</b> ₹25</p><button onclick="addToCart('Soap', 25)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧀 Cheese (10 slices)</h2><p><b>Price:</b> ₹110</p><button onclick="addToCart('Cheese Slices', 110)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍯 Ketchup (500g)</h2><p><b>Price:</b> ₹60</p><button onclick="addToCart('Ketchup', 60)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥬 Spinach (1 bunch)</h2><p><b>Price:</b> ₹20</p><button onclick="addToCart('Spinach', 20)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥒 Cucumber (1kg)</h2><p><b>Price:</b> ₹30</p><button onclick="addToCart('Cucumber', 30)">Add to Cart</button></div>
+      <!-- Additional Items -->
+      <div class="grocery-item"><h2>🍊 Oranges (1kg)</h2><p><b>Price:</b> ₹60</p><button onclick="addToCart('Oranges', 60)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥑 Avocados (2 pcs)</h2><p><b>Price:</b> ₹150</p><button onclick="addToCart('Avocados', 150)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍍 Pineapple (1 piece)</h2><p><b>Price:</b> ₹80</p><button onclick="addToCart('Pineapple', 80)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍉 Watermelon (1kg)</h2><p><b>Price:</b> ₹55</p><button onclick="addToCart('Watermelon', 55)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍑 Peaches (1kg)</h2><p><b>Price:</b> ₹150</p><button onclick="addToCart('Peaches', 150)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍒 Cherries (500g)</h2><p><b>Price:</b> ₹180</p><button onclick="addToCart('Cherries', 180)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥥 Coconut (1 pc)</h2><p><b>Price:</b> ₹75</p><button onclick="addToCart('Coconut', 75)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍇 Grapes (1kg)</h2><p><b>Price:</b> ₹100</p><button onclick="addToCart('Grapes', 100)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍓 Strawberries (500g)</h2><p><b>Price:</b> ₹120</p><button onclick="addToCart('Strawberries', 120)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍍 Papaya (1 piece)</h2><p><b>Price:</b> ₹60</p><button onclick="addToCart('Papaya', 60)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥝 Kiwi (4 pcs)</h2><p><b>Price:</b> ₹150</p><button onclick="addToCart('Kiwi', 150)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🌰 Almonds (200g)</h2><p><b>Price:</b> ₹350</p><button onclick="addToCart('Almonds', 350)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍫 Dark Chocolate (100g)</h2><p><b>Price:</b> ₹120</p><button onclick="addToCart('Dark Chocolate', 120)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍪 Cookies (Pack of 6)</h2><p><b>Price:</b> ₹90</p><button onclick="addToCart('Cookies', 90)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧁 Cupcakes (Pack of 4)</h2><p><b>Price:</b> ₹150</p><button onclick="addToCart('Cupcakes', 150)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍩 Donuts (Pack of 3)</h2><p><b>Price:</b> ₹110</p><button onclick="addToCart('Donuts', 110)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍪 Biscuit (Pack)</h2><p><b>Price:</b> ₹35</p><button onclick="addToCart('Biscuit', 35)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍞 Croissants (Pack of 4)</h2><p><b>Price:</b> ₹120</p><button onclick="addToCart('Croissants', 120)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🥞 Pancake Mix (500g)</h2><p><b>Price:</b> ₹150</p><button onclick="addToCart('Pancake Mix', 150)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🧇 Waffles (Pack of 4)</h2><p><b>Price:</b> ₹170</p><button onclick="addToCart('Waffles', 170)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍓 Jelly (500g)</h2><p><b>Price:</b> ₹90</p><button onclick="addToCart('Jelly', 90)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍍 Pineapple Juice (1L)</h2><p><b>Price:</b> ₹110</p><button onclick="addToCart('Pineapple Juice', 110)">Add to Cart</button></div>
+      <div class="grocery-item"><h2>🍊 Orange Juice (1L)</h2><p><b>Price:</b> ₹120</p><button onclick="addToCart('Orange Juice', 120)">Add to Cart</button></div>
+      <!-- End of Additional Items -->
+    </div>
+  </div>
+
+  <div class="cart">
+    <h2>🛒 Cart</h2>
+    <ul id="cart-items"></ul>
+    <button id="checkout-btn" onclick="showModal()">Checkout</button>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Your Order</h3>
+      <ul id="modal-cart-items"></ul>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function addToCart(item, price) {
+      const itemIndex = cart.findIndex(cartItem => cartItem.item === item);
+      if (itemIndex !== -1) {
+        cart[itemIndex].quantity += 1;
+      } else {
+        cart.push({ item, price, quantity: 1 });
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const cartItemsElement = document.getElementById('cart-items');
+      cartItemsElement.innerHTML = '';
+      cart.forEach(cartItem => {
+        const li = document.createElement('li');
+        li.textContent = `${cartItem.item} x${cartItem.quantity} - ₹${cartItem.price * cartItem.quantity}`;
+        cartItemsElement.appendChild(li);
+      });
+    }
+
+    function showModal() {
+      const modalCartItemsElement = document.getElementById('modal-cart-items');
+      modalCartItemsElement.innerHTML = '';
+      cart.forEach(cartItem => {
+        const li = document.createElement('li');
+        li.textContent = `${cartItem.item} x${cartItem.quantity} - ₹${cartItem.price * cartItem.quantity}`;
+        modalCartItemsElement.appendChild(li);
+      });
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
+
+
