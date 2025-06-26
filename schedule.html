@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Food Planner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://media.istockphoto.com/id/1129610282/vector/food-ingredients-and-dishes-icons.jpg?s=1024x1024&w=is&k=20&c=g-VQNeTbTiTkFvx5yZTwL7OywDM5WP5Nijsh9xzMvw0=');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 20px;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff5722;
+            color: white;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ffcc00;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .gif-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .gif-container img {
+            width: 100px;
+            height: auto;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weekly Food Planner</h1>
+        <form id="mealPlannerForm">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Breakfast</th>
+                        <th>Lunch</th>
+                        <th>Dinner</th>
+                        <th>Snacks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monday</td>
+                        <td><input type="text" placeholder="Breakfast" name="mondayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="mondayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="mondayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="mondaySnacks"></td>
+                    </tr>
+                    <tr>
+                        <td>Tuesday</td>
+                        <td><input type="text" placeholder="Breakfast" name="tuesdayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="tuesdayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="tuesdayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="tuesdaySnacks"></td>
+                    </tr>
+                    <tr>
+                        <td>Wednesday</td>
+                        <td><input type="text" placeholder="Breakfast" name="wednesdayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="wednesdayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="wednesdayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="wednesdaySnacks"></td>
+                    </tr>
+                    <tr>
+                        <td>Thursday</td>
+                        <td><input type="text" placeholder="Breakfast" name="thursdayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="thursdayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="thursdayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="thursdaySnacks"></td>
+                    </tr>
+                    <tr>
+                        <td>Friday</td>
+                        <td><input type="text" placeholder="Breakfast" name="fridayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="fridayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="fridayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="fridaySnacks"></td>
+                    </tr>
+                    <tr>
+                        <td>Saturday</td>
+                        <td><input type="text" placeholder="Breakfast" name="saturdayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="saturdayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="saturdayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="saturdaySnacks"></td>
+                    </tr>
+                    <tr>
+                        <td>Sunday</td>
+                        <td><input type="text" placeholder="Breakfast" name="sundayBreakfast"></td>
+                        <td><input type="text" placeholder="Lunch" name="sundayLunch"></td>
+                        <td><input type="text" placeholder="Dinner" name="sundayDinner"></td>
+                        <td><input type="text" placeholder="Snacks" name="sundaySnacks"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit">Save Meal Plan</button>
+        </form>
+
+        <div class="gif-container">
+            <h2>"People who love to eat are always the best people".</h2>
+            <img src="https://media.istockphoto.com/id/1137044222/vector/cartoon-happy-cute-people-cooking-set-isolated-vector-illustration.jpg?s=1024x1024&w=is&k=20&c=mrVjvpVUx9ZuWI0Gwl1uMjdGYiz_7hlLLTNVLyFdcZ8=" alt="Food GIF 1">
+            <img src="https://media.istockphoto.com/id/1291884822/vector/young-woman-cooks-soup-at-home-kitchen-interior-home-food-concept-vector-illustration-in.jpg?s=1024x1024&w=is&k=20&c=T2Bqjelyb2pfQy3btQOzsFNIyuyABgIfHpBWzzUgqrw=" alt="Food GIF 2">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/007/579/313/small_2x/cartoon-fast-food-characters-isolated-free-vector.jpg" alt="Food GIF 3">
+        </div>
+    </div>
+
+    <script>
+        const mealPlannerForm = document.getElementById('mealPlannerForm');
+
+        mealPlannerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(mealPlannerForm);
+            const mealPlan = {};
+
+            formData.forEach((value, key) => {
+                mealPlan[key] = value;
+            });
+
+            console.log('Weekly Meal Plan:', mealPlan);
+            alert('Meal plan saved! Check the console for details.');
+            mealPlannerForm.reset();
+        });
+    </script>
+</body>
+</html>
